@@ -1,0 +1,58 @@
+version: '3.7'
+
+# Define services
+services:
+
+  # Frontend Service 
+  app-client:
+    build:
+      context: app-client # build image from `app-client` directory
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_BASE_URL: http://acmsac.ecs.baylor.edu/api
+    ports:
+      - "80:80" # only open port 80 to outside
+    restart: always
+    depends_on:
+      - app-server
+    networks:
+      - app-internal
+
+  # Backend service
+  app-server:
+    build:
+      context: app-server # build image from `app-server` directory
+      dockerfile: Dockerfile
+    expose:
+      - "8080" # expose 8080 to internal network not outside
+    restart: always
+    depends_on: 
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/polls?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
+      SPRING_DATASOURCE_USERNAME: callicoder
+      SPRING_DATASOURCE_PASSWORD: callicoder     
+    networks:
+      - app-internal  
+
+  # Database Service (Mysql)
+  db:
+    image: mysql:5.7
+    expose:
+      - "3306"
+    restart: always
+    environment:
+      MYSQL_DATABASE: polls
+      MYSQL_USER: callicoder
+      MYSQL_PASSWORD: callicoder
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - app-internal  
+  
+volumes:
+  db-data:
+
+networks:
+  app-internal:
