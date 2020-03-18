@@ -12,12 +12,14 @@ services:
       args:
         REACT_APP_API_BASE_URL: /api
     ports:
-      - "80:80" # only open port 80 to outside
+      - "80:80" # only open ports 80 and 443 to outside
+      - "443:443"
     restart: always
     depends_on:
       - app-server
     volumes:
-      - ./certs:/etc/certs
+      - /etc/ssl/certs:/etc/ssl/certs
+      - /etc/ssl/keys:/etc/ssl/keys
     networks:
       - app-internal
 
