@@ -3,7 +3,7 @@ import {
     Theme, withStyles, Paper, Table, TableHead, TableRow,
     TableCell, TableBody, TablePagination, Grid, Typography
 } from '@material-ui/core';
-import { BarChart, CartesianGrid, XAxis, YAxis, Bar, Tooltip, Legend, PieChart, Pie, ResponsiveContainer } from 'recharts';
+// import { BarChart, CartesianGrid, XAxis, YAxis, Bar, Tooltip, /*Legend, PieChart, Pie,*/ ResponsiveContainer } from 'recharts';
 const classNames = require('classnames');
 import GroupIcon from '@material-ui/icons/Group';
 import MailIcon from '@material-ui/icons/Mail';
@@ -45,6 +45,15 @@ class HomePage extends React.Component<IDashboardProps, IPageState> {
         if (!users) {
             return null;
         }
+        console.log(users);
+
+        fetch(process.env.REACT_APP_API_BASE_URL + "/hello")
+            // .then(res => res.json())
+            .then(
+                (result) => {
+                    console.log(result)
+                },
+            );
 
         return (
             <Paper className={classNames(classes.paper, classes.users)}>
@@ -91,43 +100,43 @@ class HomePage extends React.Component<IDashboardProps, IPageState> {
 
     }
 
-    private renderRadialBarChart(): JSX.Element {
-        return (
-            <Paper className={this.props.classes.paper}>
-                <h3 className={this.props.classes.sectionTitle}>Material Inventory</h3>
-                <ResponsiveContainer width="100%" height={300}>
-                    <PieChart>
-                        <Pie
-                            data={this.props.materialChartData}
-                            dataKey="value"
-                            nameKey="name"
-                            cx="50%"
-                            cy="50%"
-                            label={true}
-                            fill="#8884d8" />
-                        <Legend />
-                    </PieChart>
-                </ResponsiveContainer>
-            </Paper>
-        );
-    }
+    // private renderRadialBarChart(): JSX.Element {
+    //     return (
+    //         <Paper className={this.props.classes.paper}>
+    //             <h3 className={this.props.classes.sectionTitle}>Material Inventory</h3>
+    //             <ResponsiveContainer width="100%" height={300}>
+    //                 <PieChart>
+    //                     <Pie
+    //                         data={this.props.materialChartData}
+    //                         dataKey="value"
+    //                         nameKey="name"
+    //                         cx="50%"
+    //                         cy="50%"
+    //                         label={true}
+    //                         fill="#8884d8" />
+    //                     <Legend />
+    //                 </PieChart>
+    //             </ResponsiveContainer>
+    //         </Paper>
+    //     );
+    // }
 
-    private renderBarChart(): JSX.Element {
-        return (
-            <Paper className={this.props.classes.paper}>
-                <h3 className={this.props.classes.sectionTitle}>Material Sales</h3>
-                <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={this.props.materialChartData}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
-                        <YAxis />
-                        <Tooltip />
-                        <Bar dataKey="value" fill="#8884d8" />
-                    </BarChart>
-                </ResponsiveContainer>
-            </Paper>
-        );
-    }
+    // private renderBarChart(): JSX.Element {
+    //     return (
+    //         <Paper className={this.props.classes.paper}>
+    //             <h3 className={this.props.classes.sectionTitle}>Material Sales</h3>
+    //             <ResponsiveContainer width="100%" height={300}>
+    //                 <BarChart data={this.props.materialChartData}>
+    //                     <CartesianGrid strokeDasharray="3 3" />
+    //                     <XAxis dataKey="name" />
+    //                     <YAxis />
+    //                     <Tooltip />
+    //                     <Bar dataKey="value" fill="#8884d8" />
+    //                 </BarChart>
+    //             </ResponsiveContainer>
+    //         </Paper>
+    //     );
+    // }
 
     public render(): JSX.Element {
         const { classes } = this.props;
@@ -158,12 +167,12 @@ class HomePage extends React.Component<IDashboardProps, IPageState> {
                             <Typography className={classes.tileText}>Settings</Typography>
                         </Paper>
                     </Grid>
-                    <Grid item={true} xs={12} md={6}>
-                        {this.renderBarChart()}
-                    </Grid>
-                    <Grid item={true} xs={12} md={6}>
-                        {this.renderRadialBarChart()}
-                    </Grid>
+                    {/*<Grid item={true} xs={12} md={6}>*/}
+                    {/*    {this.renderBarChart()}*/}
+                    {/*</Grid>*/}
+                    {/*<Grid item={true} xs={12} md={6}>*/}
+                    {/*    {this.renderRadialBarChart()}*/}
+                    {/*</Grid>*/}
                     <Grid item={true} xs={12}>
                         {this.renderUsers()}
                     </Grid>
