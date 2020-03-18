@@ -16,6 +16,8 @@ services:
     restart: always
     depends_on:
       - app-server
+    volumes:
+      - ./certs:/etc/certs
     networks:
       - app-internal
 
