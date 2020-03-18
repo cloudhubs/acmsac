@@ -48,10 +48,10 @@ class HomePage extends React.Component<IDashboardProps, IPageState> {
         console.log(users);
 
         fetch(process.env.REACT_APP_API_BASE_URL + "/hello")
-            // .then(res => res.json())
             .then(
                 (result) => {
-                    console.log(result)
+                    console.log(result);
+                    console.log(result.json());
                 },
             );
 
