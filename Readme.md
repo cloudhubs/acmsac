@@ -13,4 +13,13 @@
 - Build images locally: `$ docker-compose build`
 - Push images: `$ docker-compose push`
 - Copy `docker-compose.yml` to production machine
-- Run in server: `$ docker-compose up --no-build`
+- Run in server: `$ docker-compose up --no-build --detach`
+
+### Configure `firewalld`:
+
+```
+$ sudo docker network inspect {app-internal-network} # note the subnet address
+$ sudo firewall-cmd --zone=public --add-masquerade --permanent
+$ sudo firewall-cmd --permanent --zone=public --change-interface=docker0
+$ sudo firewall-cmd --permanent --zone=public --add-rich-rule='rule family=ipv4 source address=172.18.0.0/16 accept'
+```
