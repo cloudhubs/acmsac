@@ -10,7 +10,7 @@ services:
       context: app-client # build image from `app-client` directory
       dockerfile: Dockerfile
       args:
-        REACT_APP_API_BASE_URL: http://acmsac.ecs.baylor.edu/api
+        REACT_APP_API_BASE_URL: /api
     ports:
       - "80:80" # only open port 80 to outside
     restart: always
