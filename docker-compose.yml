@@ -18,8 +18,7 @@ services:
     depends_on:
       - app-server
     volumes:
-      - /etc/ssl/certs:/etc/ssl/certs
-      - /etc/ssl/keys:/etc/ssl/keys
+      - ./ssl:/etc/ssl
     networks:
       - app-internal
 
