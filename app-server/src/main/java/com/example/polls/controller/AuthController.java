@@ -4,16 +4,14 @@ import com.example.polls.exception.AppException;
 import com.example.polls.model.Role;
 import com.example.polls.model.RoleName;
 import com.example.polls.model.User;
-import com.example.polls.payload.ApiResponse;
-import com.example.polls.payload.JwtAuthenticationResponse;
-import com.example.polls.payload.LoginRequest;
-import com.example.polls.payload.SignUpRequest;
+import com.example.polls.payload.*;
 import com.example.polls.repository.RoleRepository;
 import com.example.polls.repository.UserRepository;
 import com.example.polls.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,6 +26,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.Collections;
+import java.util.Optional;
 
 /**
  * Created by rajeevkumarsingh on 02/08/17.
@@ -97,5 +96,32 @@ public class AuthController {
                 .buildAndExpand(result.getUsername()).toUri();
 
         return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
+    }
+
+    @PostMapping("/changePassword")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
+
+        if(!userRepository.existsByEmail(changePasswordRequest.getEmail())) {
+            return new ResponseEntity(new ApiResponse(false, "Email Address doesn't exist in whitelist!"), HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<User> userOpt = userRepository.findByEmail(changePasswordRequest.getEmail());
+
+        if(userOpt.isPresent()){
+            User user = userOpt.get();
+
+            user.setPassword(passwordEncoder.encode(changePasswordRequest.getPassword()));
+
+            User result = userRepository.save(user);
+
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentContextPath().path("/users/{username}")
+                    .buildAndExpand(result.getUsername()).toUri();
+
+            return ResponseEntity.created(location).body(new ApiResponse(true, "User password changed successfully"));
+        }
+
+        return new ResponseEntity(new ApiResponse(false, "User doesn't exist!"), HttpStatus.BAD_REQUEST);
     }
 }

@@ -1,9 +1,11 @@
 package com.example.polls.controller;
 
 import com.example.polls.exception.ResourceNotFoundException;
+import com.example.polls.model.Role;
 import com.example.polls.model.User;
 import com.example.polls.payload.*;
 import com.example.polls.repository.PollRepository;
+import com.example.polls.repository.RoleRepository;
 import com.example.polls.repository.UserRepository;
 import com.example.polls.repository.VoteRepository;
 import com.example.polls.security.UserPrincipal;
@@ -15,6 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -30,9 +34,17 @@ public class UserController {
     private VoteRepository voteRepository;
 
     @Autowired
+    RoleRepository roleRepository;
+
+    @Autowired
     private PollService pollService;
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
+    @GetMapping("/hello")
+    public List<Role> getRoles() {
+        return roleRepository.findAll();
+    }
 
     @GetMapping("/user/me")
     @PreAuthorize("hasRole('USER')")

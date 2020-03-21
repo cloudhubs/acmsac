@@ -35,5 +35,6 @@ COPY nginx.conf /etc/nginx/nginx.conf
 # Expose port 3000 to the Docker host, so we can access it 
 # from the outside.
 EXPOSE 80
+EXPOSE 443
 
 ENTRYPOINT ["nginx","-g","daemon off;"]
