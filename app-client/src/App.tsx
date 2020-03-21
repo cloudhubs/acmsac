@@ -1,31 +1,55 @@
-import * as React from 'react';
+import React, {useEffect} from 'react';
+// import { GlobalStateProvider } from './state';
+import { BrowserRouter, Route } from "react-router-dom";
 import './App.css';
-import AppNavBar from './navigation/App.Bar';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { store } from './store/Store';
-import blue from '@material-ui/core/colors/blue';
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core';
-import { pink } from '@material-ui/core/colors';
+import Index from './components/Index';
+import Login from './components/Login';
+import Signup from './components/Signup';
+import MainResponsiveDrawer from "./ui-elements/MainResponsiveDrawer";
+import { withRoot } from "./withRoot";
+import SubResponsiveDrawer from "./ui-elements/SubResponsiveDrawer";
+import {useGlobalState} from "./state";
+import Detail from "./components/Detail";
 
-const theme = createMuiTheme({
-  palette: {
-    primary: blue,
-    secondary: pink
-  }
-})
-class App extends React.Component {
-  public render() {
+const App = () => {
+
+    const [rows, uRows] = useGlobalState('rows');
+
+    const onAnalyze = async () => {
+        const response = await fetch('https://5e7152a1667af70016317936.mockapi.io/acmsac/papers', {
+            method: 'get',
+            headers : {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+        if (response != null){
+            const body = await response.json();
+            console.log(body);
+            uRows(body);
+            return body;
+        }
+    };
+
+    useEffect(() => {
+        onAnalyze();
+    }, []);
+
+
     return (
-      <Provider store={store}>
-        <Router>
-          <MuiThemeProvider theme={theme}>
-            <AppNavBar />
-          </MuiThemeProvider>
-        </Router>
-      </Provider>
+        <div>
+            <BrowserRouter basename="/" >
+                <Route exact path="/" component={Index}/>
+                <Route path="/login" component={Login}/>
+                <Route path="/register" component={Signup}/>
+                <Route path="/app" component={MainResponsiveDrawer}/>
+                <Route path="/app/:id" children={<Detail />} />
+            </BrowserRouter>
+        </div>
     );
-  }
+
 }
 
-export default App;
+export default withRoot(App);
+
+// export default App;
