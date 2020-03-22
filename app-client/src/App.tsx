@@ -5,15 +5,14 @@ import './App.css';
 import Index from './components/Index';
 import Login from './components/Login';
 import Signup from './components/Signup';
-import MainResponsiveDrawer from "./ui-elements/MainResponsiveDrawer";
+import AppDrawer from "./components/app/AppDrawer";
 import { withRoot } from "./withRoot";
-import SubResponsiveDrawer from "./ui-elements/SubResponsiveDrawer";
 import {useGlobalState} from "./state";
 import Detail from "./components/Detail";
 
 const App = () => {
 
-    const [rows, uRows] = useGlobalState('rows');
+    const [rows, uRows] = useGlobalState('academicPapers');
 
     const onAnalyze = async () => {
         const response = await fetch('https://5e7152a1667af70016317936.mockapi.io/acmsac/papers', {
@@ -42,7 +41,7 @@ const App = () => {
                 <Route exact path="/" component={Index}/>
                 <Route path="/login" component={Login}/>
                 <Route path="/register" component={Signup}/>
-                <Route path="/app" component={MainResponsiveDrawer}/>
+                <Route path="/app" component={AppDrawer}/>
                 <Route path="/app/:id" children={<Detail />} />
             </BrowserRouter>
         </div>

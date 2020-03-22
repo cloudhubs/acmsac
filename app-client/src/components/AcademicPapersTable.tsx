@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -14,8 +14,7 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import {useGlobalState} from "../state";
 import {Paper} from "@material-ui/core";
-import {AcademicArticle} from "../data/AcademicArticle";
-import {red, yellow} from "@material-ui/core/colors";
+import {AcademicArticle} from "../model/AcademicArticle";
 import { Redirect } from "react-router-dom";
 
 const useStyles1 = makeStyles((theme: Theme) =>
@@ -98,8 +97,8 @@ function createData(name: string, calories: number, fat: number) {
     return { name, calories, fat };
 }
 
-export default function CustomPaginationActionsTable() {
-    const [rows, uRows] = useGlobalState('rows');
+export default function AcademicPapersTable() {
+    const [rows, uRows] = useGlobalState('academicPapers');
     const classes = useStyles2();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(15);
