@@ -12,9 +12,16 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import {createStyles, makeStyles, Theme, useTheme} from '@material-ui/core/styles';
-import AcademicPapersTable from "../AcademicPapersTable";
+import AcademicPapersTable from "./AcademicPapersTable";
 import tracks from "../../data/Tracks";
-import ApplicationBar from "./ApplicationBar";
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link,
+    useParams
+} from "react-router-dom";
+import AppPaperDetail from "../appDetail/AppPaperDetail";
 
 const drawerWidth = 240;
 
@@ -77,96 +84,27 @@ export default function AppDrawer(props: ResponsiveDrawerProps) {
         setMobileOpen(!mobileOpen);
     };
 
-    // const drawer = (
-    //     <div>
-    //         <div className={classes.toolbar} />
-    //          <List>
-    //             {tracks.getTracks().map((text, index) => (
-    //                 <>
-    //                     <ListItem button>
-    //                         <ListItemText primary={text.track} />
-    //                     </ListItem>
-    //                     <Divider />
-    //                 </>
-    //
-    //             ))}
-    //         </List>
-    //         <Divider />
-    //     </div>
-    // );
-    //
-    // return (
-    //     <div className={classes.root}>
-    //         <CssBaseline />
-    //         <AppBar position="fixed" className={classes.appBar}>
-    //             <Toolbar>
-    //                 <IconButton
-    //                     color="inherit"
-    //                     aria-label="open drawer"
-    //                     edge="start"
-    //                     onClick={handleDrawerToggle}
-    //                     className={classes.menuButton}>
-    //                     <MenuIcon/>
-    //                 </IconButton>
-    //                 <Typography variant="h6" noWrap>
-    //                     ACM SAC 2020
-    //                 </Typography>
-    //             </Toolbar>
-    //         </AppBar>
-    //         <ApplicationBar/>
-    //             <nav className={classes.drawer} aria-label="mailbox folders">
-    //                 {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-    //                 <Hidden smUp implementation="css">
-    //                     <Drawer
-    //                         container={container}
-    //                         variant="temporary"
-    //                         anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-    //                         open={mobileOpen}
-    //                         onClose={handleDrawerToggle}
-    //                         classes={{
-    //                             paper: classes.drawerPaper,
-    //                         }}
-    //                         ModalProps={{
-    //                             keepMounted: true, // Better open performance on mobile.
-    //                         }}>
-    //                         {drawer}
-    //                     </Drawer>
-    //                 </Hidden>
-    //                 <Hidden xsDown implementation="css">
-    //                     <Drawer
-    //                         classes={{
-    //                             paper: classes.drawerPaper,
-    //                         }}
-    //                         variant="permanent"
-    //                         open>
-    //                         {drawer}
-    //                     </Drawer>
-    //                 </Hidden>
-    //             </nav>
-    //
-    //             <main className={classes.content}>
-    //                 <div className={classes.toolbar} />
-    //                 <AcademicPapersTable />
-    //             </main>
-    //         </div>
-    // );
+    let { id } = useParams();
 
     const drawer = (
-        <div>
+        <>
             <div className={classes.toolbar} />
             <Divider />
             <List>
                 {tracks.getTracks().map((text, index) => (
-                    <ListItem button>
-                        <ListItemText primary={text.track} />
+                    <Link to={"/app/"+ text.code} style={{ textDecoration: 'none' }}>
+                            <ListItem button>
+                            <ListItemText primary={text.track} />
                     </ListItem>
+                    </Link>
                 ))}
             </List>
             <Divider />
-        </div>
+        </>
     );
 
     return (
+    <Router>
         <div className={classes.root}>
             <CssBaseline />
             <AppBar position="fixed" className={classes.appBar}>
@@ -217,8 +155,14 @@ export default function AppDrawer(props: ResponsiveDrawerProps) {
 
             <main className={classes.content}>
                 <div className={classes.toolbar} />
-                <AcademicPapersTable />
+                <Switch>
+                    <Route path="/:app/:track" children={<AcademicPapersTable />} />
+                    <Route path="/:app/:track/:paper">
+                        <AppPaperDetail />
+                    </Route>
+                </Switch>
             </main>
         </div>
+    </Router>
     );
 }

@@ -6,10 +6,10 @@ import Grid from '@material-ui/core/Grid';
 import StarIcon from '@material-ui/icons/StarBorder';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
+import { HashRouter as Router,BrowserRouter,  Redirect, Route, Link, Switch, useHistory, useLocation } from 'react-router-dom'
 
 function Copyright() {
   return (
@@ -84,12 +84,15 @@ export default function Index() {
             ACM SAC 
           </Typography>
           <nav>
-            <Link variant="button" color="textPrimary" href="/register" className={classes.link}>
-              Register
-            </Link>
+            {/*<Link variant="button" color="textPrimary" to="/login" className={classes.link}>*/}
+            {/*  Register*/}
+            {/*</Link>*/}
           </nav>
-          <Button href="/login" color="primary" variant="outlined" className={classes.link}>
-            Login
+          <Button color="primary" variant="outlined" className={classes.link}>
+            <Link to="/register">Register</Link>
+          </Button>
+          <Button color="primary" variant="outlined" className={classes.link}>
+            <Link to="/login">Login</Link>
           </Button>
         </Toolbar>
       </AppBar>

@@ -12,10 +12,19 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
-import {useGlobalState} from "../state";
+import {useGlobalState} from "../../state";
 import {Paper} from "@material-ui/core";
-import {AcademicArticle} from "../model/AcademicArticle";
-import { Redirect } from "react-router-dom";
+import {AcademicArticle} from "../../model/AcademicArticle";
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link,
+    Redirect,
+    useHistory,
+    useParams
+} from "react-router-dom";
+import AppPaperDetail from "../appDetail/AppPaperDetail";
 
 const useStyles1 = makeStyles((theme: Theme) =>
     createStyles({
@@ -37,7 +46,7 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
     const classes = useStyles1();
     const theme = useTheme();
     const { count, page, rowsPerPage, onChangePage } = props;
-
+    let redirect = false;
     const handleFirstPageButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         onChangePage(event, 0);
     };
@@ -93,12 +102,12 @@ const useStyles2 = makeStyles({
     }
 });
 
-function createData(name: string, calories: number, fat: number) {
-    return { name, calories, fat };
-}
+
 
 export default function AcademicPapersTable() {
+    let { track } = useParams();
     const [rows, uRows] = useGlobalState('academicPapers');
+    // ToDo: filter rows by ID
     const classes = useStyles2();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(15);
@@ -112,18 +121,21 @@ export default function AcademicPapersTable() {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
-    const handleClick = (event, name) => {
-        // console.log(name);
-        // let history = useHistory();
-        // history.push("/home");
-        redirect = true;
-        console.log(redirect);
-    }
-    let redirect = false;
-    return (
-        <>
-        {(redirect)  && <Redirect to="/login" />}
 
+    const history = useHistory();
+
+    function handleClick(event, key) {
+        history.push("/detail/" + track + "/" + key);
+
+        // history.push("/detail");
+    }
+
+    let redirect = true;
+    console.log(redirect);
+
+    return (
+            <Router>
+        Track: {track}
         <TableContainer component={Paper}>
 
             <Table className={classes.table} aria-label="custom pagination table">
@@ -179,6 +191,12 @@ export default function AcademicPapersTable() {
                 </TableFooter>
             </Table>
         </TableContainer>
-            </>
+            {/*<Switch>*/}
+            {/*    /!*<Route path="/detail">*!/*/}
+            {/*    <Route path="/detail/:track/:paper">*/}
+            {/*        <AppPaperDetail />*/}
+            {/*    </Route>*/}
+            {/*</Switch>*/}
+        </Router>
     );
 }

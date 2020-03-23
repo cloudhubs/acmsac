@@ -1,14 +1,36 @@
-import React, {useEffect} from 'react';
-// import { GlobalStateProvider } from './state';
-import { BrowserRouter, Route } from "react-router-dom";
+import {useEffect} from 'react';
+import * as React from 'react'
+import { HashRouter as Router,BrowserRouter,  Redirect, Route, Link, Switch, useHistory, useLocation } from 'react-router-dom'
 import './App.css';
-import Index from './components/Index';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import AppDrawer from "./components/app/AppDrawer";
 import { withRoot } from "./withRoot";
 import {useGlobalState} from "./state";
-import Detail from "./components/Detail";
+import AppPaperDetail from "./components/appDetail/AppPaperDetail";
+import FakeAuth from './auth/FakeAuth';
+import {Table} from "@material-ui/core";
+import Index from "./components/Index";
+
+function PrivateRoute({ children, ...rest }) {
+    return (
+        <Route
+            {...rest}
+            render={({ location }) =>
+                FakeAuth.isAuthenticated ? (
+                    children
+                ) : (
+                    <Redirect
+                        to={{
+                            pathname: "/login",
+                            state: { from: location }
+                        }}
+                    />
+                )
+            }
+        />
+    );
+}
 
 const App = () => {
 
@@ -36,15 +58,25 @@ const App = () => {
 
 
     return (
-        <div>
-            <BrowserRouter basename="/" >
-                <Route exact path="/" component={Index}/>
-                <Route path="/login" component={Login}/>
-                <Route path="/register" component={Signup}/>
-                <Route path="/app" component={AppDrawer}/>
-                <Route path="/app/:id" children={<Detail />} />
-            </BrowserRouter>
-        </div>
+        <Router>
+            <div>
+
+                <Switch>
+                    <Route exact path="/" component={Index} />
+                    <Route exact path="/register" component={Signup} />
+                    <Route exact path="/login" component={Login} />
+                    <PrivateRoute exact path="/app">
+                        <AppDrawer/>
+                    </PrivateRoute>
+                    <PrivateRoute exact path="/detail/:code">
+                        <AppPaperDetail/>
+                    </PrivateRoute>
+                    <Route path="*">
+                        <Redirect path="/app"/>
+                    </Route>
+                </Switch>
+            </div>
+        </Router>
     );
 
 }
