@@ -7,7 +7,6 @@ import com.example.polls.repository.PresentationRepository;
 import com.example.polls.repository.RoleRepository;
 import com.example.polls.repository.TrackRepository;
 import com.example.polls.repository.UserRepository;
-import com.example.polls.security.PasswordGenerator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -19,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Optional;
@@ -203,18 +201,13 @@ public class ImportService {
    */
   private void updateTrackFromImportRow(XSSFRow row, User chair) {
     String trackCode = row.getCell(3, Row.CREATE_NULL_AS_BLANK).toString().trim();
-    boolean isCoChair = row.getCell(4, Row.CREATE_NULL_AS_BLANK).toString().contains("Co-chair");
 
-    Track track = trackRepository.findByCode(trackCode);
+    Track track = trackRepository.findByCodeIgnoreCase(trackCode);
     track.setTrackUrl(row.getCell(5, Row.CREATE_NULL_AS_BLANK).toString());
     track.setVideoEmbed(row.getCell(10, Row.CREATE_NULL_AS_BLANK).toString());
     track.setMessage(row.getCell(11, Row.CREATE_NULL_AS_BLANK).toString());
 
-    if (isCoChair) {
-      track.getCoChairs().add(chair);
-    } else {
-      track.setChair(chair);
-    }
+    track.getChairs().add(chair);
 
     try {
       trackRepository.save(track);
@@ -245,9 +238,9 @@ public class ImportService {
               "", "", "");
     }
 
-    Track track = trackRepository.findByCode(trackCode);
+    Track track = trackRepository.findByCodeIgnoreCase(trackCode);
     try {
-      track.getCoChairs().add(user);
+      track.getChairs().add(user);
       trackRepository.save(track);
     } catch (Exception e) {
       throw new ImportException("Could not update track!", e);

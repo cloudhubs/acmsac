@@ -26,11 +26,8 @@ public class Track {
   @Lob
   private String message;
 
-  @ManyToOne
-  private User chair;
-
-  @ManyToMany
-  private List<User> coChairs = new ArrayList();
+  @ManyToMany(fetch = FetchType.EAGER)
+  private List<User> chairs = new ArrayList();
 
   public Track() {
   }
@@ -83,19 +80,11 @@ public class Track {
     this.message = message;
   }
 
-  public User getChair() {
-    return chair;
+  public List<User> getChairs() {
+    return chairs;
   }
 
-  public void setChair(User chair) {
-    this.chair = chair;
-  }
-
-  public List<User> getCoChairs() {
-    return coChairs;
-  }
-
-  public void setCoChairs(List<User> coChairs) {
-    this.coChairs = coChairs;
+  public void setChairs(List<User> coChairs) {
+    this.chairs = coChairs;
   }
 }

@@ -117,37 +117,4 @@ public class UserController {
         importService.importUsers();
         return ResponseEntity.ok("Users created!");
     }
-
-    @GetMapping("/users/list")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(userRepository.findAll());
-    }
-
-//    /**
-//     * Takes the excel file of the Google Form results and creates presentations and users for the presenters
-//     * @param file The excel file
-//     * @return A string
-//     * @throws IOException
-//     */
-//    @PostMapping("/users/import")
-//    public String importSurveyPresentations(@RequestParam("file") MultipartFile file) throws IOException {
-//        StringBuilder sb = new StringBuilder();
-//        sb.append("Importing presentations and presenters:\n");
-//        XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
-//        XSSFSheet worksheet = workbook.getSheetAt(0);
-//        for(int i=1; i<worksheet.getPhysicalNumberOfRows(); i++) {
-//            XSSFRow row = worksheet.getRow(i);
-//
-//            // process user
-//            User presenter = importService.createOrRetrievePresenterFromImportRow(row);
-//
-//            // create presentation
-//            Presentation presentation = importService.createPresentationFromImportRow(row, presenter);
-//
-//            sb.append("Presentation ").append(presentation.getTitle()).append(" assigned to ").append(presenter.getName());
-//        }
-//
-//        return sb.toString();
-//    }
 }
