@@ -58,7 +58,7 @@ public class PaperService {
         Paper paper = getPaperById(paperId);
         User user = getUserById(userId);
 
-        if (comment == null || comment.getContent() == null || comment.getContent().isBlank()) {
+        if (comment == null || comment.getContent() == null || comment.getContent().trim().isEmpty()) {
             throw new Exception("Blank comment");
         }
 
@@ -74,7 +74,7 @@ public class PaperService {
         Comment comment = getCommentById(commentId);
         User user = getUserById(userId);
 
-        if (reply == null || reply.getContent() == null || reply.getContent().isBlank()) {
+        if (reply == null || reply.getContent() == null || reply.getContent().trim().isEmpty()) {
             throw new Exception("Blank reply");
         }
 
