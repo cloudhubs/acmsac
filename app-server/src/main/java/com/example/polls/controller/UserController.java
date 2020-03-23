@@ -7,6 +7,7 @@ import com.example.polls.model.User;
 import com.example.polls.payload.*;
 import com.example.polls.repository.*;
 import com.example.polls.security.UserPrincipal;
+import com.example.polls.service.EmailService;
 import com.example.polls.service.ImportService;
 import com.example.polls.service.PollService;
 import com.example.polls.security.CurrentUser;
@@ -55,10 +56,20 @@ public class UserController {
     @Autowired
     private ImportService importService;
 
+    @Autowired
+    private EmailService emailService;
+
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
+    // TODO: remove this api
     @GetMapping("/hello")
     public List<Role> getRoles() {
+        emailService.sendEmail(
+                "noreply@acmsac.ecs.baylor.edu",
+                "dipta_das1@baylor.edu",
+                "ACM SAC Test",
+                "hello world"
+        );
         return roleRepository.findAll();
     }
 
