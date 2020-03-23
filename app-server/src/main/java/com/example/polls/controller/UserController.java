@@ -1,22 +1,29 @@
 package com.example.polls.controller;
 
 import com.example.polls.exception.ResourceNotFoundException;
+import com.example.polls.model.Presentation;
 import com.example.polls.model.Role;
 import com.example.polls.model.User;
 import com.example.polls.payload.*;
-import com.example.polls.repository.PollRepository;
-import com.example.polls.repository.RoleRepository;
-import com.example.polls.repository.UserRepository;
-import com.example.polls.repository.VoteRepository;
+import com.example.polls.repository.*;
 import com.example.polls.security.UserPrincipal;
+import com.example.polls.service.ImportService;
 import com.example.polls.service.PollService;
 import com.example.polls.security.CurrentUser;
 import com.example.polls.util.AppConstants;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 import java.util.List;
 
@@ -34,10 +41,19 @@ public class UserController {
     private VoteRepository voteRepository;
 
     @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @Autowired
     RoleRepository roleRepository;
 
     @Autowired
+    PresentationRepository presentationRepository;
+
+    @Autowired
     private PollService pollService;
+
+    @Autowired
+    private ImportService importService;
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -95,4 +111,10 @@ public class UserController {
         return pollService.getPollsVotedBy(username, currentUser, page, size);
     }
 
+    @PostMapping("/users/import")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> importUsers() throws IOException {
+        importService.importUsers();
+        return ResponseEntity.ok("Users created!");
+    }
 }
