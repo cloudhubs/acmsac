@@ -30,6 +30,7 @@ import { actions as MaterialActionCreators } from '../data/material';
 import { getMaterialChartItems, getMailitems } from '../selectors';
 import AppDrawer from './App.Drawer';
 import NotificationIcon from '@material-ui/icons/Notifications';
+import AdminChangePasswordPanel from "../pages/admin/ChangePasswordPanel";
 //#endregion
 
 interface IAppProps extends IApplicationProps {
@@ -276,6 +277,7 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
           <Route path='/' exact={true} component={Dashboard} />
           <Route path='/dashboard' component={Dashboard} />
           <Route path='/mail' component={MailBoard} />
+          <Route path='/admin' component={AdminChangePasswordPanel} />
           <Route path='/account' render={this.renderAccount} />
           {this.renderAlert()}
           {this.renderSpinner()}
