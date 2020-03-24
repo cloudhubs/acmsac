@@ -13,9 +13,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import {useGlobalState} from "../state";
-import FakeAuth from '../auth/FakeAuth';
 import { useHistory } from 'react-router-dom';
-import Alert from '@material-ui/lab/Alert';
 import { ServerError } from '../model/ServerError';
 
 const Login = () => {
@@ -44,6 +42,8 @@ const Login = () => {
     const [serverError, uServerError] = useGlobalState('serverError');
     const [signInUser, uSignInUser] = useGlobalState('signInUser');
     const [serverToken, uServerToken] = useGlobalState('serverToken');
+    const [auth, uAuth] = useGlobalState('authenticated');
+
     let history = useHistory();
 
     const onSubmit = async (event: React.MouseEvent<HTMLElement>) => {
@@ -62,7 +62,8 @@ const Login = () => {
             if (!body.error){
               console.log({accessToken: body.accessToken, tokenType: body.tokenType});
               uServerToken({accessToken: body.accessToken, tokenType: body.tokenType});
-              FakeAuth.authenticate(() => history.push("/app"));
+              history.push("/app");
+              uAuth(true);
             } else {
               console.log(body.message);
             }

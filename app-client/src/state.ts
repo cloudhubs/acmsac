@@ -14,7 +14,8 @@ export let { useGlobalState } = createGlobalState({
         signUpUser: signUpUser,
         signInUser: signInUser,
         serverError: serverError,
-        serverToken: serverToken
+        serverToken: serverToken,
+        authenticated: false
     }
 );
 

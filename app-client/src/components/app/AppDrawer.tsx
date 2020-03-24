@@ -14,12 +14,15 @@ import Typography from '@material-ui/core/Typography';
 import {createStyles, makeStyles, Theme, useTheme} from '@material-ui/core/styles';
 import AcademicPapersTable from "./AcademicPapersTable";
 import tracks from "../../data/Tracks";
+import {useGlobalState} from "../../state";
+
 import {
     BrowserRouter as Router,
     Switch,
     Route,
     Link,
-    useParams
+    useParams,
+    useHistory
 } from "react-router-dom";
 import AppPaperDetail from "../appDetail/AppPaperDetail";
 
@@ -79,12 +82,18 @@ export default function AppDrawer(props: ResponsiveDrawerProps) {
     const classes = useStyles();
     const theme = useTheme();
     const [mobileOpen, setMobileOpen] = React.useState(false);
-
+    // const [auth] = useGlobalState('authenticated');
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
 
     let { id } = useParams();
+    let history = useHistory();
+    
+    const onClick = async (event: React.MouseEvent<HTMLElement>, code: string) => {
+        event.preventDefault();
+        history.push("/app/" + code);
+    }
 
     const drawer = (
         <>
@@ -92,11 +101,13 @@ export default function AppDrawer(props: ResponsiveDrawerProps) {
             <Divider />
             <List>
                 {tracks.getTracks().map((text, index) => (
-                    <Link to={"/app/"+ text.code} style={{ textDecoration: 'none' }}>
-                            <ListItem button>
+                    // <Link to={"/app/"+ text.code} style={{ textDecoration: 'none' }}>
+                            <ListItem button onClick={(event: React.MouseEvent<HTMLElement>) => {
+                                onClick(event, text.code)
+                            }}>
                             <ListItemText primary={text.track} />
                     </ListItem>
-                    </Link>
+                    // </Link>
                 ))}
             </List>
             <Divider />

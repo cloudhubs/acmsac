@@ -11,7 +11,6 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import {useGlobalState} from "../state";
-import FakeAuth from '../auth/FakeAuth';
 import { useHistory } from 'react-router-dom';
 import Alert from '@material-ui/lab/Alert';
 import { ServerError } from '../model/ServerError';
@@ -21,6 +20,7 @@ const Signup = () => {
 const classes = useStyles();
 const [serverResponse, uServerResp] = useGlobalState('serverError');
 const [signUpUser, uSignUpUser] = useGlobalState('signUpUser');
+const [auth, uAuth] = useGlobalState('authenticated');
 let history = useHistory();
 
 const onSubmit = async (event: React.MouseEvent<HTMLElement>) => {
@@ -39,7 +39,8 @@ const onSubmit = async (event: React.MouseEvent<HTMLElement>) => {
         console.log(body);
         if (body.success){
           console.log(body.message);
-          FakeAuth.authenticate(() => history.push("/app"));
+          history.push("/app");
+          uAuth(true);
         } else {
           console.log(body.message);
         }
