@@ -1,19 +1,16 @@
 package com.example.polls.controller;
 
 import com.example.polls.exception.ResourceNotFoundException;
-import com.example.polls.model.Presentation;
 import com.example.polls.model.Role;
 import com.example.polls.model.User;
 import com.example.polls.payload.*;
 import com.example.polls.repository.*;
+import com.example.polls.security.CurrentUser;
 import com.example.polls.security.UserPrincipal;
+import com.example.polls.service.EmailService;
 import com.example.polls.service.ImportService;
 import com.example.polls.service.PollService;
-import com.example.polls.security.CurrentUser;
 import com.example.polls.util.AppConstants;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-
 import java.util.List;
 
 @RestController
@@ -55,10 +50,17 @@ public class UserController {
     @Autowired
     private ImportService importService;
 
+    @Autowired
+    private EmailService emailService;
+
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
+    // TODO: remove this api
     @GetMapping("/hello")
-    public List<Role> getRoles() {
+    public List<Role> getRoles(@RequestParam String to) {
+        if (to != null && !to.trim().isEmpty()) {
+            emailService.sendEmail("noreply@acmsac.ecs.baylor.edu", to, "ACM SAC Test", "ACM SAC 2020");
+        }
         return roleRepository.findAll();
     }
 
