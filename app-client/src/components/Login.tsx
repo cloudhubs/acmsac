@@ -11,9 +11,12 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-// import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-
+import {useGlobalState} from "../state";
+import FakeAuth from '../auth/FakeAuth';
+import { useHistory } from 'react-router-dom';
+import Alert from '@material-ui/lab/Alert';
+import { ServerError } from '../model/ServerError';
 
 const Login = () => {
     const useStyles = makeStyles((theme: Theme) =>
@@ -38,6 +41,38 @@ const Login = () => {
         }),
     );
     const classes = useStyles();
+    const [serverError, uServerError] = useGlobalState('serverError');
+    const [signInUser, uSignInUser] = useGlobalState('signInUser');
+    const [serverToken, uServerToken] = useGlobalState('serverToken');
+    let history = useHistory();
+
+    const onSubmit = async (event: React.MouseEvent<HTMLElement>) => {
+      event.preventDefault();
+      uServerError(new ServerError(true));
+      const response = await fetch(process.env.REACT_APP_API_BASE_URL +  '/auth/signin', {
+        method: 'POST',
+        body: JSON.stringify(signInUser),
+        headers : {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+        });
+        if (response != null){
+            const body = await response.json();
+            if (!body.error){
+              console.log({accessToken: body.accessToken, tokenType: body.tokenType});
+              uServerToken({accessToken: body.accessToken, tokenType: body.tokenType});
+              FakeAuth.authenticate(() => history.push("/app"));
+            } else {
+              console.log(body.message);
+            }
+            let resp: ServerError = new ServerError(false);
+            resp.message = body.message;
+            uServerError(resp);
+        } else {
+          console.log("server error");
+        }
+    }
     
     return (
         <div>
@@ -57,10 +92,15 @@ const Login = () => {
             required
             fullWidth
             id="email"
-            label="Email Address"
+            label="Username or Email Address"
             name="email"
             autoComplete="email"
             autoFocus
+            value={signInUser.usernameOrEmail}
+            onChange={(event) => {
+              const usernameOrEmail = event.target.value;
+              uSignInUser((p) => ({ ...p, usernameOrEmail }));
+            }}
           />
           <TextField
             variant="outlined"
@@ -72,6 +112,11 @@ const Login = () => {
             type="password"
             id="password"
             autoComplete="current-password"
+            value={signInUser.password}
+            onChange={(event) => {
+              const password = event.target.value;
+              uSignInUser((p) => ({ ...p, password }));
+            }}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -83,6 +128,9 @@ const Login = () => {
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={(event: React.MouseEvent<HTMLElement>) => {
+              onSubmit(event)
+             }}
           >
             Sign In
           </Button>

@@ -1,10 +1,8 @@
-import React from 'react';
+import * as React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -12,13 +10,49 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import {useGlobalState} from "../state";
+import FakeAuth from '../auth/FakeAuth';
+import { useHistory } from 'react-router-dom';
+import Alert from '@material-ui/lab/Alert';
+import { ServerError } from '../model/ServerError';
+import { CustomLink } from './shared/CustomLink';
 
 const Signup = () => {
 const classes = useStyles();
+const [serverResponse, uServerResp] = useGlobalState('serverError');
+const [signUpUser, uSignUpUser] = useGlobalState('signUpUser');
+let history = useHistory();
+
+const onSubmit = async (event: React.MouseEvent<HTMLElement>) => {
+  event.preventDefault();
+  uServerResp(new ServerError(true));
+  const response = await fetch(process.env.REACT_APP_API_BASE_URL +  '/auth/signup', {
+    method: 'POST',
+    body: JSON.stringify(signUpUser),
+    headers : {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+    }
+    });
+    if (response != null){
+        const body = await response.json();
+        console.log(body);
+        if (body.success){
+          console.log(body.message);
+          FakeAuth.authenticate(() => history.push("/app"));
+        } else {
+          console.log(body.message);
+        }
+        uServerResp(body);
+    } else {
+      console.log("server error");
+    }
+}
 
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
+      {!serverResponse.success && <Alert severity="error">{serverResponse.message}</Alert>}
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
@@ -28,27 +62,37 @@ const classes = useStyles();
         </Typography>
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
-                autoComplete="fname"
-                name="firstName"
+                autoComplete="name"
+                name="name"
                 variant="outlined"
                 required
                 fullWidth
-                id="firstName"
-                label="First Name"
+                id="name"
+                label="Full Name"
                 autoFocus
+                value={signUpUser.name}
+                onChange={(event) => {
+                  const name = event.target.value;
+                  uSignUpUser((p) => ({ ...p, name }));
+                }}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
+                autoComplete="uname"
+                name="uname"
                 variant="outlined"
                 required
                 fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="lname"
+                id="uname"
+                label="Username"
+                value={signUpUser.username}
+                onChange={(event) => {
+                  const username = event.target.value;
+                  uSignUpUser((p) => ({ ...p, username }));
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -60,6 +104,11 @@ const classes = useStyles();
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                value={signUpUser.email}
+                onChange={(event) => {
+                  const email = event.target.value;
+                  uSignUpUser((p) => ({ ...p, email }));
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -72,6 +121,11 @@ const classes = useStyles();
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                value={signUpUser.password}
+                onChange={(event) => {
+                  const password = event.target.value;
+                  uSignUpUser((p) => ({ ...p, password }));
+                }}
               />
             </Grid>
           </Grid>
@@ -81,14 +135,15 @@ const classes = useStyles();
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={(event: React.MouseEvent<HTMLElement>) => {
+              onSubmit(event)
+             }}
           >
             Sign Up
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link href="#" variant="body2">
-                Already have an account? Sign in
-              </Link>
+              <CustomLink text="Already have an account? Sign in" linkTo="/login"/>
             </Grid>
           </Grid>
         </form>

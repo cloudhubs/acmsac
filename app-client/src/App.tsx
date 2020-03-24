@@ -9,7 +9,6 @@ import { withRoot } from "./withRoot";
 import {useGlobalState} from "./state";
 import AppPaperDetail from "./components/appDetail/AppPaperDetail";
 import FakeAuth from './auth/FakeAuth';
-import {Table} from "@material-ui/core";
 import Index from "./components/Index";
 
 function PrivateRoute({ children, ...rest }) {

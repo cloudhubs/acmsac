@@ -1,25 +1,20 @@
+import { SignInUser } from './model/SignInUser';
+import { ServerError } from './model/ServerError';
+import { SignUpUser } from './model/SignUpUser';
+import { ServerToken } from './model/ServerToken';
 import { createGlobalState } from 'react-hooks-global-state';
 
-let academicPapers = [];
-
-// const getAcademicPapers = async () => {
-//     const response = await fetch('https://5e7152a1667af70016317936.mockapi.io/acmsac/papers', {
-//         method: 'get',
-//         headers : {
-//             'Content-Type': 'application/json',
-//             'Accept': 'application/json'
-//         }
-//     });
-//     if (response != null){
-//         const body = await response.json();
-//         academicPapers = body;
-//     }
-// }
-//
-// getAcademicPapers();
+let signUpUser: SignUpUser = new SignUpUser();
+let serverError: ServerError = new ServerError(true);
+let signInUser: SignInUser = new SignInUser();
+let serverToken: ServerToken = new ServerToken();
 
 export let { useGlobalState } = createGlobalState({
-        academicPapers: academicPapers,
+        academicPapers: [],
+        signUpUser: signUpUser,
+        signInUser: signInUser,
+        serverError: serverError,
+        serverToken: serverToken
     }
 );
 
