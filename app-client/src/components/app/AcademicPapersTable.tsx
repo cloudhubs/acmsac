@@ -93,8 +93,6 @@ const useStyles2 = makeStyles({
     }
 });
 
-
-
 export default function AcademicPapersTable() {
     const [rows, uRows] = useGlobalState('academicPapers');
     const [track] = useGlobalState('track');
@@ -117,8 +115,6 @@ export default function AcademicPapersTable() {
     function handleClick(event: React.MouseEvent<HTMLElement>, key: string) {
         event.preventDefault();
         history.push("/app/" + track + "/" + key);
-        // history.push("/login");
-
     }
 
     let redirect = true;
@@ -126,7 +122,6 @@ export default function AcademicPapersTable() {
 
     return (
         <TableContainer component={Paper}>
-
             <Table className={classes.table} aria-label="custom pagination table">
                 <TableBody>
                     <TableRow>

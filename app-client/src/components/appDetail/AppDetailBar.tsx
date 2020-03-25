@@ -60,7 +60,7 @@ interface ResponsiveDrawerProps {
     container?: Element;
 }
 
-export default function AppDetailDrawer(props: ResponsiveDrawerProps) {
+export default function AppDetailBar(props: ResponsiveDrawerProps) {
     const classes = useStyles();
     const [mobileOpen, setMobileOpen] = React.useState(false);
 

@@ -18,7 +18,8 @@ import { useGlobalState, dispatch } from "../../state";
 import { ServerToken } from '../../model/ServerToken';
 import { AcademicArticle } from '../../model/AcademicArticle';
 import AcademicPapersTable from './AcademicPapersTable';
-
+import { Button } from '@material-ui/core';
+import LogoutButton from '../shared/LogoutButton';
 
 const drawerWidth = 240;
 
@@ -45,6 +46,9 @@ const useStyles = makeStyles((theme: Theme) =>
                 display: 'none',
             },
         },
+        title: {
+            flexGrow: 1,
+          },
         toolbar: theme.mixins.toolbar,
         drawerPaper: {
             width: drawerWidth,
@@ -155,8 +159,12 @@ export default function AppDrawer(props: ResponsiveDrawerProps) {
             
             <Divider />
             <List>
+                <ListItem button onClick={(event: React.MouseEvent<HTMLElement>) => {
+                    onClick(event, "all")
+                }}>
+                <ListItemText primary={"All tracks"} />
+                </ListItem>
                 {tracks.getTracks().map((text, index) => (
-                    // <Link to={"/app/"+ text.code} style={{ textDecoration: 'none' }}>
                             <ListItem button onClick={(event: React.MouseEvent<HTMLElement>) => {
                                 onClick(event, text.code)
                             }}>
@@ -183,9 +191,12 @@ export default function AppDrawer(props: ResponsiveDrawerProps) {
                         className={classes.menuButton}>
                         <MenuIcon/>
                     </IconButton>
-                    <Typography variant="h6" noWrap>
+                    <Typography variant="h6" noWrap className={classes.title}>
                         ACM SAC 2020
                     </Typography>
+
+                    <LogoutButton />
+                            
                 </Toolbar>
             </AppBar>
 

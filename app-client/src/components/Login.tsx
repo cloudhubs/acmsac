@@ -15,6 +15,7 @@ import Container from '@material-ui/core/Container';
 import {useGlobalState, dispatch} from "../state";
 import { useHistory } from 'react-router-dom';
 import { ServerToken } from "../model/ServerToken";
+import ApplicationBar from "./shared/ApplicationBar";
 
 
 const setServerToken = (serverToken: ServerToken) => dispatch({
@@ -85,6 +86,7 @@ const Login = () => {
     
     return (
         <div>
+          <ApplicationBar />
             <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>

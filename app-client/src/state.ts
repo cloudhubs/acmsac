@@ -84,6 +84,11 @@ export const reducer = (state = initialState, action: Action) => {
               ...state,
               academicPapers: action.academicPapers
             }
+            case "logout":
+            return {
+              ...state,
+              authenticated: false
+            }
     //   case "increment":
     //     return {
     //       ...state,

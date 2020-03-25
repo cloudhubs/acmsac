@@ -16,6 +16,7 @@ import AppBar from "@material-ui/core/AppBar";
 import {DetailRow} from "./DetailRow";
 import Avatar from '@material-ui/core/Avatar';
 import {Chat} from '../chat/Chat';
+import ApplicationBar from '../shared/ApplicationBar';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -42,7 +43,7 @@ export default function AppPaperDetail() {
 
     return (
         <>
-            Track: {track}, Paper: {code},
+            <ApplicationBar />
 
             <nav>
                 <Link variant="button" color="textPrimary" href="/register">
@@ -61,13 +62,6 @@ export default function AppPaperDetail() {
                             <h3>{selectedPaper.paperTitle}</h3>
                             <Avatar alt="Remy Sharp" src="https://s3.amazonaws.com/uifaces/faces/twitter/chacky14/128.jpg" />
                             <p>Author: {selectedPaper.author}</p>
-                                {/* { selectedPaper &&
-                                    Object.entries(selectedPaper).map(([key, value]) => (
-                                        <>
-                                            <DetailRow key={key} value={value} />
-                                        </>
-                                    ))
-                                } */}
                             </Paper>
                         </Grid>
 

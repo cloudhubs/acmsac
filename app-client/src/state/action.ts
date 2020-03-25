@@ -6,5 +6,6 @@ export type Action =
 //   | { type: "setFirstName"; firstName: string }
 | { type: "setAcademicPapers", academicPapers: AcademicArticle[] }  
 | { type: "setAuthenticated" }
+| { type: "logout" }
   | { type: "setTrack"; track: string } 
   | { type: "setServerToken"; serverToken: ServerToken };
