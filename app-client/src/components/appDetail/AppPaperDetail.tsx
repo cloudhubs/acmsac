@@ -15,7 +15,7 @@ import Button from "@material-ui/core/Button";
 import AppBar from "@material-ui/core/AppBar";
 import {DetailRow} from "./DetailRow";
 import Avatar from '@material-ui/core/Avatar';
-import {Chat} from '../chat/Chat';
+import Chat from '../chat/Chat';
 import ApplicationBar from '../shared/ApplicationBar';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -26,7 +26,8 @@ const useStyles = makeStyles((theme: Theme) =>
         paper: {
             padding: theme.spacing(1),
             textAlign: "center",
-            color: theme.palette.text.secondary
+            color: theme.palette.text.secondary,
+            minHeight: '100%'
           }
     }),
 );
@@ -64,32 +65,32 @@ export default function AppPaperDetail() {
                             <p>Author: {selectedPaper.author}</p>
                             </Paper>
                         </Grid>
-
-                        <Grid key={2} item xs={12} md={6} xl={4}>
-                            <Paper className={classes.paper} elevation={3}>
-                                {selectedPaper &&
-                                    <div>
-                                        {selectedPaper.paperTitle}
-                                        <div dangerouslySetInnerHTML={{__html: selectedPaper.iFrame}} />
-                                    </div>
-                                }
-                            </Paper>
-                        </Grid>
-
-                        <Grid key={3} item xs={12} md={6} xl={4}>
-                            <Paper className={classes.paper} elevation={3}>
-                                {selectedPaper &&
-                                    <div>
-                                        {selectedPaper.paperTitle}
-                                        <div dangerouslySetInnerHTML={{__html: iframe}} />
-                                    </div>
-                                }
-                            </Paper>
-                        </Grid>
-                        <Grid key={3} item xs={12} md={6} xl={4}>
-                            <Chat />
-                        </Grid>
                     </Grid>
+                </Grid>
+
+                <Grid key={2} item xs={12} md={6} xl={6}>
+                    <Paper className={classes.paper} elevation={3}>
+                        {selectedPaper &&
+                            <div>
+                                {selectedPaper.paperTitle}
+                                <div dangerouslySetInnerHTML={{__html: selectedPaper.iFrame}} />
+                            </div>
+                        }
+                    </Paper>
+                </Grid>
+
+                <Grid key={3} item xs={12} md={6} xl={6}>
+                    <Paper className={classes.paper} elevation={3}>
+                        {selectedPaper &&
+                            <div>
+                                {selectedPaper.paperTitle}
+                                <div dangerouslySetInnerHTML={{__html: iframe}} />
+                            </div>
+                        }
+                    </Paper>
+                </Grid>
+                <Grid key={3} item xs={12} >
+                    <Chat />
                 </Grid>
             </Grid>
         </>
