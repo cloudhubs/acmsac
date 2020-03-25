@@ -15,7 +15,7 @@ import Button from "@material-ui/core/Button";
 import AppBar from "@material-ui/core/AppBar";
 import {DetailRow} from "./DetailRow";
 import Avatar from '@material-ui/core/Avatar';
-import {Chat} from '../chat/Chat';
+import Chat from '../chat/Chat';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -25,7 +25,8 @@ const useStyles = makeStyles((theme: Theme) =>
         paper: {
             padding: theme.spacing(1),
             textAlign: "center",
-            color: theme.palette.text.secondary
+            color: theme.palette.text.secondary,
+            minHeight: '100%'
           }
     }),
 );
@@ -53,49 +54,45 @@ export default function AppPaperDetail() {
                 Login
             </Button>
 
-            <Grid container className={classes.root} spacing={2}>
-                <Grid item xs={12}>
-                    <Grid container justify="center" spacing={spacing}>
-                        <Grid key={1} item xs={12} md={6}>
-                            <Paper className={classes.paper} elevation={3}>
-                            <h3>{selectedPaper.paperTitle}</h3>
-                            <Avatar alt="Remy Sharp" src="https://s3.amazonaws.com/uifaces/faces/twitter/chacky14/128.jpg" />
-                            <p>Author: {selectedPaper.author}</p>
-                                {/* { selectedPaper &&
-                                    Object.entries(selectedPaper).map(([key, value]) => (
-                                        <>
-                                            <DetailRow key={key} value={value} />
-                                        </>
-                                    ))
-                                } */}
-                            </Paper>
-                        </Grid>
+            <Grid container className={classes.root} justify="center" spacing={spacing}>
+                <Grid key={1} item xs={12} md={12}>
+                    <Paper className={classes.paper} elevation={3}>
+                    <h3>{selectedPaper.paperTitle}</h3>
+                    <Avatar alt="Remy Sharp" src="https://s3.amazonaws.com/uifaces/faces/twitter/chacky14/128.jpg" />
+                    <p>Author: {selectedPaper.author}</p>
+                        {/* { selectedPaper &&
+                            Object.entries(selectedPaper).map(([key, value]) => (
+                                <>
+                                    <DetailRow key={key} value={value} />
+                                </>
+                            ))
+                        } */}
+                    </Paper>
+                </Grid>
 
-                        <Grid key={2} item xs={12} md={6} xl={4}>
-                            <Paper className={classes.paper} elevation={3}>
-                                {selectedPaper &&
-                                    <div>
-                                        {selectedPaper.paperTitle}
-                                        <div dangerouslySetInnerHTML={{__html: selectedPaper.iFrame}} />
-                                    </div>
-                                }
-                            </Paper>
-                        </Grid>
+                <Grid key={2} item xs={12} md={6} xl={6}>
+                    <Paper className={classes.paper} elevation={3}>
+                        {selectedPaper &&
+                            <div>
+                                {selectedPaper.paperTitle}
+                                <div dangerouslySetInnerHTML={{__html: selectedPaper.iFrame}} />
+                            </div>
+                        }
+                    </Paper>
+                </Grid>
 
-                        <Grid key={3} item xs={12} md={6} xl={4}>
-                            <Paper className={classes.paper} elevation={3}>
-                                {selectedPaper &&
-                                    <div>
-                                        {selectedPaper.paperTitle}
-                                        <div dangerouslySetInnerHTML={{__html: iframe}} />
-                                    </div>
-                                }
-                            </Paper>
-                        </Grid>
-                        <Grid key={3} item xs={12} md={6} xl={4}>
-                            <Chat />
-                        </Grid>
-                    </Grid>
+                <Grid key={3} item xs={12} md={6} xl={6}>
+                    <Paper className={classes.paper} elevation={3}>
+                        {selectedPaper &&
+                            <div>
+                                {selectedPaper.paperTitle}
+                                <div dangerouslySetInnerHTML={{__html: iframe}} />
+                            </div>
+                        }
+                    </Paper>
+                </Grid>
+                <Grid key={3} item xs={12} >
+                    <Chat />
                 </Grid>
             </Grid>
         </>
