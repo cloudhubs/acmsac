@@ -36,17 +36,9 @@ export default function AppPaperDetail() {
     const [spacing, setSpacing] = React.useState<GridSpacing>(2);
     let { track, code } = useParams();
     let [rows] = useGlobalState('academicPapers');
-    console.log(rows);
-    console.log(track);
-    console.log(code);
     rows = rows.filter((r: AcademicArticle) => r.key === code);
     const selectedPaper: AcademicArticle = rows[0];
-    console.log(selectedPaper);
-    const iframe = '<iframe src="http://svacina.net/clanek.pdf" width="540" height="450"></iframe>';
-
-    function createMarkup() {
-        return {__html: iframe};
-    }
+    const iframe = '<iframe src="' + selectedPaper.url +'" width="540" height="450"></iframe>';
 
     return (
         <>
@@ -61,22 +53,21 @@ export default function AppPaperDetail() {
                 Login
             </Button>
 
-            
-
             <Grid container className={classes.root} spacing={2}>
                 <Grid item xs={12}>
                     <Grid container justify="center" spacing={spacing}>
                         <Grid key={1} item xs={12} md={6}>
                             <Paper className={classes.paper} elevation={3}>
+                            <h3>{selectedPaper.paperTitle}</h3>
                             <Avatar alt="Remy Sharp" src="https://s3.amazonaws.com/uifaces/faces/twitter/chacky14/128.jpg" />
-
-                                { selectedPaper &&
+                            <p>Author: {selectedPaper.author}</p>
+                                {/* { selectedPaper &&
                                     Object.entries(selectedPaper).map(([key, value]) => (
                                         <>
                                             <DetailRow key={key} value={value} />
                                         </>
                                     ))
-                                }
+                                } */}
                             </Paper>
                         </Grid>
 
@@ -87,7 +78,6 @@ export default function AppPaperDetail() {
                                         {selectedPaper.paperTitle}
                                         <div dangerouslySetInnerHTML={{__html: selectedPaper.iFrame}} />
                                     </div>
-
                                 }
                             </Paper>
                         </Grid>

@@ -83,39 +83,6 @@ const Login = () => {
     const [serverToken, uServerToken] = useGlobalState('serverToken');
     const [auth, uAuth] = useGlobalState('authenticated');
     
-
-    // const onSubmit = async (event: React.MouseEvent<HTMLElement>) => {
-    //   event.preventDefault();
-    //   let se = new ServerError();
-    //   se.success = true;
-    //   uServerError(se);
-    //   const response = await fetch(process.env.REACT_APP_API_BASE_URL +  '/auth/signin', {
-    //     method: 'POST',
-    //     body: JSON.stringify(signInUser),
-    //     headers : {
-    //         'Content-Type': 'application/json',
-    //         'Accept': 'application/json'
-    //     }
-    //     });
-    //     if (response != null){
-    //         const body = await response.json();
-    //         if (!body.error){
-    //           console.log({accessToken: body.accessToken, tokenType: body.tokenType});
-    //           uServerToken({accessToken: body.accessToken, tokenType: body.tokenType});
-    //           uAuth(true);
-    //           history.push("/app");
-    //         } else {
-    //           console.log(body.message);
-    //         }
-    //         let resp = new ServerError();
-    //         se.success = true;
-    //         resp.message = body.message;
-    //         uServerError(resp);
-    //     } else {
-    //       console.log("server error");
-    //     }
-    // }
-    
     return (
         <div>
             <Container component="main" maxWidth="xs">
