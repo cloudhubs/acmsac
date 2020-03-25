@@ -85,13 +85,7 @@ export default function AppDetailDrawer(props: ResponsiveDrawerProps) {
                         ACM SAC 2020
                     </Typography>
                 </Toolbar>
-
-
             </AppBar>
-
-            {/*<main className={classes.content}>*/}
-            {/*    <div className={classes.toolbar} />*/}
-            {/*</main>*/}
         </div>
     );
 }

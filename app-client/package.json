@@ -23,12 +23,13 @@
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-graph-vis": "^1.0.5",
-    "react-hooks-global-state": "latest",
+    "hist": "latest",
     "react-input-autosize": "^2.2.2",
     "react-mermaid": "^0.1.3",
     "react-pdf": "^4.1.0",
     "react-router-dom": "latest",
     "react-scripts": "3.3.0",
+    "redux": "4.0.5",
     "typescript": "^3.7.4"
   },
   "scripts": {

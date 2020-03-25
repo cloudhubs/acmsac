@@ -13,6 +13,9 @@ import {useGlobalState} from "../../state";
 import {AcademicArticle} from "../../model/AcademicArticle";
 import Button from "@material-ui/core/Button";
 import AppBar from "@material-ui/core/AppBar";
+import {DetailRow} from "./DetailRow";
+import Avatar from '@material-ui/core/Avatar';
+import {Chat} from '../chat/Chat';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -20,12 +23,10 @@ const useStyles = makeStyles((theme: Theme) =>
             flexGrow: 1,
         },
         paper: {
-            height: 140,
-            width: '100%',
-        },
-        control: {
-            padding: theme.spacing(2),
-        },
+            padding: theme.spacing(1),
+            textAlign: "center",
+            color: theme.palette.text.secondary
+          }
     }),
 );
 
@@ -33,18 +34,15 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function AppPaperDetail() {
     const classes = useStyles();
     const [spacing, setSpacing] = React.useState<GridSpacing>(2);
-    let { track, paper } = useParams();
-    console.log("app paper detail");
+    let { track, code } = useParams();
     let [rows] = useGlobalState('academicPapers');
     console.log(rows);
-    // let academicPapers: AcademicArticle[] = [...rows];
-    rows = rows.filter((r: AcademicArticle) => r.key == paper);
-    console.log(rows);
+    console.log(track);
+    console.log(code);
+    rows = rows.filter((r: AcademicArticle) => r.key === code);
     const selectedPaper: AcademicArticle = rows[0];
     console.log(selectedPaper);
-
-
-    const iframe = '<iframe src="https://www.example.com/show?data..." width="540" height="450"></iframe>';
+    const iframe = '<iframe src="http://svacina.net/clanek.pdf" width="540" height="450"></iframe>';
 
     function createMarkup() {
         return {__html: iframe};
@@ -52,7 +50,7 @@ export default function AppPaperDetail() {
 
     return (
         <>
-            Track: {track}, Paper: {paper},
+            Track: {track}, Paper: {code},
 
             <nav>
                 <Link variant="button" color="textPrimary" href="/register">
@@ -63,22 +61,50 @@ export default function AppPaperDetail() {
                 Login
             </Button>
 
-            {selectedPaper &&
-                <div>
-                    {selectedPaper.paperTitle}
-                    <div dangerouslySetInnerHTML={{__html: selectedPaper.iFrame}} />
-                </div>
-
-            }
+            
 
             <Grid container className={classes.root} spacing={2}>
                 <Grid item xs={12}>
                     <Grid container justify="center" spacing={spacing}>
-                        {[0, 1, 2].map(value => (
-                            <Grid key={value} item>
-                                <Paper className={classes.paper} />
-                            </Grid>
-                        ))}
+                        <Grid key={1} item xs={12} md={6}>
+                            <Paper className={classes.paper} elevation={3}>
+                            <Avatar alt="Remy Sharp" src="https://s3.amazonaws.com/uifaces/faces/twitter/chacky14/128.jpg" />
+
+                                { selectedPaper &&
+                                    Object.entries(selectedPaper).map(([key, value]) => (
+                                        <>
+                                            <DetailRow key={key} value={value} />
+                                        </>
+                                    ))
+                                }
+                            </Paper>
+                        </Grid>
+
+                        <Grid key={2} item xs={12} md={6} xl={4}>
+                            <Paper className={classes.paper} elevation={3}>
+                                {selectedPaper &&
+                                    <div>
+                                        {selectedPaper.paperTitle}
+                                        <div dangerouslySetInnerHTML={{__html: selectedPaper.iFrame}} />
+                                    </div>
+
+                                }
+                            </Paper>
+                        </Grid>
+
+                        <Grid key={3} item xs={12} md={6} xl={4}>
+                            <Paper className={classes.paper} elevation={3}>
+                                {selectedPaper &&
+                                    <div>
+                                        {selectedPaper.paperTitle}
+                                        <div dangerouslySetInnerHTML={{__html: iframe}} />
+                                    </div>
+                                }
+                            </Paper>
+                        </Grid>
+                        <Grid key={3} item xs={12} md={6} xl={4}>
+                            <Chat />
+                        </Grid>
                     </Grid>
                 </Grid>
             </Grid>

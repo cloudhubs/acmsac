@@ -25,7 +25,9 @@ let history = useHistory();
 
 const onSubmit = async (event: React.MouseEvent<HTMLElement>) => {
   event.preventDefault();
-  uServerResp(new ServerError(true));
+  let se = new ServerError();
+  se.success = true;
+  uServerResp(se);
   const response = await fetch(process.env.REACT_APP_API_BASE_URL +  '/auth/signup', {
     method: 'POST',
     body: JSON.stringify(signUpUser),
