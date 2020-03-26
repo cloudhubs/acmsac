@@ -61,7 +61,7 @@ public class ChatController {
     // block a comment
     // needs ADMIN permission
     // same for both presentation comment and track comment
-    @GetMapping("/block/comment/{commentID}")
+    @PostMapping("/block/comment/{commentID}")
     @PreAuthorize("hasRole('ADMIN')")
     public Comment blockComment(@PathVariable long commentID) throws Exception {
         return chatService.blockUnblockComment(commentID, true);
@@ -70,7 +70,7 @@ public class ChatController {
     // block a reply
     // needs ADMIN permission
     // same for replies of both presentation comment and track comment
-    @GetMapping("/block/reply/{replyID}")
+    @PostMapping("/block/reply/{replyID}")
     @PreAuthorize("hasRole('ADMIN')")
     public Reply blockReply(@PathVariable long replyID) throws Exception {
         return chatService.blockUnblockReply(replyID, true);
@@ -78,25 +78,25 @@ public class ChatController {
 
     // block a user from commenting and replying
     // needs ADMIN permission
-    @GetMapping("/block/user/{userID}")
+    @PostMapping("/block/user/{userID}")
     @PreAuthorize("hasRole('ADMIN')")
     public User blockUser(@PathVariable long userID) throws Exception {
         return chatService.blockUnblockUser(userID, true);
     }
 
-    @GetMapping("/unblock/comment/{commentID}")
+    @PostMapping("/unblock/comment/{commentID}")
     @PreAuthorize("hasRole('ADMIN')")
     public Comment unblockComment(@PathVariable long commentID) throws Exception {
         return chatService.blockUnblockComment(commentID, false);
     }
 
-    @GetMapping("/unblock/reply/{replyID}")
+    @PostMapping("/unblock/reply/{replyID}")
     @PreAuthorize("hasRole('ADMIN')")
     public Reply unblockReply(@PathVariable long replyID) throws Exception {
         return chatService.blockUnblockReply(replyID, false);
     }
 
-    @GetMapping("/unblock/user/{userID}")
+    @PostMapping("/unblock/user/{userID}")
     @PreAuthorize("hasRole('ADMIN')")
     public User unblockUser(@PathVariable long userID) throws Exception {
         return chatService.blockUnblockUser(userID, false);
