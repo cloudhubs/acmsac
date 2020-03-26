@@ -281,9 +281,11 @@ public class ImportService {
     Optional<Presentation> presentationOpt = presentationRepository.findByPaperId(paperId);
     if (presentationOpt.isPresent()) {
       Presentation pres = presentationOpt.get();
-      pres.getAuthors().add(user);
-      try {
+      if (pres.getAuthors().stream().filter(a -> a.getId().equals(user.getId())).count() == 0) {
+        pres.getAuthors().add(user);
         presentationRepository.save(pres);
+      }
+      try {
       } catch (Exception e) {
         throw new ImportException("Could not update presentation!", e);
       }
