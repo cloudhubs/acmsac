@@ -23,6 +23,8 @@ $ export REACT_APP_API_BASE_URL=http://localhost:8080/api
 $ npm start
 ```
 
+If there is a change in the data model, stop the docker container running mysql and restart it. Any time this container is stopped, user import has to be done again.
+
 ### Production
 
 - Build images locally: `$ docker-compose build`
