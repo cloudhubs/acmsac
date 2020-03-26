@@ -4,6 +4,7 @@ import com.example.polls.dto.PresentationDto;
 import com.example.polls.exception.ResourceNotFoundException;
 import com.example.polls.model.Presentation;
 import com.example.polls.model.Role;
+import com.example.polls.model.User;
 import com.example.polls.payload.UserIdentityAvailability;
 import com.example.polls.payload.UserSummary;
 import com.example.polls.repository.PresentationRepository;
