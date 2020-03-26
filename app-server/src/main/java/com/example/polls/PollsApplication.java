@@ -104,7 +104,7 @@ public class PollsApplication {
 					admin.setEmail(adminEmail);
 					admin.setName(adminName);
 
-					Role userRole = roleRepository.findByName(RoleName.ROLE_ADMIN)
+					Role adminRole = roleRepository.findByName(RoleName.ROLE_ADMIN)
 									.orElseThrow(() -> new AppException("Admin Role not set."));
 					Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
 									.orElseThrow(() -> new AppException("User Role not set."));
