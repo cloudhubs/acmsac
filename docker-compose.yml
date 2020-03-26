@@ -49,9 +49,7 @@ services:
     restart: always
     environment:
       MYSQL_DATABASE: acmsacdb
-      MYSQL_USER: acmsac
-      MYSQL_PASSWORD: acmsac#cloudhubs@baylor
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root # WARNING - replace this in production
     volumes:
       - db-data:/var/lib/mysql
     networks:
