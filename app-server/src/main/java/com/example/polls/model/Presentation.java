@@ -53,6 +53,10 @@ public class Presentation {
   @ManyToMany
   private List<User> authors = new ArrayList<>();
 
+  // don't use Set, order matters
+  @OneToMany
+  List<Comment> comments = new ArrayList<>();
+
   public Presentation() {
   }
 
@@ -192,5 +196,13 @@ public class Presentation {
 
   public void setAuthors(List<User> authors) {
     this.authors = authors;
+  }
+
+  public List<Comment> getComments() {
+    return comments;
+  }
+
+  public void setComments(List<Comment> comments) {
+    this.comments = comments;
   }
 }

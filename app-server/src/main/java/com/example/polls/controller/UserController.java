@@ -4,15 +4,15 @@ import com.example.polls.dto.PresentationDto;
 import com.example.polls.exception.ResourceNotFoundException;
 import com.example.polls.model.Presentation;
 import com.example.polls.model.Role;
-import com.example.polls.model.User;
-import com.example.polls.payload.*;
-import com.example.polls.repository.*;
+import com.example.polls.payload.UserIdentityAvailability;
+import com.example.polls.payload.UserSummary;
+import com.example.polls.repository.PresentationRepository;
+import com.example.polls.repository.RoleRepository;
+import com.example.polls.repository.UserRepository;
 import com.example.polls.security.CurrentUser;
 import com.example.polls.security.UserPrincipal;
 import com.example.polls.service.EmailService;
 import com.example.polls.service.ImportService;
-import com.example.polls.service.PollService;
-import com.example.polls.util.AppConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,12 +34,6 @@ public class UserController {
     private UserRepository userRepository;
 
     @Autowired
-    private PollRepository pollRepository;
-
-    @Autowired
-    private VoteRepository voteRepository;
-
-    @Autowired
     PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -48,9 +41,6 @@ public class UserController {
 
     @Autowired
     PresentationRepository presentationRepository;
-
-    @Autowired
-    private PollService pollService;
 
     @Autowired
     private ImportService importService;
@@ -88,39 +78,9 @@ public class UserController {
         return new UserIdentityAvailability(isAvailable);
     }
 
-    @GetMapping("/users/{username}")
-    public UserProfile getUserProfile(@PathVariable(value = "username") String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
-
-        long pollCount = pollRepository.countByCreatedBy(user.getId());
-        long voteCount = voteRepository.countByUserId(user.getId());
-
-        UserProfile userProfile = new UserProfile(user.getId(), user.getUsername(), user.getName(), user.getCreatedAt(), pollCount, voteCount);
-
-        return userProfile;
-    }
-
-    @GetMapping("/users/{username}/polls")
-    public PagedResponse<PollResponse> getPollsCreatedBy(@PathVariable(value = "username") String username,
-                                                         @CurrentUser UserPrincipal currentUser,
-                                                         @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-                                                         @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
-        return pollService.getPollsCreatedBy(username, currentUser, page, size);
-    }
-
-
-    @GetMapping("/users/{username}/votes")
-    public PagedResponse<PollResponse> getPollsVotedBy(@PathVariable(value = "username") String username,
-                                                       @CurrentUser UserPrincipal currentUser,
-                                                       @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-                                                       @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
-        return pollService.getPollsVotedBy(username, currentUser, page, size);
-    }
-
     @PostMapping("/users/import")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> importUsers() throws IOException {
+    public ResponseEntity<String> importUsers() {
         importService.importUsers();
         return ResponseEntity.ok("Users created!");
     }

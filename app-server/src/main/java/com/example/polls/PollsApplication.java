@@ -18,6 +18,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,6 +35,24 @@ import java.util.TimeZone;
 		Jsr310JpaConverters.class
 })
 public class PollsApplication {
+
+	@Value("${app.admin.username}")
+	private String adminUsername;
+	@Value("${app.admin.password}")
+	private String adminPassword;
+	@Value("${app.admin.email}")
+	private String adminEmail;
+	@Value("${app.admin.name}")
+	private String adminName;
+
+	@Value("${app.user.username}")
+	private String userUsername;
+	@Value("${app.user.password}")
+	private String userPassword;
+	@Value("${app.user.email}")
+	private String userEmail;
+	@Value("${app.user.name}")
+	private String userFullName;
 
 	@PostConstruct
 	void init() {
@@ -63,6 +82,7 @@ public class PollsApplication {
 
 			@Override
 			public void run(String... args) throws Exception {
+
 				// if the track codes have not been loaded, do it now
 				if (trackRepository.count() == 0) {
 					XSSFWorkbook workbook = new XSSFWorkbook(trackCodesResource.getInputStream());
@@ -76,13 +96,15 @@ public class PollsApplication {
 					}
 				}
 
-				if (!userRepository.existsByEmail("cheese@cake.com")) {
+				// create admin account if not exists
+				if (!userRepository.existsByEmail(adminEmail)) {
 					User admin = new User();
-					admin.setUsername("admin");
-					admin.setPassword(passwordEncoder.encode("doofusqueen"));
-					admin.setEmail("cheese@cake.com");
-					admin.setName("Vincent Bushong");
-					Role adminRole = roleRepository.findByName(RoleName.ROLE_ADMIN)
+					admin.setUsername(adminUsername);
+					admin.setPassword(passwordEncoder.encode(adminPassword));
+					admin.setEmail(adminEmail);
+					admin.setName(adminName);
+
+					Role userRole = roleRepository.findByName(RoleName.ROLE_ADMIN)
 									.orElseThrow(() -> new AppException("Admin Role not set."));
 					Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
 									.orElseThrow(() -> new AppException("User Role not set."));
@@ -94,6 +116,22 @@ public class PollsApplication {
 					admin.setRoles(roles);
 
 					userRepository.save(admin);
+				}
+
+				// create a dummy user account if not exists
+				if (!userRepository.existsByEmail(userEmail)) {
+					User user = new User();
+					user.setUsername(userUsername);
+					user.setPassword(passwordEncoder.encode(userPassword));
+					user.setEmail(userEmail);
+					user.setName(userFullName);
+
+					Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
+							.orElseThrow(() -> new AppException("User Role not set."));
+
+					user.setRoles(Collections.singleton(userRole));
+
+					userRepository.save(user);
 				}
 			}
 		};

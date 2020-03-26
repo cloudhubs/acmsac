@@ -5,50 +5,37 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import Typography from "@material-ui/core/Typography";
 import AppBar from '@material-ui/core/AppBar';
+import { Button } from "@material-ui/core";
+import LogoutButton from "./LogoutButton";
 
 const ApplicationBar = () => {
-    const drawerWidth = 240;
+
     const [mobileOpen, setMobileOpen] = React.useState(false);
 
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({
             appBar: {
                 [theme.breakpoints.up('sm')]: {
-                    width: `calc(100% - ${drawerWidth}px)`,
-                    marginLeft: drawerWidth,
+                    width: `calc(100%)`
                 },
             },
-            // menuButton: {
-            //     marginRight: theme.spacing(2),
-            //     [theme.breakpoints.up('sm')]: {
-            //         display: 'none',
-            //     },
-            // },
+            title: {
+                flexGrow: 1,
+              },
         }),
     );
 
     const classes = useStyles();
 
-
-    // const handleDrawerToggle = () => {
-    //     setMobileOpen(!mobileOpen);
-    // };
-
     return (
         <>
             <AppBar position="fixed" className={classes.appBar}>
                 <Toolbar>
-                    {/*<IconButton*/}
-                    {/*    color="inherit"*/}
-                    {/*    aria-label="open drawer"*/}
-                    {/*    edge="start"*/}
-                    {/*    onClick={handleDrawerToggle}*/}
-                    {/*    className={classes.menuButton}>*/}
-                    {/*    <MenuIcon/>*/}
-                    {/*</IconButton>*/}
-                    <Typography variant="h6" noWrap>
+                    <Typography variant="h6" noWrap  className={classes.title}>
                         ACM SAC 2020
                     </Typography>
+                    <LogoutButton />
+                    
                 </Toolbar>
             </AppBar>
 

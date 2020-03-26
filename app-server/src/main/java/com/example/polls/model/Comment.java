@@ -36,4 +36,7 @@ public class Comment {
 
     @NotNull
     String content;
+
+    // if true, comment is blocked due to violation
+    private boolean blocked = false;
 }

@@ -1,4 +1,4 @@
-export class AcademicArticle {
+export type AcademicArticle = {
     acknowledgment: string;
     affilation: string;
     affilationsAll: string;

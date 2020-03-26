@@ -60,7 +60,7 @@ interface ResponsiveDrawerProps {
     container?: Element;
 }
 
-export default function AppDetailDrawer(props: ResponsiveDrawerProps) {
+export default function AppDetailBar(props: ResponsiveDrawerProps) {
     const classes = useStyles();
     const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -85,13 +85,7 @@ export default function AppDetailDrawer(props: ResponsiveDrawerProps) {
                         ACM SAC 2020
                     </Typography>
                 </Toolbar>
-
-
             </AppBar>
-
-            {/*<main className={classes.content}>*/}
-            {/*    <div className={classes.toolbar} />*/}
-            {/*</main>*/}
         </div>
     );
 }

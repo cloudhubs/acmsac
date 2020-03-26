@@ -78,19 +78,18 @@ const App = () => {
     return (
         <Router>
             <div>
-
                 <Switch>
                     <Route exact path="/" component={Index} />
                     <Route exact path="/register" component={Signup} />
                     <Route exact path="/login" component={Login} />
-                    <PrivateRoute exact path="/app">
+                    <PrivateRoute exact path="/app/:track">
                         <AppDrawer/>
                     </PrivateRoute>
-                    <PrivateRoute exact path="/detail/:code">
+                    <PrivateRoute exact path="/app/:track/:code">
                         <AppPaperDetail/>
                     </PrivateRoute>
                     <Route path="*">
-                        <Redirect path="/app"/>
+                        <Redirect path="/app/all"/>
                     </Route>
                 </Switch>
             </div>

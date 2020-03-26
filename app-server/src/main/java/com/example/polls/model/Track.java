@@ -29,6 +29,10 @@ public class Track {
   @ManyToMany(fetch = FetchType.EAGER)
   private List<User> chairs = new ArrayList();
 
+  // don't use Set, order matters
+  @OneToMany
+  private List<Comment> comments = new ArrayList<>();
+
   public Track() {
   }
 
@@ -86,5 +90,13 @@ public class Track {
 
   public void setChairs(List<User> coChairs) {
     this.chairs = coChairs;
+  }
+
+  public List<Comment> getComments() {
+    return comments;
+  }
+
+  public void setComments(List<Comment> comments) {
+    this.comments = comments;
   }
 }

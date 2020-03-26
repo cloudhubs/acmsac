@@ -1,4 +1,3 @@
-import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
@@ -8,23 +7,19 @@ import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import MenuIcon from '@material-ui/icons/Menu';
+import { createStyles, makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import {createStyles, makeStyles, Theme, useTheme} from '@material-ui/core/styles';
-import AcademicPapersTable from "./AcademicPapersTable";
+import MenuIcon from '@material-ui/icons/Menu';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, useHistory, useParams } from "react-router-dom";
 import tracks from "../../data/Tracks";
-import {useGlobalState} from "../../state";
-
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link,
-    useParams,
-    useHistory
-} from "react-router-dom";
-import AppPaperDetail from "../appDetail/AppPaperDetail";
+import { useGlobalState, dispatch } from "../../state";
+import { ServerToken } from '../../model/ServerToken';
+import { AcademicArticle } from '../../model/AcademicArticle';
+import AcademicPapersTable from './AcademicPapersTable';
+import { Button } from '@material-ui/core';
+import LogoutButton from '../shared/LogoutButton';
 
 const drawerWidth = 240;
 
@@ -51,6 +46,9 @@ const useStyles = makeStyles((theme: Theme) =>
                 display: 'none',
             },
         },
+        title: {
+            flexGrow: 1,
+          },
         toolbar: theme.mixins.toolbar,
         drawerPaper: {
             width: drawerWidth,
@@ -77,19 +75,79 @@ interface ResponsiveDrawerProps {
     container?: Element;
 }
 
+const setTrack = (track: string) => dispatch({
+    track: track,
+    type: 'setTrack',
+  });    
+
+  const setAcademicPapers = (academicPapers: AcademicArticle[]) => dispatch({
+    academicPapers: academicPapers,
+    type: 'setAcademicPapers',
+  });  
+
+const getRows = async (track: string, serverToken: ServerToken) => {
+    //fetch api
+    const fake = true;
+    if (fake){
+        const response = await fetch('https://5e7152a1667af70016317936.mockapi.io/acmsac/papers', {
+        method: 'get',
+        headers : {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+        });
+        if (response != null){
+            const body = await response.json();
+            console.log(body);
+            setAcademicPapers(body);
+            // set rows
+        }
+        } else {
+        let url = "";
+        if (track === "all"){
+            url = process.env.REACT_APP_API_BASE_URL +  '/presentations'
+        } else {
+            url = process.env.REACT_APP_API_BASE_URL +  '/presentations/bytrack/' + track
+        }
+        const response = await fetch(url, {
+            method: 'GET',
+            headers : {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${serverToken.accessToken}`
+            }
+            });
+        if (response != null){
+            const body = await response.json();
+            console.log(body);
+        }
+    }
+    
+
+}
+
+  
+
 export default function AppDrawer(props: ResponsiveDrawerProps) {
     const { container } = props;
     const classes = useStyles();
     const theme = useTheme();
     const [mobileOpen, setMobileOpen] = React.useState(false);
-    // const [auth] = useGlobalState('authenticated');
+    const [trackState] = useGlobalState('track');
+    const [serverToken] = useGlobalState('serverToken');
+
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
-
-    let { id } = useParams();
+    let {track} = useParams();
     let history = useHistory();
+    console.log(trackState + " " + track);
+    if (trackState !== track){
+        setTrack(track);
+        getRows(trackState, serverToken);
+    }
     
+
     const onClick = async (event: React.MouseEvent<HTMLElement>, code: string) => {
         event.preventDefault();
         history.push("/app/" + code);
@@ -98,10 +156,15 @@ export default function AppDrawer(props: ResponsiveDrawerProps) {
     const drawer = (
         <>
             <div className={classes.toolbar} />
+            
             <Divider />
             <List>
+                <ListItem button onClick={(event: React.MouseEvent<HTMLElement>) => {
+                    onClick(event, "all")
+                }}>
+                <ListItemText primary={"All tracks"} />
+                </ListItem>
                 {tracks.getTracks().map((text, index) => (
-                    // <Link to={"/app/"+ text.code} style={{ textDecoration: 'none' }}>
                             <ListItem button onClick={(event: React.MouseEvent<HTMLElement>) => {
                                 onClick(event, text.code)
                             }}>
@@ -115,8 +178,8 @@ export default function AppDrawer(props: ResponsiveDrawerProps) {
     );
 
     return (
-    <Router>
         <div className={classes.root}>
+            
             <CssBaseline />
             <AppBar position="fixed" className={classes.appBar}>
                 <Toolbar>
@@ -128,9 +191,12 @@ export default function AppDrawer(props: ResponsiveDrawerProps) {
                         className={classes.menuButton}>
                         <MenuIcon/>
                     </IconButton>
-                    <Typography variant="h6" noWrap>
+                    <Typography variant="h6" noWrap className={classes.title}>
                         ACM SAC 2020
                     </Typography>
+
+                    <LogoutButton />
+                            
                 </Toolbar>
             </AppBar>
 
@@ -166,14 +232,15 @@ export default function AppDrawer(props: ResponsiveDrawerProps) {
 
             <main className={classes.content}>
                 <div className={classes.toolbar} />
-                <Switch>
+                {track}
+                <AcademicPapersTable/>
+                {/* <Switch>
                     <Route path="/:app/:track" children={<AcademicPapersTable />} />
                     <Route path="/:app/:track/:paper">
                         <AppPaperDetail />
                     </Route>
-                </Switch>
+                </Switch> */}
             </main>
         </div>
-    </Router>
     );
 }

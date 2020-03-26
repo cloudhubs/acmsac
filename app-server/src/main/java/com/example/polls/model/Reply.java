@@ -30,4 +30,7 @@ public class Reply {
 
     @NotNull
     String content;
+
+    // if true, reply is blocked due to violation
+    private boolean blocked = false;
 }

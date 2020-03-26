@@ -12,11 +12,51 @@ import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import {useGlobalState} from "../state";
+import {useGlobalState, dispatch} from "../state";
 import { useHistory } from 'react-router-dom';
-import { ServerError } from '../model/ServerError';
+import { ServerToken } from "../model/ServerToken";
+import ApplicationBar from "./shared/ApplicationBar";
+
+
+const setServerToken = (serverToken: ServerToken) => dispatch({
+  serverToken: serverToken,
+  type: 'setServerToken',
+});
+
+const setAuthenticated = () => dispatch({
+  type: 'setAuthenticated',
+});
+
+const onSubmit = async (event: React.MouseEvent<HTMLElement>, signInUser, history) => {
+  event.preventDefault();
+  
+  const response = await fetch(process.env.REACT_APP_API_BASE_URL +  '/auth/signin', {
+    method: 'POST',
+    body: JSON.stringify(signInUser),
+    headers : {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+    }
+    });
+    if (response != null){
+        const body = await response.json();
+        if (!body.error){
+          setServerToken(body);
+          setAuthenticated();
+          history.push("/app/all");
+        } else {
+          console.log(body.message);
+        }
+    } else {
+      console.log("server error");
+    }
+}
+
+
+
 
 const Login = () => {
+    const history = useHistory();
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({
             paper: {
@@ -43,40 +83,10 @@ const Login = () => {
     const [signInUser, uSignInUser] = useGlobalState('signInUser');
     const [serverToken, uServerToken] = useGlobalState('serverToken');
     const [auth, uAuth] = useGlobalState('authenticated');
-
-    let history = useHistory();
-
-    const onSubmit = async (event: React.MouseEvent<HTMLElement>) => {
-      event.preventDefault();
-      uServerError(new ServerError(true));
-      const response = await fetch(process.env.REACT_APP_API_BASE_URL +  '/auth/signin', {
-        method: 'POST',
-        body: JSON.stringify(signInUser),
-        headers : {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        }
-        });
-        if (response != null){
-            const body = await response.json();
-            if (!body.error){
-              console.log({accessToken: body.accessToken, tokenType: body.tokenType});
-              uServerToken({accessToken: body.accessToken, tokenType: body.tokenType});
-              history.push("/app");
-              uAuth(true);
-            } else {
-              console.log(body.message);
-            }
-            let resp: ServerError = new ServerError(false);
-            resp.message = body.message;
-            uServerError(resp);
-        } else {
-          console.log("server error");
-        }
-    }
     
     return (
         <div>
+          <ApplicationBar />
             <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
@@ -130,9 +140,8 @@ const Login = () => {
             color="primary"
             className={classes.submit}
             onClick={(event: React.MouseEvent<HTMLElement>) => {
-              onSubmit(event)
-             }}
-          >
+              onSubmit(event, signInUser, history)
+             }}>
             Sign In
           </Button>
           <Grid container>

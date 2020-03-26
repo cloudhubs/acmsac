@@ -1,5 +1,6 @@
-import React from 'react';
-import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/styles';
+import { Paper } from "@material-ui/core";
+import IconButton from '@material-ui/core/IconButton';
+import { createStyles, makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -7,24 +8,14 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import IconButton from '@material-ui/core/IconButton';
 import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
-import {useGlobalState} from "../../state";
-import {Paper} from "@material-ui/core";
-import {AcademicArticle} from "../../model/AcademicArticle";
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link,
-    Redirect,
-    useHistory,
-    useParams
-} from "react-router-dom";
-import AppPaperDetail from "../appDetail/AppPaperDetail";
+import React from 'react';
+import { BrowserRouter as Router, useHistory, useParams } from "react-router-dom";
+import { AcademicArticle } from "../../model/AcademicArticle";
+import { useGlobalState } from "../../state";
 
 const useStyles1 = makeStyles((theme: Theme) =>
     createStyles({
@@ -102,12 +93,9 @@ const useStyles2 = makeStyles({
     }
 });
 
-
-
 export default function AcademicPapersTable() {
-    let { track } = useParams();
     const [rows, uRows] = useGlobalState('academicPapers');
-    // ToDo: filter rows by ID
+    const [track] = useGlobalState('track');
     const classes = useStyles2();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(15);
@@ -124,20 +112,16 @@ export default function AcademicPapersTable() {
 
     const history = useHistory();
 
-    function handleClick(event, key) {
-        history.push("/detail/" + track + "/" + key);
-
-        // history.push("/detail");
+    function handleClick(event: React.MouseEvent<HTMLElement>, key: string) {
+        event.preventDefault();
+        history.push("/app/" + track + "/" + key);
     }
 
     let redirect = true;
     console.log(redirect);
 
     return (
-            <Router>
-        Track: {track}
         <TableContainer component={Paper}>
-
             <Table className={classes.table} aria-label="custom pagination table">
                 <TableBody>
                     <TableRow>
@@ -150,7 +134,7 @@ export default function AcademicPapersTable() {
                             ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             : rows
                     ).map((row: AcademicArticle) => (
-                        <TableRow hover key={row.key} onClick={event => handleClick(event, row.key)} className={classes.rowClick}>
+                        <TableRow hover key={row.key} onClick={(event: React.MouseEvent<HTMLElement>) => handleClick(event, row.key)} className={classes.rowClick}>
                             <TableCell component="th" scope="row">
                                 {row.key}
                             </TableCell>
@@ -191,12 +175,5 @@ export default function AcademicPapersTable() {
                 </TableFooter>
             </Table>
         </TableContainer>
-            {/*<Switch>*/}
-            {/*    /!*<Route path="/detail">*!/*/}
-            {/*    <Route path="/detail/:track/:paper">*/}
-            {/*        <AppPaperDetail />*/}
-            {/*    </Route>*/}
-            {/*</Switch>*/}
-        </Router>
     );
 }
