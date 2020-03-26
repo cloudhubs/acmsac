@@ -5,7 +5,7 @@ services:
 
   # Frontend Service 
   app-client:
-    image: diptadas/acmsac-client
+    image: cloudhubs2/acmsac-client
     build:
       context: app-client # build image from `app-client` directory
       dockerfile: Dockerfile
@@ -24,7 +24,7 @@ services:
 
   # Backend service
   app-server:
-    image: diptadas/acmsac-server
+    image: cloudhubs2/acmsac-server
     build:
       context: app-server # build image from `app-server` directory
       dockerfile: Dockerfile

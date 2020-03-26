@@ -41,6 +41,8 @@ $ cd /acmsac
 $ curl -O https://raw.githubusercontent.com/cloudhubs/acmsac/master/docker-compose.yml
 ```
 
+- Change passwords in `docker-compose.yml` file
+
 - Make sure `/acmsac/ssl` folder exists
 
 - Pull recent images: 
