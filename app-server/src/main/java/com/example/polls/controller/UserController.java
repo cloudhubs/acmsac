@@ -97,10 +97,10 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
-    @GetMapping("/check/{email}/{paperId}")
-    public ResponseEntity<PresentationDto> checkSingleUserPresentation(@PathVariable("email") String email, @PathVariable("paperId") int paperId) {
+    @GetMapping("/check/{email}/{presId}")
+    public ResponseEntity<PresentationDto> checkSingleUserPresentation(@PathVariable("email") String email, @PathVariable("presId") long presId) {
         if (userRepository.existsByEmail(email)) {
-            Optional<Presentation> presentation = presentationRepository.findByPaperId(paperId);
+            Optional<Presentation> presentation = presentationRepository.findById(presId);
             if (presentation.isPresent() && presentation.get().getPresenter().getEmail().equals(email)) {
                 return ResponseEntity.ok(new PresentationDto(presentation.get()));
             } else {
