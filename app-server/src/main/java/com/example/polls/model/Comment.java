@@ -23,11 +23,6 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonIdentityInfo(
-            generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "id",
-            scope = User.class)
-    @JsonIdentityReference(alwaysAsId = true)
     User user;
 
     // don't use Set, order matters
