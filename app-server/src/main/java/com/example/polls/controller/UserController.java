@@ -1,6 +1,8 @@
 package com.example.polls.controller;
 
+import com.example.polls.dto.PresentationDto;
 import com.example.polls.exception.ResourceNotFoundException;
+import com.example.polls.model.Presentation;
 import com.example.polls.model.Role;
 import com.example.polls.model.User;
 import com.example.polls.payload.*;
@@ -14,6 +16,7 @@ import com.example.polls.util.AppConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +24,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -118,5 +123,29 @@ public class UserController {
     public ResponseEntity<String> importUsers() throws IOException {
         importService.importUsers();
         return ResponseEntity.ok("Users created!");
+    }
+
+    @GetMapping("/check/{email}")
+    public ResponseEntity<List<PresentationDto>> checkUserPresentations(@PathVariable("email") String email) {
+        if (userRepository.existsByEmail(email)) {
+            User user = userRepository.findByEmail(email).get();
+            List<PresentationDto> presentations = presentationRepository.findAllByPresenter(user)
+                    .stream().map(p -> new PresentationDto(p)).collect(Collectors.toList());
+            return ResponseEntity.ok(presentations);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
+    @GetMapping("/check/{email}/{paperId}")
+    public ResponseEntity<PresentationDto> checkSingleUserPresentation(@PathVariable("email") String email, @PathVariable("paperId") int paperId) {
+        if (userRepository.existsByEmail(email)) {
+            Optional<Presentation> presentation = presentationRepository.findByPaperId(paperId);
+            if (presentation.isPresent() && presentation.get().getPresenter().getEmail().equals(email)) {
+                return ResponseEntity.ok(new PresentationDto(presentation.get()));
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 }

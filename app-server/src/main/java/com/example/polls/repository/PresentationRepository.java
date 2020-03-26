@@ -1,6 +1,7 @@
 package com.example.polls.repository;
 
 import com.example.polls.model.Presentation;
+import com.example.polls.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,4 +15,6 @@ public interface PresentationRepository extends JpaRepository<Presentation, Long
   boolean existsByPaperId(int paperId);
 
   List<Presentation> findAllByTrackCodeIgnoreCase(String trackCode);
+
+  List<Presentation> findAllByPresenter(User presenter);
 }

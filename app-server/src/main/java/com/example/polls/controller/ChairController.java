@@ -20,6 +20,6 @@ public class ChairController {
 
   @GetMapping("/bytrack/{trackCode}")
   public List<UserDto> getChairsByTrack(@PathVariable("trackCode") String trackCode) {
-    return trackRepository.findByCodeIgnoreCase(trackCode).getChairs().stream().map(u -> new UserDto(u)).collect(Collectors.toList());
+    return trackRepository.findByCodeIgnoreCase(trackCode).get().getChairs().stream().map(u -> new UserDto(u)).collect(Collectors.toList());
   }
 }

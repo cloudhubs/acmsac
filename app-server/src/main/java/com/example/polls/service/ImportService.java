@@ -202,7 +202,7 @@ public class ImportService {
   private void updateTrackFromImportRow(XSSFRow row, User chair) {
     String trackCode = row.getCell(3, Row.CREATE_NULL_AS_BLANK).toString().trim();
 
-    Track track = trackRepository.findByCodeIgnoreCase(trackCode);
+    Track track = trackRepository.findByCodeIgnoreCase(trackCode).get();
     track.setTrackUrl(row.getCell(5, Row.CREATE_NULL_AS_BLANK).toString());
     track.setVideoEmbed(row.getCell(10, Row.CREATE_NULL_AS_BLANK).toString());
     track.setMessage(row.getCell(11, Row.CREATE_NULL_AS_BLANK).toString());
@@ -238,7 +238,7 @@ public class ImportService {
               "", "", "");
     }
 
-    Track track = trackRepository.findByCodeIgnoreCase(trackCode);
+    Track track = trackRepository.findByCodeIgnoreCase(trackCode).get();
     try {
       track.getChairs().add(user);
       trackRepository.save(track);

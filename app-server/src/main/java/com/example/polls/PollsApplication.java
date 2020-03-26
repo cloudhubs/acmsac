@@ -24,6 +24,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.annotation.PostConstruct;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.TimeZone;
 
 @SpringBootApplication
@@ -80,10 +82,16 @@ public class PollsApplication {
 					admin.setPassword(passwordEncoder.encode("doofusqueen"));
 					admin.setEmail("cheese@cake.com");
 					admin.setName("Vincent Bushong");
-					Role userRole = roleRepository.findByName(RoleName.ROLE_ADMIN)
+					Role adminRole = roleRepository.findByName(RoleName.ROLE_ADMIN)
 									.orElseThrow(() -> new AppException("Admin Role not set."));
+					Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
+									.orElseThrow(() -> new AppException("User Role not set."));
 
-					admin.setRoles(Collections.singleton(userRole));
+					Set<Role> roles = new HashSet<>();
+					roles.add(adminRole);
+					roles.add(userRole);
+
+					admin.setRoles(roles);
 
 					userRepository.save(admin);
 				}
