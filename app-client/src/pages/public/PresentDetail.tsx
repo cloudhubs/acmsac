@@ -131,11 +131,7 @@ const PresentDetail = () => {
                                 <TableCell component="th" scope="row">
                                     Date
                                 </TableCell>
-                                <TableCell align="left">{new Intl.DateTimeFormat("en-GB", {
-                                    year: "numeric",
-                                    month: "long",
-                                    day: "2-digit"
-                                }).format(new Date(selectedPaper.date))}</TableCell>
+                                <TableCell align="left">{selectedPaper.date}</TableCell>
                             </TableRow>
 
                             <TableRow>
