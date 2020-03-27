@@ -77,9 +77,7 @@ export default function Index() {
         </Typography>
 
         <Typography variant="h6" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
-        You should have received your login credentials to the platform by email sent on March 30th. Alternatively,  
-        please request a password reminder above. You may also register, but note that we limit email addresses only to these of known paper authors, 
-        track chairs and organizers (in case of emergency <a href="mailto:someone@example.com" target="_top">email</a> us).
+        You should have received your login credentials to the platform by email sent on March 30th.  Alternatively,  please request a password reminder above, but note that we limit email addresses only to these of known paper authors, track chairs and organizers (in case of emergency <a href="mailto:someone@example.com" target="_top">email</a> us).
         </Typography>
 
         <Typography variant="h6" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
