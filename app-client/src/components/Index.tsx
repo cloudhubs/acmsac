@@ -1,28 +1,14 @@
 import React from 'react';
-import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Grid from '@material-ui/core/Grid';
-import StarIcon from '@material-ui/icons/StarBorder';
-import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
-import { HashRouter as Router,BrowserRouter,  Redirect, Route, Link, Switch, useHistory, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import PublicHeader from './header/PublicHeader';
+import PublicFooter from './footer/PublicFooter';
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-         {'ACM SAC '}
-      {new Date().getFullYear()}
-      {'.'}
-      </Link>
-    </Typography>
-  );
-}
+
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -34,12 +20,6 @@ const useStyles = makeStyles(theme => ({
   },
   appBar: {
     borderBottom: `1px solid ${theme.palette.divider}`,
-  },
-  toolbar: {
-    flexWrap: 'wrap',
-  },
-  toolbarTitle: {
-    flexGrow: 1,
   },
   link: {
     margin: theme.spacing(1, 1.5),
@@ -78,24 +58,6 @@ export default function Index() {
   return (
     <React.Fragment>
       <CssBaseline />
-      <AppBar position="static" color="default" elevation={0} className={classes.appBar}>
-        <Toolbar className={classes.toolbar}>
-          <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
-            ACM SAC 
-          </Typography>
-          <nav>
-            {/*<Link variant="button" color="textPrimary" to="/login" className={classes.link}>*/}
-            {/*  Register*/}
-            {/*</Link>*/}
-          </nav>
-          <Button color="primary" variant="outlined" className={classes.link}>
-            <Link to="/register">Register</Link>
-          </Button>
-          <Button color="primary" variant="outlined" className={classes.link}>
-            <Link to="/login">Login</Link>
-          </Button>
-        </Toolbar>
-      </AppBar>
       {/* Hero unit */}
       <Container maxWidth="md" component="main" className={classes.heroContent}>
         <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
@@ -103,10 +65,8 @@ export default function Index() {
         </Typography>
 
         <Typography variant="h4" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
-
         Virtual Welcome!
         </Typography>
-
 
         <Typography variant="h5" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
         It is our great pleasure to announce that the ACM SAC 2020 conference platform is now open.  
@@ -137,11 +97,8 @@ export default function Index() {
       </Container>
       {/* End hero unit */}
      
-      <Container maxWidth="md" component="footer" className={classes.footer}>
-        <Box mt={5}>
-          <Copyright />
-        </Box>
-      </Container>
+     
+      
       {/* End footer */}
     </React.Fragment>
   );

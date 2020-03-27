@@ -9,6 +9,8 @@ import { withRoot } from "./withRoot";
 import {useGlobalState} from "./state";
 import AppPaperDetail from "./components/appDetail/AppPaperDetail";
 import Index from "./components/Index";
+import PublicRouter from './router/PublicRouter';
+import Search from './pages/public/Search';
 
 // function PrivateRoute({ children, ...rest }) {
 //     return (
@@ -56,18 +58,18 @@ const App = () => {
     }
 
     const onAnalyze = async () => {
-        const response = await fetch('https://5e7152a1667af70016317936.mockapi.io/acmsac/papers', {
-            method: 'get',
-            headers : {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
-        });
-        if (response != null){
-            const body = await response.json();
-            uRows(body);
-            return body;
-        }
+        // const response = await fetch('https://5e7152a1667af70016317936.mockapi.io/acmsac/papers', {
+        //     method: 'get',
+        //     headers : {
+        //         'Content-Type': 'application/json',
+        //         'Accept': 'application/json'
+        //     }
+        // });
+        // if (response != null){
+        //     const body = await response.json();
+        //     uRows(body);
+        //     return body;
+        // }
     };
 
     useEffect(() => {
@@ -79,9 +81,16 @@ const App = () => {
         <Router>
             <div>
                 <Switch>
-                    <Route exact path="/" component={Index} />
+                    <Route exact path="/" component={PublicRouter} />
+                    <Route exact path="/search" component={PublicRouter} />
+                    <Route exact path="/register" component={PublicRouter} />
+                    <Route exact path="/list/:email" component={PublicRouter} />
+                    <Route exact path="/list/:email/:paperId" component={PublicRouter} />
+
                     <Route exact path="/register" component={Signup} />
                     <Route exact path="/login" component={Login} />
+                    
+                    
                     <PrivateRoute exact path="/app/:track">
                         <AppDrawer/>
                     </PrivateRoute>
