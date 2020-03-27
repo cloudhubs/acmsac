@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom';
 
 const onSubmit = (event: React.MouseEvent<HTMLElement>, email: string, history) => {
     event.preventDefault();
-    history.push("/list/" + email);
+    history.push("/api/check/" + email);
 }
 
 
@@ -54,7 +54,6 @@ const Search = () => {
             </Typography>
 
             <form  noValidate autoComplete="off">
-            <TextField id="email" type="email" inputProps={inputProps} />
 
             <TextField
             variant="outlined"
@@ -87,8 +86,6 @@ const Search = () => {
 
           </form>
             
-            {email}
-
             </Container>
         </>
     );

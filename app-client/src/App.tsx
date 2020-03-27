@@ -84,8 +84,8 @@ const App = () => {
                     <Route exact path="/" component={PublicRouter} />
                     <Route exact path="/search" component={PublicRouter} />
                     <Route exact path="/register" component={PublicRouter} />
-                    <Route exact path="/list/:email" component={PublicRouter} />
-                    <Route exact path="/list/:email/:paperId" component={PublicRouter} />
+                    <Route exact path="/api/check/:email" component={PublicRouter} />
+                    <Route exact path="/api/check/:email/:paperId" component={PublicRouter} />
 
                     <Route exact path="/register" component={Signup} />
                     <Route exact path="/login" component={Login} />

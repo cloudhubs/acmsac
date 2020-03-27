@@ -40,8 +40,8 @@ const PublicRouter = () => {
                         <Route exact path="/" component={Index} />
                         <Route exact path="/search" component={Search} />
                         <Route exact path="/register" component={EarlyRegister} />
-                        <Route exact path="/list/:email" component={PresentList} />
-                        <Route exact path="/list/:email/:paperId" component={PresentDetail} />
+                        <Route exact path="/api/check/:email" component={PresentList} />
+                        <Route exact path="/api/check/:email/:paperId" component={PresentDetail} />
                         {/* <Route exact path="/register" component={Signup} />
                         <Route exact path="/login" component={Login} /> */}
                         {/* <Route path="*">

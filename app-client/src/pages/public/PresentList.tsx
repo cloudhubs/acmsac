@@ -76,7 +76,7 @@ const PresentList = () => {
 
     const onClick = (event: React.MouseEvent<HTMLElement>, id) => {
         event.preventDefault();
-        history.push("/list/" + email + "/" + id);
+        history.push("/api/check/" + email + "/" + id);
     }
 
     return (
