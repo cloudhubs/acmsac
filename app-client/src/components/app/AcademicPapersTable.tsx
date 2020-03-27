@@ -134,20 +134,21 @@ export default function AcademicPapersTable() {
                             ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             : rows
                     ).map((row: AcademicArticle) => (
-                        <TableRow hover key={row.key} onClick={(event: React.MouseEvent<HTMLElement>) => handleClick(event, row.key)} className={classes.rowClick}>
-                            <TableCell component="th" scope="row">
-                                {row.key}
-                            </TableCell>
-                            <TableCell align="left">{row.paperTitle}</TableCell>
-                            <TableCell align="right">{row.author}</TableCell>
-                            <TableCell align="right">
-                                {new Intl.DateTimeFormat("en-GB", {
-                                    year: "numeric",
-                                    month: "long",
-                                    day: "2-digit"
-                                }).format(new Date(row.presentationDate))}
-                            </TableCell>
-                        </TableRow>
+                        <></>
+                        // <TableRow hover key={row.key} onClick={(event: React.MouseEvent<HTMLElement>) => handleClick(event, row.key)} className={classes.rowClick}>
+                        //     <TableCell component="th" scope="row">
+                        //         {row.key}
+                        //     </TableCell>
+                        //     <TableCell align="left">{row.paperTitle}</TableCell>
+                        //     <TableCell align="right">{row.author}</TableCell>
+                        //     <TableCell align="right">
+                                // {new Intl.DateTimeFormat("en-GB", {
+                                //     year: "numeric",
+                                //     month: "long",
+                                //     day: "2-digit"
+                                // }).format(new Date(row.presentationDate))}
+                        //     </TableCell>
+                        // </TableRow>
                     ))}
                     {emptyRows > 0 && (
                         <TableRow style={{height: 53 * emptyRows}}>

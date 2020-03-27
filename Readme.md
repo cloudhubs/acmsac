@@ -7,7 +7,7 @@
 - Run database: 
 
 ```
-$ docker run -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=acmsacdb mysql:5.7
+$ docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=acmsacdb mysql:5.7
 ```
 
 - Run backend: 
@@ -27,10 +27,35 @@ If there is a change in the data model, stop the docker container running mysql 
 
 ### Production
 
-- Build images locally: `$ docker-compose build`
-- Push images: `$ docker-compose push`
-- Copy `docker-compose.yml` and `ssl` folder to production machine
-- Run in server: `$ docker-compose up --no-build --detach`
+- Build images locally and push to docker hub: 
+
+```
+$ docker-compose build
+$ docker-compose push
+```
+
+- Download recent `docker-compose.yml` file in production machine:
+
+```
+$ cd /acmsac
+$ curl -O https://raw.githubusercontent.com/cloudhubs/acmsac/master/docker-compose.yml
+```
+
+- Change passwords in `docker-compose.yml` file
+
+- Make sure `/acmsac/ssl` folder exists
+
+- Pull recent images: 
+
+```
+$ docker-compose pull
+```
+
+- Trigger the deployment:
+
+```
+$ docker-compose up --no-build --detach
+```
 
 ### Configure `firewalld`:
 

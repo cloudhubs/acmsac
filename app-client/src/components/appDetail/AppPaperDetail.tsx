@@ -38,13 +38,13 @@ export default function AppPaperDetail() {
     const [spacing, setSpacing] = React.useState<GridSpacing>(2);
     let { track, code } = useParams();
     let [rows] = useGlobalState('academicPapers');
-    rows = rows.filter((r: AcademicArticle) => r.key === code);
+    // rows = rows.filter((r: AcademicArticle) => r.key === code);
     const selectedPaper: AcademicArticle = rows[0];
-    const iframe = '<iframe src="' + selectedPaper.url +'" width="540" height="450"></iframe>';
+    // const iframe = '<iframe src="' + selectedPaper.url +'" width="540" height="450"></iframe>';
 
     return (
         <>
-            <ApplicationBar />
+            {/* <ApplicationBar />
 
             <nav>
                 <Link variant="button" color="textPrimary" href="/register">
@@ -92,7 +92,7 @@ export default function AppPaperDetail() {
                 <Grid key={3} item xs={12} >
                     <Chat />
                 </Grid>
-            </Grid>
+            </Grid> */}
         </>
     );
 }

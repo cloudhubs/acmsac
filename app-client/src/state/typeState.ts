@@ -5,6 +5,7 @@ import { SignInUser } from '../model/SignInUser';
 import { SignUpUser } from '../model/SignUpUser';
 
 export type State = {
+    selectedPaper: AcademicArticle;
     academicPapers: AcademicArticle[];
     serverError: ServerError;
     serverToken: ServerToken;

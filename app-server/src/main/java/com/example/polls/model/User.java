@@ -1,6 +1,6 @@
 package com.example.polls.model;
 
-import com.example.polls.model.audit.DateAudit;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
@@ -19,7 +19,7 @@ import java.util.Set;
                 "email"
         })
 })
-public class User extends DateAudit {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,6 +37,7 @@ public class User extends DateAudit {
 
     @NotBlank
     @Size(max = 100)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Lob

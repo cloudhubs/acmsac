@@ -1,27 +1,3 @@
-// import { AcademicArticle } from './model/AcademicArticle';
-// import { SignInUser } from './model/SignInUser';
-// import { ServerError } from './model/ServerError';
-// import { SignUpUser } from './model/SignUpUser';
-// import { ServerToken } from './model/ServerToken';
-// import { createGlobalState } from 'react-hooks-global-state';
-
-// let signUpUser: SignUpUser = new SignUpUser();
-// let serverError: ServerError = new ServerError(true);
-// let signInUser: SignInUser = new SignInUser();
-// let serverToken: ServerToken = new ServerToken();
-
-// export let { useGlobalState } = createGlobalState({
-//         academicPapers: [],
-//         signUpUser: signUpUser,
-//         signInUser: signInUser,
-//         serverError: serverError,
-//         serverToken: serverToken,
-//         authenticated: false
-//     }
-// );
-
-
-
 import { Dispatch } from "react";
 import { applyMiddleware } from "redux";
 import { createStore } from "react-hooks-global-state";
@@ -34,6 +10,31 @@ import { SignInUser } from "./model/SignInUser";
 import { SignUpUser } from "./model/SignUpUser";
 
 const defaultState: State = {
+    selectedPaper: {
+      id: 0,
+      title: "",
+      paperId: 0,
+      trackCode: "",
+      sessionCode: "",
+      sessionChair: "",
+      date: "",
+      paperAbstract: "",
+      pageNumbers: "",
+      acknowledgements: "",
+      videoEmbed: "",
+      slidesUrl: "",
+      presenter: {
+        name: "",
+        affiliation: "",
+        country: "",
+        orcid: "",
+        linkedInUrl: "",
+        googleScholarUrl: "",
+        bio: "",
+        picUrl: ""
+    },
+    authors: [],
+    },
     academicPapers: [],
     serverError: new ServerError(),
     serverToken: new ServerToken(),
@@ -88,6 +89,11 @@ export const reducer = (state = initialState, action: Action) => {
             return {
               ...state,
               authenticated: false
+            }
+            case "setSelectedPaper":
+            return {
+              ...state,
+              selectedPaper: action.selectedPaper
             }
     //   case "increment":
     //     return {

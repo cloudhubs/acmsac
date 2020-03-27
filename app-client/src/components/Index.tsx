@@ -1,28 +1,14 @@
 import React from 'react';
-import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Grid from '@material-ui/core/Grid';
-import StarIcon from '@material-ui/icons/StarBorder';
-import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
-import { HashRouter as Router,BrowserRouter,  Redirect, Route, Link, Switch, useHistory, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import PublicHeader from './header/PublicHeader';
+import PublicFooter from './footer/PublicFooter';
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -34,12 +20,6 @@ const useStyles = makeStyles(theme => ({
   },
   appBar: {
     borderBottom: `1px solid ${theme.palette.divider}`,
-  },
-  toolbar: {
-    flexWrap: 'wrap',
-  },
-  toolbarTitle: {
-    flexGrow: 1,
   },
   link: {
     margin: theme.spacing(1, 1.5),
@@ -78,66 +58,47 @@ export default function Index() {
   return (
     <React.Fragment>
       <CssBaseline />
-      <AppBar position="static" color="default" elevation={0} className={classes.appBar}>
-        <Toolbar className={classes.toolbar}>
-          <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
-            ACM SAC 
-          </Typography>
-          <nav>
-            {/*<Link variant="button" color="textPrimary" to="/login" className={classes.link}>*/}
-            {/*  Register*/}
-            {/*</Link>*/}
-          </nav>
-          <Button color="primary" variant="outlined" className={classes.link}>
-            <Link to="/register">Register</Link>
-          </Button>
-          <Button color="primary" variant="outlined" className={classes.link}>
-            <Link to="/login">Login</Link>
-          </Button>
-        </Toolbar>
-      </AppBar>
       {/* Hero unit */}
       <Container maxWidth="md" component="main" className={classes.heroContent}>
         <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
           ACM SAC 2020
         </Typography>
 
+        <Typography variant="h4" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
+        Virtual Welcome!
+        </Typography>
+
         <Typography variant="h5" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
-        It is our great pleasure to announce that ACM SAC 2020 is open and to welcome everyone, virtually of course, to Brno Czech Republic!
+        It is our great pleasure to announce that the ACM SAC 2020 conference platform is now open.  
+        </Typography>
+
+        <Typography variant="h5" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
+        The papers and talk videos are online, along with social contacts to the authors. You may chat and comment to discuss particular papers, with the audience and the authors. 
         </Typography>
 
         <Typography variant="h6" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
-            The papers and talk videos are online, and the Slack workspace is ready to host lively discussions.
+        You should have received your login credentials to the platform by email sent on March 30th. Alternatively,  
+        please request a password reminder above. You may also register, but note that we limit email addresses only to these of known paper authors, 
+        track chairs and organizers (in case of emergency <a href="mailto:someone@example.com" target="_top">email</a> us).
         </Typography>
 
         <Typography variant="h6" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
-            Fortunately, most of you are probably sitting at home, looking for stimulating technical interactions with your colleagues. Please take advantage of this week to “attend” this first online ASPLOS conference. Don't wait, the Slack channel will not stay around forever and, this week, more people will be around to meet and talk to.
+        Thank you for participating in ACM SAC 2020! All the conference organizers did a fabulous job and hoped to see you all in person in Brno. You did a fabulous job by posting your presentation videos online and we really appreciate such teamwork and allowing us to make this happen remotely.
         </Typography>
 
         <Typography variant="h6" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
-            The Slack workspace is: <a href="https://join.slack.com/t/asplos2020/shared_invite/zt-cgxs6950-E1buN2T7vH6nY5jjp63opQ">https://join.slack.com/t/asplos2020/shared_invite/zt-cgxs6950-E1buN2T7vH6nY5jjp63opQ</a>
+        We hope to see you all in ACM SAC 2021, if possible in person.
         </Typography>
 
         <Typography variant="h6" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
-            Click on “Channels” in the left-hand toolbar to see a list of the program session channels. We have created a channel for each session in the conference and have put the talk videos in each channel. The papers themselves are publicly accessible in the ACM digital library (https://dl.acm.org/doi/proceedings/10.1145/3373376).
-        </Typography>
-
-        <Typography variant="h6" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
-        Please use these channels to discuss the papers in a session, as you would at the conference. Keep in mind that attendees live in many time zones, so conversations may be more asynchronous than when you use Slack with your colleagues down the hall.
-        </Typography>
-
-        <Typography variant="h6" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
-            If you prefer to binge watch ASPLOS, all of the talks are on the SIGARCH YouTube channel: https://www.youtube.com/channel/UCoyvfoA-z0A2sSWmwwwurWA
+        This platform will be open temporarily till mid-April, please make the social connection rather early than late. Also, save your presentation feedback for your personal future work!
         </Typography>
 
       </Container>
       {/* End hero unit */}
      
-      <Container maxWidth="md" component="footer" className={classes.footer}>
-        <Box mt={5}>
-          <Copyright />
-        </Box>
-      </Container>
+     
+      
       {/* End footer */}
     </React.Fragment>
   );
