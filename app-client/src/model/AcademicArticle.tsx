@@ -1,4 +1,5 @@
 import { Person } from "./Person";
+import { Comment } from "./Comment";
 
 export type AcademicArticle = {
     id: number;
@@ -15,6 +16,6 @@ export type AcademicArticle = {
     slidesUrl: string;
     presenter: Person;
     authors: Person[];
-    
+    comments: Comment[];
 }
 
