@@ -224,10 +224,6 @@ const PresentDetail = () => {
                 </Box>
                 </Grid>
             </Grid>
-            
-
-                
-
 
             </Container>
 

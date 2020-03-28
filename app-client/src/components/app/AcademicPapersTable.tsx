@@ -94,7 +94,9 @@ const useStyles2 = makeStyles({
 });
 
 export default function AcademicPapersTable() {
+    
     const [rows, uRows] = useGlobalState('academicPapers');
+    console.log(rows);
     const [track] = useGlobalState('track');
     const classes = useStyles2();
     const [page, setPage] = React.useState(0);
@@ -112,15 +114,13 @@ export default function AcademicPapersTable() {
 
     const history = useHistory();
 
-    function handleClick(event: React.MouseEvent<HTMLElement>, key: string) {
+    function handleClick(event: React.MouseEvent<HTMLElement>, key: number) {
         event.preventDefault();
-        history.push("/app/" + track + "/" + key);
+        history.push("/beta/app/" + track + "/" + key);
     }
 
-    let redirect = true;
-    console.log(redirect);
-
     return (
+        <>
         <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="custom pagination table">
                 <TableBody>
@@ -134,21 +134,15 @@ export default function AcademicPapersTable() {
                             ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             : rows
                     ).map((row: AcademicArticle) => (
-                        <></>
-                        // <TableRow hover key={row.key} onClick={(event: React.MouseEvent<HTMLElement>) => handleClick(event, row.key)} className={classes.rowClick}>
-                        //     <TableCell component="th" scope="row">
-                        //         {row.key}
-                        //     </TableCell>
-                        //     <TableCell align="left">{row.paperTitle}</TableCell>
-                        //     <TableCell align="right">{row.author}</TableCell>
-                        //     <TableCell align="right">
-                                // {new Intl.DateTimeFormat("en-GB", {
-                                //     year: "numeric",
-                                //     month: "long",
-                                //     day: "2-digit"
-                                // }).format(new Date(row.presentationDate))}
-                        //     </TableCell>
-                        // </TableRow>
+                        
+                        <TableRow hover key={row.id} onClick={(event: React.MouseEvent<HTMLElement>) => handleClick(event, row.id)} className={classes.rowClick}>
+                            <TableCell component="th" scope="row">
+                                {row.id}
+                            </TableCell>
+                            <TableCell align="left">{row.title}</TableCell>
+                            {/* <TableCell align="right">{row.presenter.name}</TableCell> */}
+                        </TableRow>
+                        
                     ))}
                     {emptyRows > 0 && (
                         <TableRow style={{height: 53 * emptyRows}}>
@@ -176,5 +170,6 @@ export default function AcademicPapersTable() {
                 </TableFooter>
             </Table>
         </TableContainer>
+        </>
     );
 }

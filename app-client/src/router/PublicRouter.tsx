@@ -1,14 +1,13 @@
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React from "react";
-import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
-import { HashRouter as Router,BrowserRouter,  Redirect, Route, Link, Switch, useHistory, useLocation } from 'react-router-dom'
-import Index from "../components/Index";
-import Search from "../pages/public/Search";
-import PublicHeader from "../components/header/PublicHeader";
-import { Container } from "@material-ui/core";
+import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import PublicFooter from "../components/footer/PublicFooter";
+import PublicHeader from "../components/header/PublicHeader";
+import Index from "../components/Index";
 import EarlyRegister from "../pages/public/EarlyRegister";
 import PresentDetail from "../pages/public/PresentDetail";
 import PresentList from "../pages/public/PresentList";
+import Search from "../pages/public/Search";
 
 const PublicRouter = () => {
 
@@ -42,8 +41,8 @@ const PublicRouter = () => {
                         <Route exact path="/register" component={EarlyRegister} />
                         <Route exact path="/api/check/:email" component={PresentList} />
                         <Route exact path="/api/check/:email/:paperId" component={PresentDetail} />
-                        {/* <Route exact path="/register" component={Signup} />
-                        <Route exact path="/login" component={Login} /> */}
+                        
+                        {/*<Route exact path="/login" component={Login} /> */}
                         {/* <Route path="*">
                             <Redirect path="/app/all"/>
                         </Route> */}

@@ -85,46 +85,7 @@ const setTrack = (track: string) => dispatch({
     type: 'setAcademicPapers',
   });  
 
-const getRows = async (track: string, serverToken: ServerToken) => {
-    //fetch api
-    const fake = true;
-    if (fake){
-        const response = await fetch('https://5e7152a1667af70016317936.mockapi.io/acmsac/papers', {
-        method: 'get',
-        headers : {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        }
-        });
-        if (response != null){
-            const body = await response.json();
-            console.log(body);
-            setAcademicPapers(body);
-            // set rows
-        }
-        } else {
-        let url = "";
-        if (track === "all"){
-            url = process.env.REACT_APP_API_BASE_URL +  '/presentations'
-        } else {
-            url = process.env.REACT_APP_API_BASE_URL +  '/presentations/bytrack/' + track
-        }
-        const response = await fetch(url, {
-            method: 'GET',
-            headers : {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${serverToken.accessToken}`
-            }
-            });
-        if (response != null){
-            const body = await response.json();
-            console.log(body);
-        }
-    }
-    
 
-}
 
   
 
@@ -135,17 +96,66 @@ export default function AppDrawer(props: ResponsiveDrawerProps) {
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const [trackState] = useGlobalState('track');
     const [serverToken] = useGlobalState('serverToken');
-
+    const [academicPapers] = useGlobalState('academicPapers');
+    
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
     let {track} = useParams();
     let history = useHistory();
+    
+    const getRows = async () => {
+        //fetch api
+        const fake = false;
+        if (fake){
+            const response = await fetch('https://5e7152a1667af70016317936.mockapi.io/acmsac/papers', {
+            method: 'get',
+            headers : {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+            });
+            if (response != null){
+                const body = await response.json();
+                console.log(body);
+                setAcademicPapers(body);
+            }
+            } else {
+            let url = "";
+            if (track === "all"){
+                url = process.env.REACT_APP_API_BASE_URL +  '/presentations'
+            } else {
+                url = process.env.REACT_APP_API_BASE_URL +  '/presentations/bytrack/' + track
+            }
+            const response = await fetch(url, {
+                method: 'GET',
+                headers : {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': `Bearer ${serverToken.accessToken}`
+                }
+                });
+            if (response != null){
+                const body = await response.json();
+                console.log(body);
+            }
+        }
+        
+    
+    }
+
     console.log(trackState + " " + track);
     if (trackState !== track){
         setTrack(track);
-        getRows(trackState, serverToken);
+        console.log("get tracks");
+        getRows();
     }
+
+    useEffect(() => {
+        getRows();
+    }, []);
+
+    
     
 
     const onClick = async (event: React.MouseEvent<HTMLElement>, code: string) => {
