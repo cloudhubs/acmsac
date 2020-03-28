@@ -1,6 +1,7 @@
 package com.example.polls.dto;
 
 import com.example.polls.model.User;
+import com.example.polls.service.PostprocessingHelpers;
 
 public class UserDto {
   private String name;
@@ -22,7 +23,7 @@ public class UserDto {
     this.linkedInUrl = user.getLinkedInUrl();
     this.googleScholarUrl = user.getGoogleScholarUrl();
     this.bio = user.getBio();
-    this.picUrl = user.getPicUrl();
+    this.picUrl = user.getPicUrl() != null && !user.getPicUrl().isEmpty() ? PostprocessingHelpers.processPresentationLink(user.getPicUrl()).getEmbed() : "";
   }
 
   public String getName() {

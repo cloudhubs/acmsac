@@ -2,6 +2,7 @@ package com.example.polls.dto;
 
 import com.example.polls.model.Presentation;
 import com.example.polls.model.User;
+import com.example.polls.service.PostprocessingHelpers;
 
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
@@ -25,7 +26,7 @@ public class PresentationDto {
   private String pageNumbers;
   private String acknowledgements;
   private String videoEmbed;
-  private String slidesUrl;
+  private PresentationLinks presentation;
   private UserDto presenter;
   private List<UserDto> authors = new ArrayList<>();
 
@@ -41,7 +42,7 @@ public class PresentationDto {
     this.pageNumbers = presentation.getPageNumbers();
     this.acknowledgements = presentation.getAcknowledgements();
     this.videoEmbed = presentation.getVideoEmbed();
-    this.slidesUrl = presentation.getSlidesUrl();
+    this.presentation = PostprocessingHelpers.processPresentationLink(presentation.getSlidesUrl());
     this.presenter = new UserDto(presentation.getPresenter());
     this.authors = presentation.getAuthors().stream().map(u -> new UserDto(u)).collect(Collectors.toList());
   }
@@ -134,12 +135,12 @@ public class PresentationDto {
     this.videoEmbed = videoEmbed;
   }
 
-  public String getSlidesUrl() {
-    return slidesUrl;
+  public PresentationLinks getPresentation() {
+    return presentation;
   }
 
-  public void setSlidesUrl(String slidesUrl) {
-    this.slidesUrl = slidesUrl;
+  public void setSlidesUrl(PresentationLinks presentation) {
+    this.presentation = presentation;
   }
 
   public UserDto getPresenter() {

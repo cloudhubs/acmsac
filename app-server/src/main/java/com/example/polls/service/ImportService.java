@@ -42,8 +42,8 @@ public class ImportService {
   @Autowired
   private ResourceLoader resourceLoader;
 
-  private final String DEFAULT_CHAIR_PW = "acmsacchair2020";
-  private final String DEFAULT_REGISTRANT_PW = "acmsac2020";
+  private final String DEFAULT_ORGANIZER_PW = "acmsaccommittee2020";
+  private final String DEFAULT_REGISTRANT_PW = "acmsacregistrant2020";
 
   public void importUsers() {
     try {
@@ -87,6 +87,16 @@ public class ImportService {
       for (int i = 1; i < authorSheet.getPhysicalNumberOfRows(); i++) {
         XSSFRow row = authorSheet.getRow(i);
         addAuthorFromImportRow(row);
+      }
+
+      // add organizers
+      Resource organizerResource = resourceLoader.getResource("classpath:organizers.xlsx");
+      XSSFWorkbook organizerWorkbook = new XSSFWorkbook(organizerResource.getInputStream());
+      XSSFSheet organizerSheet = organizerWorkbook.getSheetAt(0);
+
+      for (int i = 1; i < organizerSheet.getPhysicalNumberOfRows(); i++) {
+        XSSFRow row = organizerSheet.getRow(i);
+        addOrganizerFromImportRow(row);
       }
 
       // add other registrants
@@ -138,30 +148,28 @@ public class ImportService {
    * @return The created presentation
    */
   private Presentation createPresentationFromImportRow(XSSFRow row, User presenter) {
-    Presentation presentation = new Presentation();
-    presentation.setTitle(row.getCell(4, Row.CREATE_NULL_AS_BLANK).toString());
-    presentation.setPaperId((int) row.getCell(2).getNumericCellValue());
-    presentation.setAuthorsString(row.getCell(9, Row.CREATE_NULL_AS_BLANK).toString());
-    presentation.setTrackCode(row.getCell(10, Row.CREATE_NULL_AS_BLANK).toString());
-    presentation.setSessionCode(row.getCell(11, Row.CREATE_NULL_AS_BLANK).toString());
-    presentation.setSessionChair(row.getCell(12, Row.CREATE_NULL_AS_BLANK).toString());
-    presentation.setDate(row.getCell(13, Row.CREATE_NULL_AS_BLANK).getDateCellValue().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-    presentation.setPaperAbstract(row.getCell(14, Row.CREATE_NULL_AS_BLANK).toString());
-    presentation.setPageNumbers(row.getCell(15, Row.CREATE_NULL_AS_BLANK).toString());
-    presentation.setAcknowledgements(row.getCell(16, Row.CREATE_NULL_AS_BLANK).toString());
-    presentation.setVideoEmbed(row.getCell(17, Row.CREATE_NULL_AS_BLANK).toString());
-    presentation.setSlidesUrl(row.getCell(18, Row.CREATE_NULL_AS_BLANK).toString());
-
-    presentation.setPresenter(presenter);
-
-    if (presentationRepository.existsByPaperId(presentation.getPaperId())) {
-      return presentationRepository.findByPaperId(presentation.getPaperId()).get();
-    } else {
-      try {
-        return presentationRepository.save(presentation);
-      } catch (Exception e) {
-        throw new ImportException("Could not create presentation!", e);
+    try {
+      Presentation presentation = new Presentation();
+      int paperId = (int) row.getCell(2).getNumericCellValue();
+      if (presentationRepository.existsByPaperId(paperId)) {
+        presentation = presentationRepository.findByPaperId(paperId).get();
       }
+      presentation.setTitle(row.getCell(4, Row.CREATE_NULL_AS_BLANK).toString());
+      presentation.setPaperId(paperId);
+      presentation.setAuthorsString(row.getCell(9, Row.CREATE_NULL_AS_BLANK).toString());
+      presentation.setTrackCode(row.getCell(10, Row.CREATE_NULL_AS_BLANK).toString());
+      presentation.setSessionCode(row.getCell(11, Row.CREATE_NULL_AS_BLANK).toString());
+      presentation.setSessionChair(row.getCell(12, Row.CREATE_NULL_AS_BLANK).toString());
+      presentation.setDate(row.getCell(13, Row.CREATE_NULL_AS_BLANK).getDateCellValue().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+      presentation.setPaperAbstract(row.getCell(14, Row.CREATE_NULL_AS_BLANK).toString());
+      presentation.setPageNumbers(row.getCell(15, Row.CREATE_NULL_AS_BLANK).toString());
+      presentation.setAcknowledgements(row.getCell(16, Row.CREATE_NULL_AS_BLANK).toString());
+      presentation.setVideoEmbed(row.getCell(17, Row.CREATE_NULL_AS_BLANK).toString());
+      presentation.setSlidesUrl(row.getCell(18, Row.CREATE_NULL_AS_BLANK).toString());
+      presentation.setPresenter(presenter);
+      return presentationRepository.save(presentation);
+    } catch (Exception e) {
+      throw new ImportException("Could not create presentation! " + e.getMessage(), e);
     }
   }
 
@@ -171,12 +179,13 @@ public class ImportService {
    * @return
    */
   private User createOrRetrieveChairFromImportRow(XSSFRow row) {
+    String trackCode = row.getCell(3, Row.CREATE_NULL_AS_BLANK).toString().trim();
     String email = row.getCell(1, Row.CREATE_NULL_AS_BLANK).toString().trim();
-    String nameAndAffiliation = row.getCell(6, Row.CREATE_NULL_AS_BLANK).toString();
-    String fullName = nameAndAffiliation.split(",")[0];
+    String[] nameAndAffiliation = row.getCell(6, Row.CREATE_NULL_AS_BLANK).toString().split(",", 2);
+    String fullName = nameAndAffiliation.length > 0 ? nameAndAffiliation[0] : "";
     String username = email;
-    String password = DEFAULT_CHAIR_PW;
-    String affiliation = nameAndAffiliation.split(",")[1];
+    String password = trackCode.toLowerCase();
+    String affiliation = nameAndAffiliation.length > 1 ? nameAndAffiliation[1] : "";
     String orcid = row.getCell(12, Row.CREATE_NULL_AS_BLANK).toString();
     String linkedIn = row.getCell(13, Row.CREATE_NULL_AS_BLANK).toString();
     String googleScholar = row.getCell(14, Row.CREATE_NULL_AS_BLANK).toString();
@@ -201,18 +210,21 @@ public class ImportService {
    */
   private void updateTrackFromImportRow(XSSFRow row, User chair) {
     String trackCode = row.getCell(3, Row.CREATE_NULL_AS_BLANK).toString().trim();
+    boolean isMainChair = !row.getCell(4).toString().contains("Co-chair");
 
-    Track track = trackRepository.findByCodeIgnoreCase(trackCode).get();
-    track.setTrackUrl(row.getCell(5, Row.CREATE_NULL_AS_BLANK).toString());
-    track.setVideoEmbed(row.getCell(10, Row.CREATE_NULL_AS_BLANK).toString());
-    track.setMessage(row.getCell(11, Row.CREATE_NULL_AS_BLANK).toString());
+    if (isMainChair) {
+      Track track = trackRepository.findByCodeIgnoreCase(trackCode).get();
+      track.setTrackUrl(row.getCell(5, Row.CREATE_NULL_AS_BLANK).toString());
+      track.setVideoEmbed(row.getCell(10, Row.CREATE_NULL_AS_BLANK).toString());
+      track.setMessage(row.getCell(11, Row.CREATE_NULL_AS_BLANK).toString());
 
-    track.getChairs().add(chair);
+      track.getChairs().add(chair);
 
-    try {
-      trackRepository.save(track);
-    } catch (Exception e) {
-      throw new ImportException("Could not update track!", e);
+      try {
+        trackRepository.save(track);
+      } catch (Exception e) {
+        throw new ImportException("Could not update track!", e);
+      }
     }
   }
 
@@ -225,8 +237,8 @@ public class ImportService {
     String email = row.getCell(0, Row.CREATE_NULL_AS_BLANK).toString().trim();
     String fullName = row.getCell(2, Row.CREATE_NULL_AS_BLANK).toString().trim();
     String username = email;
-    String password = DEFAULT_CHAIR_PW;
     String trackCode = row.getCell(1, Row.CREATE_NULL_AS_BLANK).toString().trim();
+    String password = trackCode.toLowerCase();
 
     User user = null;
 
@@ -292,6 +304,17 @@ public class ImportService {
     }
   }
 
+  private void addOrganizerFromImportRow(XSSFRow row) {
+    String email = row.getCell(0).toString().trim();
+    String name = row.getCell(1).toString().trim();
+    String affiliation = row.getCell(2, Row.CREATE_NULL_AS_BLANK).toString();
+    String password = DEFAULT_ORGANIZER_PW;
+    if (!userRepository.existsByEmail(email)) {
+      createUser(name, email, email, password, affiliation, "", "", "",
+              "", "", "");
+    }
+  }
+
   private void addRegistrantFromImportRow(XSSFRow row) {
     String email = row.getCell(1, Row.CREATE_NULL_AS_BLANK).toString().trim();
     String fullName = row.getCell(0, Row.CREATE_NULL_AS_BLANK).toString().trim();
@@ -315,6 +338,10 @@ public class ImportService {
   private User createUser(String name, String username, String email, String password,
                           String affiliation, String country, String orcid, String linkedIn,
                           String googleScholar, String bio, String picUrl) {
+    if (email != null) {
+      email = email.toLowerCase();
+    }
+
     // Creating user's account
     User user = new User(name, username, email, password, affiliation, country, orcid, linkedIn,
             googleScholar, bio, picUrl);
