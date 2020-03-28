@@ -1,5 +1,6 @@
 package com.example.polls.dto;
 
+import com.example.polls.model.Comment;
 import com.example.polls.model.Presentation;
 import com.example.polls.model.User;
 
@@ -28,6 +29,7 @@ public class PresentationDto {
   private String slidesUrl;
   private UserDto presenter;
   private List<UserDto> authors = new ArrayList<>();
+  private List<Comment> comments = new ArrayList<>();
 
   public PresentationDto(Presentation presentation) {
     this.id = presentation.getId();
@@ -44,6 +46,7 @@ public class PresentationDto {
     this.slidesUrl = presentation.getSlidesUrl();
     this.presenter = new UserDto(presentation.getPresenter());
     this.authors = presentation.getAuthors().stream().map(u -> new UserDto(u)).collect(Collectors.toList());
+    this.comments = presentation.getComments();
   }
 
   public Long getId() {
@@ -157,4 +160,12 @@ public class PresentationDto {
   public void setAuthors(List<UserDto> authors) {
     this.authors = authors;
   }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 }

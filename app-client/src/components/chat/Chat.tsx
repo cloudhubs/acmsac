@@ -1,113 +1,108 @@
 import * as React from 'react';
-import {Theme, withStyles} from '@material-ui/core/styles';
+import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from "@material-ui/core/Typography";
 import ChatRow from "./ChatRow";
 import {TextField} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import {useGlobalState} from "../../state";
+import {useState} from "react";
+import { Comment } from "../../model/Comment";
 
-const styles = (theme: Theme) => ({
-    root: {
-        flexGrow: 1,
-    },
-    paper: {
-        padding: theme.spacing(1),
-        textAlign: 'left' as 'left',
-        color: theme.palette.text.secondary
-    },
-    heading: {
-        fontSize: theme.typography.pxToRem(15),
-        height: '100%',
-        verticalAlign: 'middle',
-        flexBasis: '33.33%',
-        flexShrink: 0,
-        color: theme.palette.text.secondary,
-    },
-    secondaryHeading: {
-        fontSize: theme.typography.pxToRem(15),
-    },
-});
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        root: {
+            flexGrow: 1,
+        },
+        paper: {
+            padding: theme.spacing(1),
+            textAlign: 'left' as 'left',
+            color: theme.palette.text.secondary
+        },
+        heading: {
+            fontSize: theme.typography.pxToRem(15),
+            height: '100%',
+            verticalAlign: 'middle',
+            flexBasis: '33.33%',
+            flexShrink: 0,
+            color: theme.palette.text.secondary,
+        },
+        secondaryHeading: {
+            fontSize: theme.typography.pxToRem(15),
+        },
+    }),
+);
 
-interface IChatProps {
-    classes: any;
-}
+const Chat = () => {
 
-interface IState {
-    commentText: string;
-    comments: [];
-}
+    const [commentText, setComment] = useState("");
+    const [selectedPaper] = useGlobalState('selectedPaper');
+    const [token] = useGlobalState('serverToken');
+    const classes = useStyles();
 
-interface Comment {
-    id: any;
-    date: any;
-    user: User;
-    replies: [];
-    content: string;
-}
-
-interface User {
-    id: any,
-    name: string
-}
-
-class Chat extends React.Component<IChatProps, IState> {
-
-    public state: IState = {
-        commentText: "",
-        comments: []
-    };
-
-    private onReplyChanged = (event: any) => {
-        this.setState({
-            commentText: event.target.value
+    const onSubmit = async () =>{
+        const response = await fetch(process.env.REACT_APP_API_BASE_URL +  '/chat/presentation/' + selectedPaper.id, {
+            method: 'POST',
+            headers : {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                date: null,
+                user: null,
+                replies: [],
+                content: commentText,
+                blocked: false
+            })
         });
+
+        if (response != null){
+            const body = await response.json();
+            console.log(body);
+
+            if (!body.error) {
+                // TODO - We probably need to refresh the page, idk how to do that
+            } else {
+                console.log(body.message);
+            }
+        } else {
+            console.log("Server error");
+        }
     };
 
-    private submitComment = () => {
-        // Send off request and on return, print success - simulated below
+    return (
+        <Paper className={classes.paper} elevation={3}>
+            <h3>Chat</h3>
 
-        this.setState({
-            commentText: ""
-        });
-    };
+            {selectedPaper.comments.length > 0 ?
+                selectedPaper.comments.map((comment: Comment) => {
+                    return (<ChatRow data={comment}/>);
+                })
+            :
+                <Typography className={classes.secondaryHeading}>
+                    No comments yet
+                </Typography>
+            }
 
-    public render() {
-        const {classes} = this.props;
-        return (
-            <Paper className={classes.paper} elevation={3}>
-                <h3>Chat</h3>
+            <br/>
 
-                {this.state.comments.length > 0 ?
-                    this.state.comments.map((comment: Comment) => {
-                        return (
-                            <ChatRow comment={comment}/>
-                        );
-                    })
-                :
-                    <Typography className={classes.secondaryHeading}>
-                        No comments yet
-                    </Typography>
-                }
+            <form>
+                <TextField
+                    placeholder={"Comment"}
+                    value={commentText}
+                    onChange={(event) => setComment(event.target.value)}
+                    style={{minWidth: '75%'}}
+                />
 
-                <br/>
+                <Button size="small" color="primary" style={{marginLeft: '15px'}} onClick={onSubmit}>
+                    Submit
+                </Button>
+            </form>
 
-                <form>
-                    <TextField
-                        placeholder={"Comment"}
-                        value={this.state.commentText}
-                        style={{minWidth: '75%'}}
-                        onChange={this.onReplyChanged}
-                    />
+        </Paper>
 
-                    <Button size="small" color="primary" style={{marginLeft: '15px'}} onClick={this.submitComment}>
-                        Submit
-                    </Button>
-                </form>
+    );
+};
 
-            </Paper>
-
-        )
-    }
-}
-
-export default withStyles(styles)(Chat);
+export default Chat;

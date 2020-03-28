@@ -32,8 +32,9 @@ const defaultState: State = {
         googleScholarUrl: "",
         bio: "",
         picUrl: ""
-    },
-    authors: [],
+      },
+      authors: [],
+      comments: []
     },
     academicPapers: [],
     serverError: new ServerError(),
