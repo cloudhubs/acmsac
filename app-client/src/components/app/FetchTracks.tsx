@@ -10,8 +10,6 @@ const setAuthorsPapers = (authorsPapers: AcademicArticle[]) => dispatch({
 
 const FetchTracks = {
 
-    
-
     async getAcademicPapers(track, history, token: ServerToken) {
         
         let url = "";

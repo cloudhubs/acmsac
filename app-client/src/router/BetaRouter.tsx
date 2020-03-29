@@ -15,11 +15,6 @@ const BetaRouter = () => {
 
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({
-            appBar: {
-                [theme.breakpoints.up('sm')]: {
-                    width: `calc(100%)`
-                },
-            },
             root: {
                 display: 'flex',
                 flexDirection: 'column',

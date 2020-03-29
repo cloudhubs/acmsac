@@ -1,53 +1,54 @@
 import { Dispatch } from "react";
-import { applyMiddleware } from "redux";
 import { createStore } from "react-hooks-global-state";
-import { State } from "./state/typeState";
-import { Action } from "./state/action";
+import { applyMiddleware } from "redux";
 //model
 import { ServerError } from "./model/ServerError";
 import { ServerToken } from "./model/ServerToken";
 import { SignInUser } from "./model/SignInUser";
 import { SignUpUser } from "./model/SignUpUser";
+import { Action } from "./state/action";
+import { State } from "./state/typeState";
 
 const defaultState: State = {
-    selectedPaper: {
-      id: 0,
-      title: "",
-      paperId: 0,
-      trackCode: "",
-      sessionCode: "",
-      sessionChair: "",
-      date: "",
-      paperAbstract: "",
-      pageNumbers: "",
-      acknowledgements: "",
-      videoEmbed: "",
-      presentation: {
-        original: "",
-        download: "",
-        embed: "",
-      },
-      presenter: {
-        name: "",
-        email: "",
-        affiliation: "",
-        country: "",
-        orcid: "",
-        linkedInUrl: "",
-        googleScholarUrl: "",
-        bio: "",
-        picUrl: ""
-      },
-      authors: [],
-      comments: []
+  tracks: [],
+  selectedPaper: {
+    id: 0,
+    title: "",
+    paperId: 0,
+    trackCode: "",
+    sessionCode: "",
+    sessionChair: "",
+    date: "",
+    paperAbstract: "",
+    pageNumbers: "",
+    acknowledgements: "",
+    videoEmbed: "",
+    presentation: {
+      original: "",
+      download: "",
+      embed: "",
     },
-    academicPapers: [],
-    serverError: new ServerError(),
-    serverToken: new ServerToken(),
-    signInUser: new SignInUser(),
-    signUpUser: new SignUpUser(),
-    authenticated: false,
-    track: "",
+    presenter: {
+      name: "",
+      email: "",
+      affiliation: "",
+      country: "",
+      orcid: "",
+      linkedInUrl: "",
+      googleScholarUrl: "",
+      bio: "",
+      picUrl: ""
+    },
+    authors: [],
+    comments: []
+  },
+  academicPapers: [],
+  serverError: new ServerError(),
+  serverToken: new ServerToken(),
+  signInUser: new SignInUser(),
+  signUpUser: new SignUpUser(),
+  authenticated: false,
+  track: "",
 };
 
 
@@ -68,54 +69,46 @@ const parseState = (str: string | null): State | null => {
 const stateFromStorage = parseState(localStorage.getItem(LOCAL_STORAGE_KEY));
 const initialState: State = stateFromStorage || defaultState;
 export const reducer = (state = initialState, action: Action) => {
-    switch (action.type) {
-        case "setServerToken":
-            return {
-                ...state,
-                serverToken: action.serverToken
-            }
-        case "setAuthenticated":
-            return {
-                ...state,
-                authenticated: true
-            }
-        case "setTrack":
-          return {
-            ...state,
-            track: action.track
-          }
-          case "setAcademicPapers":
-            return {
-              ...state,
-              academicPapers: action.academicPapers
-            }
-            case "logout":
-            return {
-              ...state,
-              authenticated: false
-            }
-            case "setSelectedPaper":
-            return {
-              ...state,
-              selectedPaper: action.selectedPaper
-            }
-    //   case "increment":
-    //     return {
-    //       ...state,
-    //       count: state.count + 1
-    //     };
-    //   case "setAge":
-    //     return {
-    //       ...state,
-    //       person: {
-    //         ...state.person,
-    //         age: action.age
-    //       }
-    //     };
-      default:
-        return state;
-    }
-  };
+  switch (action.type) {
+    case "setServerToken":
+      return {
+        ...state,
+        serverToken: action.serverToken
+      }
+    case "setAuthenticated":
+      return {
+        ...state,
+        authenticated: true
+      }
+    case "setTrack":
+      return {
+        ...state,
+        track: action.track
+      }
+    case "setAcademicPapers":
+      return {
+        ...state,
+        academicPapers: action.academicPapers
+      }
+    case "logout":
+      return {
+        ...state,
+        authenticated: false
+      }
+    case "setSelectedPaper":
+      return {
+        ...state,
+        selectedPaper: action.selectedPaper
+      }
+    case "setTracks":
+      return {
+        ...state,
+        tracks: action.tracks
+      }
+    default:
+      return state;
+  }
+};
 
 const saveStateToStorage = ({ getState }: { getState: () => State }) => (
   next: Dispatch<Action>
