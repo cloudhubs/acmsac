@@ -16,7 +16,7 @@ import { useHistory, useParams } from "react-router-dom";
 import tracks from "../../data/Tracks";
 import { AcademicArticle } from '../../model/AcademicArticle';
 import { dispatch, useGlobalState } from "../../state";
-import LogoutButton from '../shared/LogoutButton';
+import LogoutButton from '../../shared/LogoutButton';
 import AcademicPapersTable from './AcademicPapersTable';
 
 const drawerWidth = 240;
@@ -84,7 +84,7 @@ const setTrack = (track: string) => dispatch({
 
 
   
-  const AppDrawer = () => {
+  const TrackDrawer = () => {
 
     const classes = useStyles();
     const theme = useTheme();
@@ -103,7 +103,7 @@ const setTrack = (track: string) => dispatch({
 
     const onClick = async (event: React.MouseEvent<HTMLElement>, code: string) => {
         event.preventDefault();
-        history.push("/beta/app/" + code);
+        history.push("/beta/track/" + code);
     }
 
     const drawer = (
@@ -187,8 +187,8 @@ const setTrack = (track: string) => dispatch({
                 {track}
                 <AcademicPapersTable/>
                 {/* <Switch>
-                    <Route path="/:app/:track" children={<AcademicPapersTable />} />
-                    <Route path="/:app/:track/:paper">
+                    <Route path="/:track/:track" children={<AcademicPapersTable />} />
+                    <Route path="/:track/:track/:paper">
                         <AppPaperDetail />
                     </Route>
                 </Switch> */}
@@ -197,4 +197,4 @@ const setTrack = (track: string) => dispatch({
     );
 }
 
-export default AppDrawer;
+export default TrackDrawer;

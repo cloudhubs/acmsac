@@ -15,7 +15,7 @@ import Container from '@material-ui/core/Container';
 import {useGlobalState, dispatch} from "../../../state";
 import { useHistory } from 'react-router-dom';
 import { ServerToken } from "../../../model/ServerToken";
-import ApplicationBar from "../../../components/shared/ApplicationBar";
+import ApplicationBar from "../../../shared/ApplicationBar";
 
 
 const setServerToken = (serverToken: ServerToken) => dispatch({
@@ -43,7 +43,7 @@ const onSubmit = async (event: React.MouseEvent<HTMLElement>, signInUser, histor
         if (!body.error){
           setServerToken(body);
           setAuthenticated();
-          history.push("/beta/app/all");
+          history.push("/beta/track/all");
         } else {
           console.log(body.message);
         }

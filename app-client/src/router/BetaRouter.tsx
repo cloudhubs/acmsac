@@ -1,17 +1,29 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import React from "react";
+import React, {useEffect} from "react";
 import { HashRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
-import TrackList from '../components/app/TrackList';
-import AppPaperDetail from '../components/appDetail/AppPaperDetail';
-import PublicFooter from "../components/shared/footer/PublicFooter";
-import PrivateHeader from '../components/shared/header/PrivateHeader';
+import TrackList from '../pages/beta/private/TrackList';
+import PublicFooter from "../shared/footer/PublicFooter";
+import PrivateHeader from '../shared/header/PrivateHeader';
 import Login from '../pages/beta/public/Login';
 import Signup from '../pages/beta/public/Signup';
 import { useGlobalState } from "../state";
+import FetchTracks from "../http/FetchTracks";
+import { useHistory, useParams } from "react-router-dom";
 
 const BetaRouter = () => {
 
     const [auth] = useGlobalState('authenticated');
+
+    const [token] = useGlobalState('serverToken');
+    const history = useHistory();
+
+    const getAcademicPapers = async () => {
+        FetchTracks.getAllTracks(history, token);
+    };
+
+    useEffect(() => {
+        getAcademicPapers();
+    }, []);
 
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({
@@ -59,7 +71,7 @@ const BetaRouter = () => {
                             <TrackList/>
                         </PrivateRoute>
                         <PrivateRoute exact path="/beta/app/:track/:code">
-                            <AppPaperDetail/>
+                            {/*<AppPaperDetail/>*/}
                         </PrivateRoute>
                     </Switch>
                 </div>
