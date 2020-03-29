@@ -1,7 +1,6 @@
 package com.example.polls.controller;
 
 import com.example.polls.dto.PresentationDto;
-import com.example.polls.exception.ResourceNotFoundException;
 import com.example.polls.model.Presentation;
 import com.example.polls.model.Role;
 import com.example.polls.model.User;
@@ -53,7 +52,7 @@ public class UserController {
 
     // TODO: remove this api
     @GetMapping("/hello")
-    public List<Role> getRoles(@RequestParam String to) {
+    public List<Role> getRoles(@RequestParam String to) throws Exception {
         if (to != null && !to.trim().isEmpty()) {
             emailService.sendEmail("noreply@acmsac.ecs.baylor.edu", to, "ACM SAC Test", "ACM SAC 2020");
         }

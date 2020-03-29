@@ -93,9 +93,8 @@ const useStyles2 = makeStyles({
     }
 });
 
-export default function AcademicPapersTable() {
-    
-    const [rows, uRows] = useGlobalState('academicPapers');
+const AcademicPapersTable = () => {    
+    const [rows] = useGlobalState('academicPapers');
     console.log(rows);
     const [track] = useGlobalState('track');
     const classes = useStyles2();
@@ -121,7 +120,7 @@ export default function AcademicPapersTable() {
 
     return (
         <>
-        <TableContainer component={Paper}>
+        {/* <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="custom pagination table">
                 <TableBody>
                     <TableRow>
@@ -140,7 +139,6 @@ export default function AcademicPapersTable() {
                                 {row.id}
                             </TableCell>
                             <TableCell align="left">{row.title}</TableCell>
-                            {/* <TableCell align="right">{row.presenter.name}</TableCell> */}
                         </TableRow>
                         
                     ))}
@@ -169,7 +167,9 @@ export default function AcademicPapersTable() {
                     </TableRow>
                 </TableFooter>
             </Table>
-        </TableContainer>
+        </TableContainer> */}
         </>
     );
 }
+
+export default AcademicPapersTable;

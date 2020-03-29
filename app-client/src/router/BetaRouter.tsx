@@ -8,6 +8,7 @@ import {useGlobalState} from "../state";
 import AppPaperDetail from '../components/appDetail/AppPaperDetail';
 import AppDrawer from '../components/app/AppDrawer';
 import Signup from '../components/Signup';
+import TrackList from '../components/app/TrackList';
 
 const BetaRouter = () => {
 
@@ -61,7 +62,7 @@ const BetaRouter = () => {
                         <Route exact path="/beta" component={Login} />
                         <Route exact path="/beta/register" component={Signup} />
                         <PrivateRoute exact path="/beta/app/:track">
-                            <AppDrawer/>
+                            <TrackList/>
                         </PrivateRoute>
                         <PrivateRoute exact path="/beta/app/:track/:code">
                             <AppPaperDetail/>

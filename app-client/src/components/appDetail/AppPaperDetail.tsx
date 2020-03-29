@@ -38,7 +38,6 @@ export default function AppPaperDetail() {
     const [spacing, setSpacing] = React.useState<GridSpacing>(2);
     let { track, code } = useParams();
     let [rows] = useGlobalState('academicPapers');
-    console.log(rows);
     rows = rows.filter((r: AcademicArticle) => r.id === code);
     const selectedPaper: AcademicArticle = rows[0];
     

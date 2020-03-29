@@ -7,47 +7,20 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { AcademicArticle } from "../../model/AcademicArticle";
 import { dispatch, useGlobalState } from "../../state";
-import { useHistory } from 'react-router-dom';
-
-const setAuthorsPapers = (authorsPapers: AcademicArticle[]) => dispatch({
-    academicPapers: authorsPapers,
-    type: 'setAcademicPapers',
-  });
+import FetchTracks from "./FetchTracks";
 
 
-const PresentList = () => {
+const TrackList = () => {
 
-    let { email } = useParams();
-
+    let { track } = useParams();
     const history = useHistory();
+    const [token] = useGlobalState('serverToken');
 
     const getAcademicPapers = async () => {
-
-        let token: string = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTg1MzAxMDAyLCJleHAiOjE1ODU5MDU4MDJ9.mjgyoExoVU5UwKneeUctDGjwEviErcZxmPUeQQew1KIX0ZDHI7fv4a36xoxgZq-iMcuN8F-Gxfllmx__y8sxCg";
-    
-        const response = await fetch(process.env.REACT_APP_API_BASE_URL +  '/check/' + email, {            
-
-            method: 'GET',
-            headers : {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                //'Authorization': `Bearer ${token}`
-            }
-            });
-            if (response != null){
-                const body = await response.json();
-                console.log(body);
-                if (!body.error) {
-                    setAuthorsPapers(body)
-                } else {
-                  console.log(body.message);
-                }
-            } else {
-              console.log("server error");
-            }
+        FetchTracks.getAcademicPapers(track, history, token);
     };
     
     useEffect(() => {
@@ -72,10 +45,10 @@ const PresentList = () => {
     const classes = useStyles();
 
     const [academicPapers] = useGlobalState('academicPapers');
-
+    
     const onClick = (event: React.MouseEvent<HTMLElement>, id) => {
         event.preventDefault();
-        history.push("/api/check/" + email + "/" + id);
+        //history.push("/api/check/" + email + "/" + id);
     }
 
     return (
@@ -99,8 +72,9 @@ const PresentList = () => {
                     <Divider />
                 </Box>
             </Container>
+            {/* <AppDrawer/> */}
                 
         </>
     );
 }
-export default PresentList;
+export default TrackList;

@@ -38,9 +38,7 @@ const onSubmit = async (event: React.MouseEvent<HTMLElement>) => {
     });
     if (response != null){
         const body = await response.json();
-        console.log(body);
         if (body.success){
-          console.log(body.message);
           history.push("/app");
           uAuth(true);
         } else {

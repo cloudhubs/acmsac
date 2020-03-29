@@ -7,6 +7,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { Container, Paper, Typography, TableCell, Grid, Box } from "@material-ui/core";
 import { Slides } from './Slides';
+import Avatar from "@material-ui/core/Avatar";
 
 type AuthorProps = {
   author: Person,
@@ -14,7 +15,6 @@ type AuthorProps = {
 
 export const Author: FunctionComponent<AuthorProps> = ({ author }) => <div>
     
-    <Box m={2}>
     <TableContainer component={Paper} >
                     <Table aria-label="simple table">
                         <TableBody>
@@ -88,13 +88,12 @@ export const Author: FunctionComponent<AuthorProps> = ({ author }) => <div>
                                 Picture
                                 </TableCell>
                                 <TableCell align="left" scope="row">
-                                    <Slides url={author.picUrl} />
+                                    <Avatar style={{height: "auto", maxWidth: "200px", width: "auto"}} src={author.picUrl} />
                                 </TableCell>
                             </TableRow>
 
                             </TableBody>
                             </Table>
                             </TableContainer>
-    </Box>
-  
+
 </div>

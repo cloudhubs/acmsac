@@ -6,7 +6,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import { Container, Paper, Typography, TableCell, Grid } from "@material-ui/core";
+import {Container, Paper, Typography, TableCell, Grid, Link} from "@material-ui/core";
 import { useHistory } from 'react-router-dom';
 import { useParams } from "react-router-dom";
 import { AcademicArticle } from "../../model/AcademicArticle";
@@ -14,6 +14,8 @@ import { dispatch, useGlobalState } from "../../state";
 import { Author } from "./Author";
 import { Video } from "./Video";
 import { Slides } from "./Slides";
+import {Simulate} from "react-dom/test-utils";
+import {Person} from "../../model/Person";
 
 const setSelectedPaper = (selectedPaper: AcademicArticle) => dispatch({
     selectedPaper: selectedPaper,
@@ -40,7 +42,6 @@ const PresentDetail = () => {
             });
             if (response != null){
                 const body = await response.json();
-                console.log(body);
                 if (!body.error) {
                     setSelectedPaper(body)
                     
@@ -75,19 +76,60 @@ const PresentDetail = () => {
 
     const [selectedPaper] = useGlobalState('selectedPaper');
 
+    let affiliationSet = new Set<string>();
+    selectedPaper.authors.forEach((author: Person) => {
+        affiliationSet.add(author.affiliation);
+    });
+    let affiliations: Array<string> = Array.from(affiliationSet.keys());
+
+    let authorList: string[] = [];
+    selectedPaper.authors.forEach((author) => {
+        authorList.push(author.name + " (" + (affiliations.indexOf(author.affiliation) + 1) + ")");
+    });
+
     return (
         <>
 
             <Container maxWidth="xl" component="main" className={classes.heroContent}>
+
+            <Typography variant="h4" align="center" color="textPrimary" component="h1">
+                {selectedPaper.title}
+            </Typography>
+
+            <br/>
+
+            <Grid container spacing={2}>
+                <Grid item md={6}>
+                    <Typography variant="h6" align="center" color="textSecondary" component="p">
+                        Video
+                    </Typography>
+                    <Paper style={{textAlign: "center", padding: "15px", minHeight: "100%", paddingTop: "15%"}}>
+                            <Video url={selectedPaper.videoEmbed}/>
+                    </Paper>
+                </Grid>
+
+                <Grid item md={6} alignContent="center">
+                    <Typography variant="h6" align="center" color="textSecondary" component="p">
+                        Slides ({<Link target="_blank" href={selectedPaper.slidesUrl}>External Link</Link>})
+                    </Typography>
+                    <Paper style={{textAlign: "center", padding: "15px", minHeight: "100%"}}>
+                        <Slides url={selectedPaper.slidesUrl} />
+
+                    </Paper>
+                </Grid>
+            </Grid>
+
+                <br/>
+                <br/>
+                <br/>
                 
             <Grid container spacing={2}>
                 
                 <Grid item md={6}>
                 <Typography variant="h6" align="center" color="textSecondary" component="p">
-                    Paper Detail
+                    Paper Details
                     </Typography>
-                <Box m={2}>
-                
+
                 <TableContainer component={Paper}>
                     <Table aria-label="simple table">
                         <TableBody>
@@ -102,10 +144,30 @@ const PresentDetail = () => {
 
                             <TableRow>
                                 <TableCell component="th">
-                                    Paper ID
+                                    Authors
                                 </TableCell>
                                 <TableCell align="left" scope="row">
-                                    {selectedPaper.paperId}    
+                                    {authorList.join(", ")}
+                                </TableCell>
+                            </TableRow>
+
+                            <TableRow>
+                                <TableCell component="th">
+                                    Affiliations
+                                </TableCell>
+                                <TableCell align="left" scope="row">
+                                    <Typography>
+                                    {
+                                        affiliations.map((affiliation, ndx) =>{
+                                            return (
+                                                <div>
+                                                    {(ndx + 1) + " - " + affiliation}
+                                                    <br/>
+                                                </div>
+                                            );
+                                        })
+                                    }
+                                    </Typography>
                                 </TableCell>
                             </TableRow>
 
@@ -123,7 +185,16 @@ const PresentDetail = () => {
                                     Session Code
                                 </TableCell>
                                 <TableCell align="left" scope="row">
-                                    {selectedPaper.sessionChair}    
+                                    {selectedPaper.sessionCode}
+                                </TableCell>
+                            </TableRow>
+
+                            <TableRow>
+                                <TableCell component="th">
+                                    Session Chair
+                                </TableCell>
+                                <TableCell align="left" scope="row">
+                                    {selectedPaper.sessionChair}
                                 </TableCell>
                             </TableRow>
 
@@ -181,48 +252,28 @@ const PresentDetail = () => {
                     </Table>
                     </TableContainer>
                 
-                    </Box>
                 </Grid>
                 
 
                 <Grid item xs={6}>
 
                 <Typography variant="h6" align="center" color="textSecondary" component="p">
-                    Paper Detail
+                    Presenter Details
                     </Typography>
                 
                     <Author author={selectedPaper.presenter} />
 
 
-                <Typography variant="h6" align="center" color="textSecondary" component="p">
-                    Authors
-                    </Typography>
-                    {selectedPaper && selectedPaper.authors.map(p => (
-                        <Grid item xs={12}>
-                            <Author author={p} />
-                            </Grid>
-                    ))}
+                {/*<Typography variant="h6" align="center" color="textSecondary" component="p">*/}
+                {/*    Authors*/}
+                {/*    </Typography>*/}
+                {/*    {selectedPaper && selectedPaper.authors.map(p => (*/}
+                {/*        <Grid item xs={12}>*/}
+                {/*            <Author author={p} />*/}
+                {/*            </Grid>*/}
+                {/*    ))}*/}
                 </Grid>
 
-            </Grid>
-            <Grid container spacing={2}>
-            <Grid item md={6}>
-                <Typography variant="h6" align="center" color="textSecondary" component="p">
-                    Video
-                    </Typography>
-                <Box m={2}>
-                        <Video url={selectedPaper.videoEmbed}/>
-                </Box>
-            </Grid>
-
-            <Grid item md={6}>
-                <Typography variant="h6" align="center" color="textSecondary" component="p">
-                    Slides
-                    </Typography>
-                <Box m={2}>
-                    <Slides url={selectedPaper.slidesUrl} />
-                </Box>
-                </Grid>
             </Grid>
 
             </Container>
