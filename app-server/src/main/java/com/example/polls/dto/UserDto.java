@@ -5,6 +5,7 @@ import com.example.polls.service.PostprocessingHelpers;
 
 public class UserDto {
   private String name;
+  private String email;
   private String affiliation;
   private String country;
   private String orcid;
@@ -17,6 +18,7 @@ public class UserDto {
 
   public UserDto(User user) {
     this.name = user.getName();
+    this.email = user.getEmail();
     this.affiliation = user.getAffiliation();
     this.country = user.getCountry();
     this.orcid = user.getOrcid();
@@ -34,7 +36,15 @@ public class UserDto {
     this.name = name;
   }
 
-  public String getAffiliation() {
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getAffiliation() {
     return affiliation;
   }
 

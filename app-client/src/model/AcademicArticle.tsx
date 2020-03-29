@@ -1,5 +1,6 @@
 import { Person } from "./Person";
 import { Comment } from "./Comment";
+import { Presentation } from "./Presentation";
 
 export type AcademicArticle = {
     id: number;
@@ -13,7 +14,7 @@ export type AcademicArticle = {
     pageNumbers: string;
     acknowledgements: string;
     videoEmbed: string;
-    slidesUrl: string;
+    presentation: Presentation;
     presenter: Person;
     authors: Person[];
     comments: Comment[];

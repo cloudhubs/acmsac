@@ -22,9 +22,14 @@ const defaultState: State = {
       pageNumbers: "",
       acknowledgements: "",
       videoEmbed: "",
-      slidesUrl: "",
+      presentation: {
+        original: "",
+        download: "",
+        embed: "",
+      },
       presenter: {
         name: "",
+        email: "",
         affiliation: "",
         country: "",
         orcid: "",

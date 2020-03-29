@@ -34,6 +34,12 @@ public class ChatController {
         return chatService.getTrackComments(trackID);
     }
 
+    // get comment by id
+    @GetMapping("/comment/{commentID}")
+    public Comment getCommentById(@PathVariable long commentID) throws Exception {
+        return chatService.getCommentById(commentID);
+    }
+
     // post comment on a presentation
     @PostMapping("/presentation/{presentationID}")
     public Comment addPresentationComment(@CurrentUser UserPrincipal currentUser, @RequestBody Comment comment, @PathVariable long presentationID) throws Exception {
