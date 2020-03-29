@@ -44,7 +44,10 @@ public class Presentation {
   @Lob
   private String videoEmbed;
 
+  @Lob
   private String slidesUrl;
+
+  private String doiUrl;
 
   @ManyToOne
   @JoinColumn(name = "user_id")
@@ -188,6 +191,14 @@ public class Presentation {
 
   public void setPresenter(User presenter) {
     this.presenter = presenter;
+  }
+
+  public String getDoiUrl() {
+    return doiUrl;
+  }
+
+  public void setDoiUrl(String doiUrl) {
+    this.doiUrl = doiUrl;
   }
 
   public List<User> getAuthors() {

@@ -218,7 +218,9 @@ public class ImportService {
       track.setVideoEmbed(row.getCell(10, Row.CREATE_NULL_AS_BLANK).toString());
       track.setMessage(row.getCell(11, Row.CREATE_NULL_AS_BLANK).toString());
 
-      track.getChairs().add(chair);
+      if (!track.getChairs().contains(chair)) {
+        track.getChairs().add(chair);
+      }
 
       try {
         trackRepository.save(track);
@@ -252,8 +254,10 @@ public class ImportService {
 
     Track track = trackRepository.findByCodeIgnoreCase(trackCode).get();
     try {
-      track.getChairs().add(user);
-      trackRepository.save(track);
+      if (!track.getChairs().contains(user)) {
+        track.getChairs().add(user);
+        trackRepository.save(track);
+      }
     } catch (Exception e) {
       throw new ImportException("Could not update track!", e);
     }

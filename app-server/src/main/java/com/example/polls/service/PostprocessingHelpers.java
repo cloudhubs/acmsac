@@ -1,6 +1,8 @@
 package com.example.polls.service;
 
+import com.example.polls.dto.PresentationDto;
 import com.example.polls.dto.PresentationLinks;
+import com.example.polls.model.Presentation;
 import org.springframework.stereotype.Service;
 
 import java.net.MalformedURLException;
@@ -75,4 +77,5 @@ public class PostprocessingHelpers {
       return new PresentationLinks(original, original, original);
     }
   }
+
 }

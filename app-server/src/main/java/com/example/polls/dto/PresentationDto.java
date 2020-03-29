@@ -28,6 +28,8 @@ public class PresentationDto {
   private String acknowledgements;
   private String videoEmbed;
   private PresentationLinks presentation;
+  private String doiUrl;
+  private String acmUrl;
   private UserDto presenter;
   private List<UserDto> authors = new ArrayList<>();
   private List<Comment> comments = new ArrayList<>();
@@ -142,8 +144,24 @@ public class PresentationDto {
     return presentation;
   }
 
-  public void setSlidesUrl(PresentationLinks presentation) {
+  public void setPresentation(PresentationLinks presentation) {
     this.presentation = presentation;
+  }
+
+  public String getDoiUrl() {
+    return doiUrl;
+  }
+
+  public void setDoiUrl(String doiUrl) {
+    this.doiUrl = doiUrl;
+  }
+
+  public String getAcmUrl() {
+    return acmUrl;
+  }
+
+  public void setAcmUrl(String acmUrl) {
+    this.acmUrl = acmUrl;
   }
 
   public UserDto getPresenter() {
@@ -162,11 +180,13 @@ public class PresentationDto {
     this.authors = authors;
   }
 
-    public List<Comment> getComments() {
-        return comments;
-    }
+  public List<Comment> getComments() {
+      return comments;
+  }
 
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
-    }
+  public void setComments(List<Comment> comments) {
+      this.comments = comments;
+  }
+
+
 }

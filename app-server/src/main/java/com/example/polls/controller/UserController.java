@@ -11,6 +11,7 @@ import com.example.polls.repository.RoleRepository;
 import com.example.polls.repository.UserRepository;
 import com.example.polls.security.CurrentUser;
 import com.example.polls.security.UserPrincipal;
+import com.example.polls.service.DtoConverterService;
 import com.example.polls.service.EmailService;
 import com.example.polls.service.ImportService;
 import org.slf4j.Logger;
@@ -47,6 +48,9 @@ public class UserController {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private DtoConverterService dtoConverterService;
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -88,8 +92,9 @@ public class UserController {
     public ResponseEntity<List<PresentationDto>> checkUserPresentations(@PathVariable("email") String email) {
         if (userRepository.existsByEmail(email)) {
             User user = userRepository.findByEmail(email).get();
-            List<PresentationDto> presentations = presentationRepository.findAllByPresenter(user)
-                    .stream().map(p -> new PresentationDto(p)).collect(Collectors.toList());
+            List<PresentationDto> presentations = dtoConverterService.getPresentationDtoList(presentationRepository.findAllByPresenter(user));
+//            List<PresentationDto> presentations = presentationRepository.findAllByPresenter(user)
+//                    .stream().map(p -> new PresentationDto(p)).collect(Collectors.toList());
             return ResponseEntity.ok(presentations);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -100,7 +105,7 @@ public class UserController {
         if (userRepository.existsByEmail(email)) {
             Optional<Presentation> presentation = presentationRepository.findById(presId);
             if (presentation.isPresent() && presentation.get().getPresenter().getEmail().equals(email)) {
-                return ResponseEntity.ok(new PresentationDto(presentation.get()));
+                return ResponseEntity.ok(dtoConverterService.getPresentationDto(presentation.get()));
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
