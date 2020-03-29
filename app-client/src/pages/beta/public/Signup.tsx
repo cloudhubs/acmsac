@@ -10,11 +10,11 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import {useGlobalState} from "../state";
+import {useGlobalState} from "../../../state";
 import { useHistory } from 'react-router-dom';
 import Alert from '@material-ui/lab/Alert';
-import { ServerError } from '../model/ServerError';
-import { CustomLink } from './shared/CustomLink';
+import { ServerError } from '../../../model/ServerError';
+import { CustomLink } from '../../../components/shared/CustomLink';
 
 const Signup = () => {
 const classes = useStyles();

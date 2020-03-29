@@ -18,6 +18,16 @@ export const Author: FunctionComponent<AuthorProps> = ({ author }) => <div>
     <TableContainer component={Paper} >
                     <Table aria-label="simple table">
                         <TableBody>
+
+                        <TableRow>
+                                <TableCell component="th">
+                                Picture
+                                </TableCell>
+                                <TableCell align="left" scope="row">
+                                    <Avatar style={{height: "auto", maxWidth: "200px", width: "auto"}} src={author.picUrl} />
+                                </TableCell>
+                            </TableRow>
+                            
                         <TableRow>
                                 <TableCell component="th">
                                 Name
@@ -92,14 +102,7 @@ export const Author: FunctionComponent<AuthorProps> = ({ author }) => <div>
                                 </TableCell>
                             </TableRow>
 
-                            <TableRow>
-                                <TableCell component="th">
-                                Picture
-                                </TableCell>
-                                <TableCell align="left" scope="row">
-                                    <Avatar style={{height: "auto", maxWidth: "200px", width: "auto"}} src={author.picUrl} />
-                                </TableCell>
-                            </TableRow>
+                            
 
                             </TableBody>
                             </Table>

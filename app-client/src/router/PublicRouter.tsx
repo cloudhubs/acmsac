@@ -1,8 +1,8 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React from "react";
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
-import PublicFooter from "../components/footer/PublicFooter";
-import PublicHeader from "../components/header/PublicHeader";
+import PublicFooter from "../components/shared/footer/PublicFooter";
+import PublicHeader from "../components/shared/header/PublicHeader";
 import Index from "../components/Index";
 import EarlyRegister from "../pages/public/EarlyRegister";
 import PresentDetail from "../pages/public/PresentDetail";

@@ -1,14 +1,13 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React from "react";
-import { HashRouter as Router,BrowserRouter,  Redirect, Route, Link, Switch, useHistory, useLocation } from 'react-router-dom'
-import PublicFooter from "../components/footer/PublicFooter";
-import PublicHeader from "../components/header/PublicHeader";
-import Login from '../components/Login';
-import {useGlobalState} from "../state";
-import AppPaperDetail from '../components/appDetail/AppPaperDetail';
-import AppDrawer from '../components/app/AppDrawer';
-import Signup from '../components/Signup';
+import { HashRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import TrackList from '../components/app/TrackList';
+import AppPaperDetail from '../components/appDetail/AppPaperDetail';
+import PublicFooter from "../components/shared/footer/PublicFooter";
+import PrivateHeader from '../components/shared/header/PrivateHeader';
+import Login from '../pages/beta/public/Login';
+import Signup from '../pages/beta/public/Signup';
+import { useGlobalState } from "../state";
 
 const BetaRouter = () => {
 
@@ -56,7 +55,7 @@ const BetaRouter = () => {
         <>
         <div className={classes.root}>
         <Router>
-                <PublicHeader />
+                <PrivateHeader />
                 <div>
                     <Switch>
                         <Route exact path="/beta" component={Login} />
@@ -67,10 +66,6 @@ const BetaRouter = () => {
                         <PrivateRoute exact path="/beta/app/:track/:code">
                             <AppPaperDetail/>
                         </PrivateRoute>
-                        {/*<Route exact path="/login" component={Login} /> */}
-                        {/* <Route path="*">
-                            <Redirect path="/app/all"/>
-                        </Route> */}
                     </Switch>
                 </div>
                 <PublicFooter />

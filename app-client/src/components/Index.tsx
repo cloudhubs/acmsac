@@ -5,8 +5,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import { Link } from 'react-router-dom'
-import PublicHeader from './header/PublicHeader';
-import PublicFooter from './footer/PublicFooter';
+import PublicHeader from './shared/header/PublicHeader';
+import PublicFooter from './shared/footer/PublicFooter';
 
 
 

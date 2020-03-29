@@ -6,6 +6,12 @@ npm start
 docker-compose -f docker-compose-fe.yml up --build
 ```
 
+```
+git pull origin master; docker-compose build; docker-compose push
+```
+
+
+
 ## Available Scripts
 
 In the project directory, you can run:
@@ -48,3 +54,5 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+

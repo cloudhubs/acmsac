@@ -12,10 +12,10 @@ import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import {useGlobalState, dispatch} from "../state";
+import {useGlobalState, dispatch} from "../../../state";
 import { useHistory } from 'react-router-dom';
-import { ServerToken } from "../model/ServerToken";
-import ApplicationBar from "./shared/ApplicationBar";
+import { ServerToken } from "../../../model/ServerToken";
+import ApplicationBar from "../../../components/shared/ApplicationBar";
 
 
 const setServerToken = (serverToken: ServerToken) => dispatch({

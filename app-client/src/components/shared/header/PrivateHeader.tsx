@@ -1,5 +1,3 @@
-
-
 import React from "react";
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -8,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom'
 
-const PublicHeader = () => {
+const PrivateHeader = () => {
 
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({
@@ -38,14 +36,14 @@ const PublicHeader = () => {
                         ACM SAC 2020
                     </Typography>
                     <Button color="primary" variant="outlined" className={classes.link}>
-                        <Link to="/">Home</Link>
+                        <Link to="/">Tracks</Link>
                     </Button>
                     <Button color="primary" variant="outlined" className={classes.link}>
-                        <Link to="/search">Search</Link>
+                        <Link to="/search">Logout</Link>
                     </Button>
                 </Toolbar>
             </AppBar>
         </>
     );
 }
-export default PublicHeader;
+export default PrivateHeader;
