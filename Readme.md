@@ -11,15 +11,16 @@ $ docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=acmsa
 ```
 
 - Run backend: 
-
+Go to app-backend
 ```
 $ mvn spring-boot:run
 ```
 
 - Run frontend:
-
+Go to app-frontend
 ```
 $ export REACT_APP_API_BASE_URL=http://localhost:8080/api
+$ npm install
 $ npm start
 ```
 
