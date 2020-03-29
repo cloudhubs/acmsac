@@ -13,7 +13,11 @@ export type AcademicArticle = {
     pageNumbers: string;
     acknowledgements: string;
     videoEmbed: string;
-    slidesUrl: string;
+    presentation: {
+        original: string;
+        download: string;
+        embed: string;
+    };
     presenter: Person;
     authors: Person[];
     comments: Comment[];

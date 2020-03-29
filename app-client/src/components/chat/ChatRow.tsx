@@ -12,8 +12,8 @@ import Grid from '@material-ui/core/Grid';
 import {TextField} from "@material-ui/core";
 import {Reply} from "../../model/Reply";
 import {useState} from "react";
-import {useGlobalState} from "../../state";
-import {Comment} from "../../model/Comment";
+import {dispatch, useGlobalState} from "../../state";
+import {AcademicArticle} from "../../model/AcademicArticle";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -36,10 +36,16 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
+const setSelectedPaper = (selectedPaper: AcademicArticle) => dispatch({
+    selectedPaper: selectedPaper,
+    type: 'setSelectedPaper',
+});
+
 const ChatRow = (props) => {
 
     const [expanded, setExpanded] = useState(false);
     const [replyText, setReply] = useState("");
+    const [selectedPaper] = useGlobalState('selectedPaper');
     const [token] = useGlobalState('serverToken');
     const classes = useStyles();
 
@@ -66,6 +72,14 @@ const ChatRow = (props) => {
 
             if (!body.error) {
                 // TODO - We probably need to refresh the page, idk how to do that
+                for(let i = 0; i < selectedPaper.comments.length; i++){
+                    if(selectedPaper.comments[i].id == props.data.id){
+                        //console.log(body);
+                        selectedPaper.comments[i].replies.push(body);
+                        setSelectedPaper(selectedPaper);
+                        setReply("");
+                    }
+                }
             } else {
                 console.log(body.message);
             }
@@ -90,8 +104,7 @@ const ChatRow = (props) => {
                         props.data.replies.map((reply: Reply) => {
                             return (
                                 <>
-                                    <Grid item xs={1} />
-                                    <Grid item={true} xs={11}>
+                                    <Grid item style={{marginLeft: "30px"}} xs={12}>
                                         <Typography>
                                             <b>{reply.user.name}</b> <br/>
                                             {reply.content}

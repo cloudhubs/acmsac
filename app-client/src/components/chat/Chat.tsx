@@ -5,9 +5,10 @@ import Typography from "@material-ui/core/Typography";
 import ChatRow from "./ChatRow";
 import {TextField} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import {useGlobalState} from "../../state";
+import {dispatch, useGlobalState} from "../../state";
 import {useState} from "react";
 import { Comment } from "../../model/Comment";
+import {AcademicArticle} from "../../model/AcademicArticle";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -32,6 +33,11 @@ const useStyles = makeStyles((theme: Theme) =>
         },
     }),
 );
+
+const setSelectedPaper = (selectedPaper: AcademicArticle) => dispatch({
+    selectedPaper: selectedPaper,
+    type: 'setSelectedPaper',
+});
 
 const Chat = () => {
 
@@ -59,10 +65,13 @@ const Chat = () => {
 
         if (response != null){
             const body = await response.json();
-            console.log(body);
 
             if (!body.error) {
                 // TODO - We probably need to refresh the page, idk how to do that
+                selectedPaper.comments.push(body);
+                setSelectedPaper(selectedPaper);
+                //console.log(body);
+                setComment("");
             } else {
                 console.log(body.message);
             }
@@ -77,7 +86,7 @@ const Chat = () => {
 
             {selectedPaper.comments.length > 0 ?
                 selectedPaper.comments.map((comment: Comment) => {
-                    return (<ChatRow data={comment}/>);
+                    return (<ChatRow commentId={comment.id} data={comment}/>);
                 })
             :
                 <Typography className={classes.secondaryHeading}>

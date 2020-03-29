@@ -16,6 +16,7 @@ import { Video } from "./Video";
 import { Slides } from "./Slides";
 import {Simulate} from "react-dom/test-utils";
 import {Person} from "../../model/Person";
+import Chat from "../../components/chat/Chat";
 
 const setSelectedPaper = (selectedPaper: AcademicArticle) => dispatch({
     selectedPaper: selectedPaper,
@@ -111,10 +112,10 @@ const PresentDetail = () => {
 
                 <Grid item md={6} alignContent="center">
                     <Typography variant="h6" align="center" color="textSecondary" component="p">
-                        Slides ({<Link target="_blank" href={selectedPaper.slidesUrl}>External Link</Link>})
+                        Slides ({<Link target="_blank" href={selectedPaper.presentation.download}>External Link</Link>})
                     </Typography>
                     <Paper style={{textAlign: "center", padding: "15px", minHeight: "100%"}}>
-                        <Slides url={selectedPaper.slidesUrl} />
+                        <Slides url={selectedPaper.presentation.embed} />
 
                     </Paper>
                 </Grid>
@@ -293,13 +294,13 @@ const PresentDetail = () => {
 
             </Container>
 
-            <Container maxWidth="md" component="main" className={classes.heroContent}>
-                <Box>
-                    <Paper>
-                        
-                    </Paper>
-                </Box>
-            </Container>
+            {/*<Container maxWidth="md" component="main" className={classes.heroContent}>*/}
+            {/*    <Box>*/}
+            {/*        <Paper>*/}
+            {/*            <Chat/>*/}
+            {/*        </Paper>*/}
+            {/*    </Box>*/}
+            {/*</Container>*/}
         </>
     );
 }

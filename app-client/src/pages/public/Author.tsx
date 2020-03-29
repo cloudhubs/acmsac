@@ -27,6 +27,15 @@ export const Author: FunctionComponent<AuthorProps> = ({ author }) => <div>
                                 </TableCell>
                             </TableRow>
 
+                            <TableRow>
+                                <TableCell component="th">
+                                    Email
+                                </TableCell>
+                                <TableCell align="left" scope="row">
+                                    {author.email}
+                                </TableCell>
+                            </TableRow>
+
 
                             <TableRow>
                                 <TableCell component="th">
