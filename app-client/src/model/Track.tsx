@@ -6,6 +6,6 @@ export type Track = {
     name: string;
     trackUrl: string;
     videoEmbed: string;
-    message: string:
+    message: string;
     chairs: Person[];
   }
