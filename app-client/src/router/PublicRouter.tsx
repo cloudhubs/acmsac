@@ -8,6 +8,7 @@ import EarlyRegister from "../pages/public/EarlyRegister";
 import PaperDetail from "../components/paperDetail/PaperDetail";
 import CheckList from "../pages/public/CheckList";
 import Search from "../pages/public/Search";
+import CheckDetail from "../pages/public/CheckDetail";
 
 const PublicRouter = () => {
 
@@ -40,7 +41,7 @@ const PublicRouter = () => {
                         <Route exact path="/search" component={Search} />
                         <Route exact path="/register" component={EarlyRegister} />
                         <Route exact path="/api/check/:email" component={CheckList} />
-                        <Route exact path="/api/check/:email/:paperId" component={PaperDetail} />
+                        <Route exact path="/api/check/:email/:paperId" component={CheckDetail} />
                     </Switch>
                 </div>
                 <PublicFooter />

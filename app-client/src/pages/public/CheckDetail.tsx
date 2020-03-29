@@ -1,20 +1,47 @@
-import React from "react";
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import React, {useEffect} from "react";
+import {AcademicArticle} from "../../model/AcademicArticle";
+import {dispatch} from "../../state";
+import { useParams } from "react-router-dom";
+import PaperDetail from "../../components/paperDetail/PaperDetail";
+
+const setSelectedPaper = (selectedPaper: AcademicArticle) => dispatch({
+    selectedPaper: selectedPaper,
+    type: 'setSelectedPaper',
+});
+
+
 const CheckDetail = () => {
-    const useStyles = makeStyles((theme: Theme) =>
-        createStyles({
-            autoSizeInput: {
-                margin: '2px'
-            },
-            boxik: {
-                padding: '10px'
+
+    let { email, paperId } = useParams();
+
+    const getAcademicPaper = async () => {
+        const response = await fetch(process.env.REACT_APP_API_BASE_URL + '/check/' + email + '/' + paperId, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
             }
-        }),
-    );
-    const classes = useStyles();
+        });
+        if (response != null) {
+            const body = await response.json();
+            if (!body.error) {
+                console.log(body);
+                setSelectedPaper(body)
+            } else {
+                console.log(body.message);
+            }
+        } else {
+            console.log("server error");
+        }
+    };
+
+    useEffect(() => {
+        getAcademicPaper();
+    }, []);
+
     return (
         <div>
-            This is login.
+            <PaperDetail />
         </div>
     );
 }

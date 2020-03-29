@@ -10,6 +10,7 @@ import { useGlobalState } from "../state";
 import FetchTracks from "../http/FetchTracks";
 import { useHistory, useParams } from "react-router-dom";
 import TrackDetail from "../pages/beta/private/TrackDetail";
+import AcademicPaperDetail from "../pages/beta/private/AcademicPaperDetail";
 
 const BetaRouter = () => {
 
@@ -73,6 +74,9 @@ const BetaRouter = () => {
                         </PrivateRoute>
                         <PrivateRoute exact path="/beta/track/:code">
                             <TrackDetail/>
+                        </PrivateRoute>
+                        <PrivateRoute>
+                            <Route exact path="/beta/track/:track/:code" component={AcademicPaperDetail}/>
                         </PrivateRoute>
                     </Switch>
                 </div>

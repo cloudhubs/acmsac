@@ -23,26 +23,26 @@ const PaperDetail = () => {
 
     let { email, paperId } = useParams();
 
-    const getAcademicPaper = async () => {
-        const response = await fetch(process.env.REACT_APP_API_BASE_URL + '/check/' + email + '/' + paperId, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            }
-        });
-        if (response != null) {
-            const body = await response.json();
-            if (!body.error) {
-                console.log(body);
-                setSelectedPaper(body)
-            } else {
-                console.log(body.message);
-            }
-        } else {
-            console.log("server error");
-        }
-    };
+    // const getAcademicPaper = async () => {
+    //     const response = await fetch(process.env.REACT_APP_API_BASE_URL + '/check/' + email + '/' + paperId, {
+    //         method: 'GET',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             'Accept': 'application/json',
+    //         }
+    //     });
+    //     if (response != null) {
+    //         const body = await response.json();
+    //         if (!body.error) {
+    //             console.log(body);
+    //             setSelectedPaper(body)
+    //         } else {
+    //             console.log(body.message);
+    //         }
+    //     } else {
+    //         console.log("server error");
+    //     }
+    // };
 
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({
@@ -58,9 +58,10 @@ const PaperDetail = () => {
         }),
     );
 
-    useEffect(() => {
-        getAcademicPaper();
-    }, []);
+    //
+    // useEffect(() => {
+    //     getAcademicPaper();
+    // }, []);
 
     const classes = useStyles();
 
