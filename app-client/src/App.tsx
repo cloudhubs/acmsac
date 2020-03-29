@@ -11,6 +11,8 @@ import AppPaperDetail from "./components/appDetail/AppPaperDetail";
 import Index from "./components/Index";
 import PublicRouter from './router/PublicRouter';
 import Search from './pages/public/Search';
+import ReactGA from 'react-ga';
+import { createBrowserHistory } from 'history';
 
 // function PrivateRoute({ children, ...rest }) {
 //     return (
@@ -32,7 +34,19 @@ import Search from './pages/public/Search';
 //     );
 // }
 
+
 const App = () => {
+
+    const trackingId: string = process.env.GA_TRACKING_ID || "";
+    ReactGA.initialize(trackingId);
+
+    const history = createBrowserHistory();
+
+    // Initialize google analytics page view tracking
+    history.listen(location => {
+        ReactGA.set({ page: location.pathname }); // Update the user's current page
+        ReactGA.pageview(location.pathname); // Record a pageview for the given page
+    });
 
     const [rows, uRows] = useGlobalState('academicPapers');
     const [auth] = useGlobalState('authenticated');
@@ -78,7 +92,7 @@ const App = () => {
 
 
     return (
-        <Router>
+        <Router history={history}>
             <div>
                 <Switch>
                     <Route exact path="/" component={PublicRouter} />
