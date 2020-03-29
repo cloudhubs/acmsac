@@ -38,13 +38,14 @@ export default function AppPaperDetail() {
     const [spacing, setSpacing] = React.useState<GridSpacing>(2);
     let { track, code } = useParams();
     let [rows] = useGlobalState('academicPapers');
-    // rows = rows.filter((r: AcademicArticle) => r.key === code);
+    rows = rows.filter((r: AcademicArticle) => r.id === code);
     const selectedPaper: AcademicArticle = rows[0];
-    // const iframe = '<iframe src="' + selectedPaper.url +'" width="540" height="450"></iframe>';
-
-    return (
+    
+    // const iframe = '<iframe src="' + selectedPaper.slidesUrl +'" width="540" height="450"></iframe>';
+    const iframe = '';
+        return (
         <>
-            {/* <ApplicationBar />
+            <ApplicationBar />
 
             <nav>
                 <Link variant="button" color="textPrimary" href="/register">
@@ -60,9 +61,9 @@ export default function AppPaperDetail() {
                     <Grid container justify="center" spacing={spacing}>
                         <Grid key={1} item xs={12} md={6}>
                             <Paper className={classes.paper} elevation={3}>
-                            <h3>{selectedPaper.paperTitle}</h3>
+                            <h3>{selectedPaper.title}</h3>
                             <Avatar alt="Remy Sharp" src="https://s3.amazonaws.com/uifaces/faces/twitter/chacky14/128.jpg" />
-                            <p>Author: {selectedPaper.author}</p>
+                            <p>Author: {selectedPaper.presenter.name}</p>
                             </Paper>
                         </Grid>
                     </Grid>
@@ -72,8 +73,8 @@ export default function AppPaperDetail() {
                     <Paper className={classes.paper} elevation={3}>
                         {selectedPaper &&
                             <div>
-                                {selectedPaper.paperTitle}
-                                <div dangerouslySetInnerHTML={{__html: selectedPaper.iFrame}} />
+                                {selectedPaper.presenter.name}
+                                <div dangerouslySetInnerHTML={{__html: selectedPaper.videoEmbed}} />
                             </div>
                         }
                     </Paper>
@@ -83,7 +84,7 @@ export default function AppPaperDetail() {
                     <Paper className={classes.paper} elevation={3}>
                         {selectedPaper &&
                             <div>
-                                {selectedPaper.paperTitle}
+                                {selectedPaper.title}
                                 <div dangerouslySetInnerHTML={{__html: iframe}} />
                             </div>
                         }
@@ -92,7 +93,7 @@ export default function AppPaperDetail() {
                 <Grid key={3} item xs={12} >
                     <Chat />
                 </Grid>
-            </Grid> */}
+            </Grid>
         </>
     );
 }

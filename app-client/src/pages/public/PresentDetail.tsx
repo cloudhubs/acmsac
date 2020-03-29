@@ -43,8 +43,8 @@ const PresentDetail = () => {
             });
             if (response != null){
                 const body = await response.json();
-                console.log(body);
                 if (!body.error) {
+                    console.log(body);
                     setSelectedPaper(body)
                     
                 } else {
@@ -112,10 +112,10 @@ const PresentDetail = () => {
 
                 <Grid item md={6} alignContent="center">
                     <Typography variant="h6" align="center" color="textSecondary" component="p">
-                        Slides ({<Link target="_blank" href={selectedPaper.presentation.download}>External Link</Link>})
+                        Slides ({<Link target="_blank" href={selectedPaper && selectedPaper.presentation.download}>External Link</Link>})
                     </Typography>
                     <Paper style={{textAlign: "center", padding: "15px", minHeight: "100%"}}>
-                        <Slides url={selectedPaper.presentation.embed} />
+                        <Slides url={selectedPaper && selectedPaper.presentation.embed} />
 
                     </Paper>
                 </Grid>
@@ -170,15 +170,6 @@ const PresentDetail = () => {
                                         })
                                     }
                                     </Typography>
-                                </TableCell>
-                            </TableRow>
-
-                            <TableRow>
-                                <TableCell component="th">
-                                    Paper ID
-                                </TableCell>
-                                <TableCell align="left" scope="row">
-                                    {selectedPaper.paperId}    
                                 </TableCell>
                             </TableRow>
 
@@ -286,11 +277,6 @@ const PresentDetail = () => {
                 </Grid>
 
             </Grid>
-
-            
-
-                
-
 
             </Container>
 

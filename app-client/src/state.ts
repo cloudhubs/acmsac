@@ -66,9 +66,7 @@ const parseState = (str: string | null): State | null => {
   }
 };
 const stateFromStorage = parseState(localStorage.getItem(LOCAL_STORAGE_KEY));
-console.log(stateFromStorage);
 const initialState: State = stateFromStorage || defaultState;
-console.log(initialState);
 export const reducer = (state = initialState, action: Action) => {
     switch (action.type) {
         case "setServerToken":
@@ -123,8 +121,6 @@ const saveStateToStorage = ({ getState }: { getState: () => State }) => (
   next: Dispatch<Action>
 ) => (action: Action) => {
   const returnValue = next(action);
-  console.log("-------------");
-  console.log(getState());
   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(getState()));
   return returnValue;
 };
