@@ -73,8 +73,10 @@ const PaperDetail = () => {
     let affiliations: Array<string> = Array.from(affiliationSet.keys());
 
     let authorList: string[] = [];
+    let affiliationList: number[] = [];
     selectedPaper.authors.forEach((author) => {
-        authorList.push(author.name + " (" + (affiliations.indexOf(author.affiliation) + 1) + ")");
+        authorList.push(author.name);
+        affiliationList.push(affiliations.indexOf(author.affiliation) + 1);
     });
 
     return (
@@ -139,7 +141,17 @@ const PaperDetail = () => {
                                             Authors
                                 </TableCell>
                                         <TableCell align="left" scope="row">
-                                            {authorList.join(", ")}
+                                            <Typography>
+                                            {
+                                                authorList.map((author, ndx) => {
+                                                    return (
+                                                        <span>
+                                                            {author}<sup>{affiliationList[ndx]}</sup>{ndx === authorList.length - 1 ? "" : ", "}
+                                                        </span>
+                                                    );
+                                                })
+                                            }
+                                            </Typography>
                                         </TableCell>
                                     </TableRow>
 
