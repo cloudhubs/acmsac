@@ -31,7 +31,8 @@ import { withRoot } from './withRoot';
 
 const App = () => {
 
-    const trackingId: string = process.env.GA_TRACKING_ID || "";
+    console.log(process.env.REACT_APP_GA_TRACKING_ID);
+    const trackingId: string = process.env.REACT_APP_GA_TRACKING_ID || "";
     ReactGA.initialize(trackingId);
 
     const history = createBrowserHistory();
