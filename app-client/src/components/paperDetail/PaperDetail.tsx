@@ -12,6 +12,7 @@ import { dispatch, useGlobalState } from "../../state";
 import { Author } from "../../pages/public/Author";
 import { Slides } from "./Slides";
 import { Video } from "./Video";
+import Chat from "../chat/Chat";
 
 const setSelectedPaper = (selectedPaper: AcademicArticle) => dispatch({
     selectedPaper: selectedPaper,
@@ -216,6 +217,14 @@ const PaperDetail = () => {
                             Presenter Details
                     </Typography>
                         <Author author={selectedPaper.presenter} />
+                    </Grid>
+                </Grid>
+
+                <Grid container spacing={4}>
+
+                    <Grid item md={12}>
+                        <Chat/>
+
                     </Grid>
                 </Grid>
 
