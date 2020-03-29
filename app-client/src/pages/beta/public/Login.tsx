@@ -43,7 +43,7 @@ const onSubmit = async (event: React.MouseEvent<HTMLElement>, signInUser, histor
         if (!body.error){
           setServerToken(body);
           setAuthenticated();
-          history.push("/beta/track/all");
+          history.push("/beta/track");
         } else {
           console.log(body.message);
         }

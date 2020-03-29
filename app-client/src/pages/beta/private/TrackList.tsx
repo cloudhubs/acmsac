@@ -28,10 +28,7 @@ const TrackList = () => {
 
     let { track } = useParams();
 
-    const onClick = (event: React.MouseEvent<HTMLElement>, id) => {
-        event.preventDefault();
-        //history.push("/api/check/" + email + "/" + id);
-    }
+
 
     return (
         <>

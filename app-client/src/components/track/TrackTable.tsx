@@ -5,7 +5,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {useGlobalState} from "../../state";
 import {
     ButtonBase,
-    Container,
+    Container, IconButton,
     Link,
     Paper,
     Table,
@@ -15,12 +15,19 @@ import {
     TableHead,
     TableRow, Typography
 } from "@material-ui/core";
+import { BrowserRouter as Router, useHistory, useParams } from "react-router-dom";
 
 
 
 const TrackTable = () => {
     const [tracks] = useGlobalState('tracks');
     console.log(tracks);
+    let history = useHistory();
+
+    const goDetail = (event: React.MouseEvent<HTMLElement>, row: Track) => {
+        event.preventDefault();
+        history.push("/beta/track/" + row.id);
+    }
 
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({
@@ -49,8 +56,7 @@ const TrackTable = () => {
                         <Table aria-label="simple table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell>ID</TableCell>
-                                    <TableCell align="right">Code</TableCell>
+                                    <TableCell>Code</TableCell>
                                     <TableCell align="right">Name</TableCell>
                                     <TableCell align="right">Track URL</TableCell>
                                     <TableCell >Detail</TableCell>
@@ -60,15 +66,15 @@ const TrackTable = () => {
                                 {tracks.map(row => (
 
                                         <TableRow key={row.id} hover role="checkbox" className={classes.rowClick}>
-
-                                            <TableCell component="th" scope="row" >
-                                                {row.id}
-                                            </TableCell>
-                                            <TableCell align="right">{row.code}</TableCell>
+                                            <TableCell>{row.code}</TableCell>
                                             <TableCell align="right">{row.name}</TableCell>
                                             <TableCell align="right">{<Link target="_blank" href={row && row.trackUrl}>{row.trackUrl}</Link>}</TableCell>
                                             <ButtonBase>
-                                            <TableCell> <MoreVertIcon /> </TableCell>
+                                            <TableCell>
+                                                <IconButton onClick={(event) => {goDetail(event, row)}}>
+                                                    <MoreVertIcon />
+                                                </IconButton>
+                                                 </TableCell>
                                             </ButtonBase>
                                         </TableRow>
 

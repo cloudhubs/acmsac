@@ -97,6 +97,7 @@ const App = () => {
                     <Route exact path="/api/check/:email" component={PublicRouter} />
                     <Route exact path="/api/check/:email/:paperId" component={PublicRouter} />
                     <Route exact path="/beta/register" component={BetaRouter} />
+                    <Route exact path="/beta/track" component={BetaRouter} />
                     <Route exact path="/beta/track/:track" component={BetaRouter} />
                     <Route exact path="/beta/track/:track/:code" component={BetaRouter}/>
                     <Route path="*">

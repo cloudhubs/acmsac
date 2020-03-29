@@ -9,6 +9,7 @@ import Signup from '../pages/beta/public/Signup';
 import { useGlobalState } from "../state";
 import FetchTracks from "../http/FetchTracks";
 import { useHistory, useParams } from "react-router-dom";
+import TrackDetail from "../pages/beta/private/TrackDetail";
 
 const BetaRouter = () => {
 
@@ -67,9 +68,11 @@ const BetaRouter = () => {
                     <Switch>
                         <Route exact path="/beta" component={Login} />
                         <Route exact path="/beta/register" component={Signup} />
-
-                        <PrivateRoute exact path="/beta/track/:code">
+                        <PrivateRoute exact path="/beta/track">
                             <TrackList/>
+                        </PrivateRoute>
+                        <PrivateRoute exact path="/beta/track/:code">
+                            <TrackDetail/>
                         </PrivateRoute>
                     </Switch>
                 </div>
