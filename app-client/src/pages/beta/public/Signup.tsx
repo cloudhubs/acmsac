@@ -14,7 +14,7 @@ import {useGlobalState} from "../../../state";
 import { useHistory } from 'react-router-dom';
 import Alert from '@material-ui/lab/Alert';
 import { ServerError } from '../../../model/ServerError';
-import { CustomLink } from '../../../components/shared/CustomLink';
+import { CustomLink } from '../../../shared/CustomLink';
 
 const Signup = () => {
 const classes = useStyles();
@@ -39,7 +39,7 @@ const onSubmit = async (event: React.MouseEvent<HTMLElement>) => {
     if (response != null){
         const body = await response.json();
         if (body.success){
-          history.push("/app");
+          history.push("/track");
           uAuth(true);
         } else {
           console.log(body.message);

@@ -9,6 +9,7 @@
  */
 
 
+/**
 body {
 
 font-family: Oswald !important;
@@ -24,10 +25,9 @@ header h6{
  color: rgba(255,255,255,1) !important;
  background-image: url('https://www.sigapp.org/sac/sac2020/img/acmlogos.png');
  background-repeat: no-repeat;
- padding-left: 60px;  /* width of the image plus a little extra padding */
- display: block;  /* may not need this, but I've found I do */
+ padding-left: 60px;
+ display: block;
  padding: 12px 0px 12px 60px;
- /* line-height: 7em; */
  background-position: left center;
 }
 
@@ -48,7 +48,6 @@ div.MuiToolbar-root {
            top: 0;
            opacity: 0.9 !important;
             background-color: #373834 !important;
-           /* width: 100%; */
     }
 
 
@@ -67,12 +66,12 @@ h1 {
 }
 
 .MuiGrid-grid-md-6 {
-    /* margin: .5em !important; */
+
 }
 .MuiGrid-spacing-xs-2 > .MuiGrid-item {
     padding-left: 5em !important;
     padding-right: 5em !important;
-    
+
 }
 
 .MuiPaper-root.MuiPaper-elevation1.MuiPaper-rounded {
@@ -99,7 +98,7 @@ main .MuiPaper-root {
     box: 0 !important;
     background: none !important;
     box-shadow: none;
-   
+
 
 }
 
@@ -133,7 +132,7 @@ main {
 color: #92D400;
 }
 .MuiGrid-container:nth-of-type(2) .MuiTableCell-body {
-    
+
     color: #fff;
 }
 .MuiGrid-container:nth-of-type(2) th {
@@ -141,7 +140,7 @@ color: #92D400;
 }
 
 .MuiGrid-container:nth-of-type(2) .MuiTableCell-root {
-   border: 0;  
+   border: 0;
 }
 
 
@@ -154,6 +153,7 @@ footer {
 
 main:nth-of-type(2) {
   background: black !important;
-  display: none !important; /** be careful */
+  display: none !important;
 }
 
+**/

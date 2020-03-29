@@ -1,11 +1,11 @@
 import { Person } from "./Person";
 
-export type Track = {
-    id: string;
+export class Track {
+    id: number;
     code: string;
     name: string;
     trackUrl: string;
     videoEmbed: string;
-    message: string:
+    message: string;
     chairs: Person[];
   }

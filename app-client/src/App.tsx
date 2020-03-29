@@ -67,7 +67,7 @@ const App = () => {
     // }
 
     const onAnalyze = async () => {
-        // const response = await fetch('https://5e7152a1667af70016317936.mockapi.io/acmsac/papers', {
+        // const response = await http('https://5e7152a1667af70016317936.mockapi.io/acmsac/papers', {
         //     method: 'get',
         //     headers : {
         //         'Content-Type': 'application/json',
@@ -97,8 +97,9 @@ const App = () => {
                     <Route exact path="/api/check/:email" component={PublicRouter} />
                     <Route exact path="/api/check/:email/:paperId" component={PublicRouter} />
                     <Route exact path="/beta/register" component={BetaRouter} />
-                    <Route exact path="/beta/app/:track" component={BetaRouter} />
-                    <Route exact path="/beta/app/:track/:code" component={BetaRouter}/>
+                    <Route exact path="/beta/track" component={BetaRouter} />
+                    <Route exact path="/beta/track/:track" component={BetaRouter} />
+                    <Route exact path="/beta/track/:track/:code" component={BetaRouter}/>
                     <Route path="*">
                         <Redirect path="/app/all"/>
                     </Route>

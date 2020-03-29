@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 import { AcademicArticle } from "../../model/AcademicArticle";
 import { Person } from "../../model/Person";
 import { dispatch, useGlobalState } from "../../state";
-import { Author } from "./Author";
+import { Author } from "../../pages/public/Author";
 import { Slides } from "./Slides";
 import { Video } from "./Video";
 
@@ -19,7 +19,7 @@ const setSelectedPaper = (selectedPaper: AcademicArticle) => dispatch({
 });
 
 
-const PresentDetail = () => {
+const PaperDetail = () => {
 
     let { email, paperId } = useParams();
 
@@ -73,8 +73,10 @@ const PresentDetail = () => {
     let affiliations: Array<string> = Array.from(affiliationSet.keys());
 
     let authorList: string[] = [];
+    let affiliationList: number[] = [];
     selectedPaper.authors.forEach((author) => {
-        authorList.push(author.name + " (" + (affiliations.indexOf(author.affiliation) + 1) + ")");
+        authorList.push(author.name);
+        affiliationList.push(affiliations.indexOf(author.affiliation) + 1);
     });
 
     return (
@@ -139,7 +141,17 @@ const PresentDetail = () => {
                                             Authors
                                 </TableCell>
                                         <TableCell align="left" scope="row">
-                                            {authorList.join(", ")}
+                                            <Typography>
+                                            {
+                                                authorList.map((author, ndx) => {
+                                                    return (
+                                                        <span>
+                                                            {author}<sup>{affiliationList[ndx]}</sup>{ndx === authorList.length - 1 ? "" : ", "}
+                                                        </span>
+                                                    );
+                                                })
+                                            }
+                                            </Typography>
                                         </TableCell>
                                     </TableRow>
 
@@ -211,4 +223,4 @@ const PresentDetail = () => {
         </>
     );
 }
-export default PresentDetail;
+export default PaperDetail;

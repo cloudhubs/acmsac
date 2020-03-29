@@ -16,7 +16,7 @@ import { useHistory, useParams } from "react-router-dom";
 import tracks from "../../data/Tracks";
 import { AcademicArticle } from '../../model/AcademicArticle';
 import { dispatch, useGlobalState } from "../../state";
-import LogoutButton from '../shared/LogoutButton';
+import LogoutButton from '../../shared/LogoutButton';
 import AcademicPapersTable from './AcademicPapersTable';
 
 const drawerWidth = 240;
@@ -84,7 +84,7 @@ const setTrack = (track: string) => dispatch({
 
 
   
-  const AppDrawer = () => {
+  const TrackDrawer = () => {
 
     const classes = useStyles();
     const theme = useTheme();
@@ -103,13 +103,12 @@ const setTrack = (track: string) => dispatch({
 
     const onClick = async (event: React.MouseEvent<HTMLElement>, code: string) => {
         event.preventDefault();
-        history.push("/beta/app/" + code);
+        history.push("/beta/track/" + code);
     }
 
     const drawer = (
         <>
             <div className={classes.toolbar} />
-            
             <Divider />
             <List>
                 <ListItem button onClick={(event: React.MouseEvent<HTMLElement>) => {
@@ -123,7 +122,6 @@ const setTrack = (track: string) => dispatch({
                             }}>
                             <ListItemText primary={text.track} />
                     </ListItem>
-                    // </Link>
                 ))}
             </List>
             <Divider />
@@ -132,69 +130,63 @@ const setTrack = (track: string) => dispatch({
 
     return (
         <div className={classes.root}>
-            
-            <CssBaseline />
-            <AppBar position="fixed" className={classes.appBar}>
-                <Toolbar>
-                    <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        edge="start"
-                        onClick={handleDrawerToggle}
-                        className={classes.menuButton}>
-                        <MenuIcon/>
-                    </IconButton>
-                    <Typography variant="h6" noWrap className={classes.title}>
-                        ACM SAC 2020
-                    </Typography>
+            Drawer
+            {/*<CssBaseline />*/}
+            {/*<AppBar position="fixed" className={classes.appBar}>*/}
+            {/*    <Toolbar>*/}
+            {/*        <IconButton*/}
+            {/*            color="inherit"*/}
+            {/*            aria-label="open drawer"*/}
+            {/*            edge="start"*/}
+            {/*            onClick={handleDrawerToggle}*/}
+            {/*            className={classes.menuButton}>*/}
+            {/*            <MenuIcon/>*/}
+            {/*        </IconButton>*/}
+            {/*        <Typography variant="h6" noWrap className={classes.title}>*/}
+            {/*            ACM SAC 2020*/}
+            {/*        </Typography>*/}
 
-                    <LogoutButton />
-                            
-                </Toolbar>
-            </AppBar>
+            {/*        <LogoutButton />*/}
+            {/*                */}
+            {/*    </Toolbar>*/}
+            {/*</AppBar>*/}
 
-            <nav className={classes.drawer} aria-label="mailbox folders">
-                {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-                <Hidden smUp implementation="css">
-                    <Drawer
-                        variant="temporary"
-                        anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-                        open={mobileOpen}
-                        onClose={handleDrawerToggle}
-                        classes={{
-                            paper: classes.drawerPaper,
-                        }}
-                        ModalProps={{
-                            keepMounted: true, // Better open performance on mobile.
-                        }}>
-                        {drawer}
-                    </Drawer>
-                </Hidden>
-                <Hidden xsDown implementation="css">
-                    <Drawer
-                        classes={{
-                            paper: classes.drawerPaper,
-                        }}
-                        variant="permanent"
-                        open>
-                        {drawer}
-                    </Drawer>
-                </Hidden>
-            </nav>
+            {/*<nav className={classes.drawer} aria-label="mailbox folders">*/}
+            {/*    /!* The implementation can be swapped with js to avoid SEO duplication of links. *!/*/}
+            {/*    <Hidden smUp implementation="css">*/}
+            {/*        <Drawer*/}
+            {/*            variant="temporary"*/}
+            {/*            anchor={theme.direction === 'rtl' ? 'right' : 'left'}*/}
+            {/*            open={mobileOpen}*/}
+            {/*            onClose={handleDrawerToggle}*/}
+            {/*            classes={{*/}
+            {/*                paper: classes.drawerPaper,*/}
+            {/*            }}*/}
+            {/*            ModalProps={{*/}
+            {/*                keepMounted: true, // Better open performance on mobile.*/}
+            {/*            }}>*/}
+            {/*            {drawer}*/}
+            {/*        </Drawer>*/}
+            {/*    </Hidden>*/}
+            {/*    <Hidden xsDown implementation="css">*/}
+            {/*        <Drawer*/}
+            {/*            classes={{*/}
+            {/*                paper: classes.drawerPaper,*/}
+            {/*            }}*/}
+            {/*            variant="permanent"*/}
+            {/*            open>*/}
+            {/*            {drawer}*/}
+            {/*        </Drawer>*/}
+            {/*    </Hidden>*/}
+            {/*</nav>*/}
 
-            <main className={classes.content}>
-                <div className={classes.toolbar} />
-                {track}
-                <AcademicPapersTable/>
-                {/* <Switch>
-                    <Route path="/:app/:track" children={<AcademicPapersTable />} />
-                    <Route path="/:app/:track/:paper">
-                        <AppPaperDetail />
-                    </Route>
-                </Switch> */}
-            </main>
+            {/*<main className={classes.content}>*/}
+            {/*    <div className={classes.toolbar} />*/}
+            {/*    {track}*/}
+            {/*    <AcademicPapersTable/>*/}
+            {/*</main>*/}
         </div>
     );
 }
 
-export default AppDrawer;
+export default TrackDrawer;

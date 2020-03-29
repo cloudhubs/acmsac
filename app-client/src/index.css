@@ -1,13 +1,163 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+/*body {*/
+/*  margin: 0;*/
+/*   margin-top: 50px !important;*/
+/*  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',*/
+/*    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',*/
+/*    sans-serif;*/
+/*  -webkit-font-smoothing: antialiased;*/
+/*  -moz-osx-font-smoothing: grayscale;*/
+/*}h*/
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
+/*body {*/
+
+/*font-family: Oswald !important;*/
+/*  background:white !important;*/
+/*  margin-top: 50px !important;*/
+/*}*/
+
+/*code {*/
+/*  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',*/
+/*    monospace;*/
+/*}*/
+
+/*header h6{*/
+/* font-family: Oswald !important;*/
+/* font-weight: 500 !important;*/
+/* font-size: 22px !important;*/
+/* line-height: 1.26 !important;*/
+/* text-decoration: none !important;*/
+/* text-overflow: ellipsis !important;*/
+/* color: rgba(255,255,255,1) !important;*/
+/* background-image: url('https://www.sigapp.org/sac/sac2020/img/acmlogos.png');*/
+/* background-repeat: no-repeat;*/
+/* padding-left: 60px;*/
+/* display: block;*/
+/* padding: 12px 0px 12px 60px;*/
+/* background-position: left center;*/
+/*}*/
+
+/*div.MuiToolbar-root {*/
+/*    background-size: cover;*/
+/*    background-position: top center;*/
+/*    }*/
+
+/*    header {*/
+/*           position: fixed !important;*/
+/*           top: 0;*/
+/*           opacity: 0.9 !important;*/
+/*            background-color: #373834 !important;*/
+/*    }*/
+
+
+/*    .MuiButton-outlinedPrimary {*/
+/*    color: #f1f1f1 !important;*/
+/*    border: 1px solid rgba(224, 213, 213, 0.88) !important;*/
+/*    background: #505050 !important;*/
+/*}*/
+/*.MuiButton-outlinedPrimary a {*/
+/*    color: #f1f1f1 !important;*/
+/*}*/
+
+/*h1 {*/
+/*    margin: 2em .1em 2em !important;*/
+/*    font-size:2vw !important;*/
+/*}*/
+
+/*.MuiGrid-grid-md-6 {*/
+
+/*}*/
+/*.MuiGrid-spacing-xs-2 > .MuiGrid-item {*/
+/*    padding-left: 5em !important;*/
+/*    padding-right: 5em !important;*/
+/*    */
+/*}*/
+
+/*.MuiPaper-root.MuiPaper-elevation1.MuiPaper-rounded {*/
+/*    padding-left: 0 !important;*/
+/*    padding-right: 0 !important;*/
+/*}*/
+
+/*p.MuiTypography-root {*/
+/*    text-align: left !important;*/
+/*     padding: .2em .2em .8em 1em !important;*/
+/*    font-family: Oswald !important;*/
+/*    font-weight: 500 !important;*/
+/*    font-size: 17px !important;*/
+/*    color: #3F9C35;*/
+/*}*/
+
+/*.MuiGrid-container.MuiGrid-spacing-xs-2 div.MuiGrid-grid-md-6:first-child {*/
+/*	border-right: 1px solid #BBBDBF !important*/
+/*}*/
+
+
+/*main .MuiPaper-root {*/
+/*    border: 0 !important;*/
+/*    box: 0 !important;*/
+/*    background: none !important;*/
+/*    box-shadow: none;*/
+/*   */
+
+/*}*/
+
+/*main .MuiPaper-root:first-child {*/
+/*    background: #272723 !important;*/
+/*}*/
+
+/*main {*/
+/*    padding: 0 !important;*/
+/*    margin: 0 !important;*/
+/*    margin-top:30px !important;*/
+/*}*/
+
+
+
+/*.MuiGrid-container:nth-of-type(2) {*/
+/*  background-color: #4c4c4c !important;*/
+/*  color: #fff !important;*/
+/*  font-weight: 300 !important;*/
+/*  padding-top: 4em !important;*/
+/*  padding-bottom: 4em !important;*/
+/*}*/
+
+/*.MuiGrid-container:nth-of-type(2) a{*/
+
+/*  color: #fff !important;*/
+
+/*}*/
+
+/*.MuiGrid-container:nth-of-type(2) p.MuiTypography-root {*/
+/*color: #92D400;*/
+/*}*/
+/*.MuiGrid-container:nth-of-type(2) .MuiTableCell-body {*/
+/*    */
+/*    color: #fff;*/
+/*}*/
+/*.MuiGrid-container:nth-of-type(2) th {*/
+/*  color: #92D400 !important;*/
+/*}*/
+
+/*.MuiGrid-container:nth-of-type(2) .MuiTableCell-root {*/
+/*   border: 0;  */
+/*}*/
+
+
+/*footer {*/
+/*  background: black;*/
+/*  margin:0 !important;*/
+/*  width: 100% !important;*/
+/*  max-width: 100% !important;*/
+/*}*/
+
+/*main:nth-of-type(2) {*/
+/*  background: black !important;*/
+/*  display: none !important;*/
+/*}*/
+
+/*@media all and (max-width: 959px) {*/
+/*.MuiGrid-grid-xs-6 {*/
+/*    */
+/*     max-width: 100% !important;*/
+/*   flex-basis: 100%  !important;*/
+/*}*/
+/*}*/
