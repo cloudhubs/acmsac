@@ -6,7 +6,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { Container, Paper, Typography, TableCell, Grid, Box } from "@material-ui/core";
-import { Slides } from './Slides';
+import { Slides } from '../../components/paperDetail/Slides';
 import Avatar from "@material-ui/core/Avatar";
 
 type AuthorProps = {

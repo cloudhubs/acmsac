@@ -1,7 +1,7 @@
 import { useHistory, useParams } from "react-router-dom";
-import { AcademicArticle } from "../../model/AcademicArticle";
-import { dispatch, useGlobalState } from "../../state";
-import { ServerToken } from "../../model/ServerToken";
+import { AcademicArticle } from "../model/AcademicArticle";
+import { dispatch, useGlobalState } from "../state";
+import { ServerToken } from "../model/ServerToken";
 
 const setAuthorsPapers = (authorsPapers: AcademicArticle[]) => dispatch({
     academicPapers: authorsPapers,
@@ -10,15 +10,9 @@ const setAuthorsPapers = (authorsPapers: AcademicArticle[]) => dispatch({
 
 const FetchTracks = {
 
-    async getAcademicPapers(track, history, token: ServerToken) {
-        
-        let url = "";
-        if (track === "all"){
-            url = process.env.REACT_APP_API_BASE_URL +  '/tracks'
-        } else {
-            url = process.env.REACT_APP_API_BASE_URL +  '/tracks/' + track
-        }
-        const response = await fetch(url , {            
+    async getAllTracks(history, token: ServerToken) {
+
+        const response = await fetch(process.env.REACT_APP_API_BASE_URL +  '/tracks' , {
 
             method: 'GET',
             headers : {
@@ -27,12 +21,11 @@ const FetchTracks = {
                 'Authorization': `Bearer ${token.accessToken}`
             }
             });
-            console.log(response);
             if (response != null){
                 const body = await response.json();
+                console.log(body);
                 if (!body.error) {
                     setAuthorsPapers(body)
-                    console.log(body);
                 } else {
                   console.log(body.message);
                 }
@@ -42,3 +35,6 @@ const FetchTracks = {
     }
 }
 export default FetchTracks;
+
+
+

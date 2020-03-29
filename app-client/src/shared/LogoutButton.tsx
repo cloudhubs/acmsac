@@ -2,7 +2,7 @@ import React from "react";
 import {createStyles, makeStyles, Theme, useTheme} from '@material-ui/core/styles';
 import { Button } from "@material-ui/core";
 import { useHistory, useLocation } from 'react-router-dom';
-import { dispatch } from "../../state";
+import { dispatch } from "../state";
 
 const logout = () => dispatch({
     type: 'logout',

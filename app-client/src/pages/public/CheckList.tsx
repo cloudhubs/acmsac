@@ -18,7 +18,7 @@ const setAuthorsPapers = (authorsPapers: AcademicArticle[]) => dispatch({
   });
 
 
-const PresentList = () => {
+const CheckList = () => {
 
     let { email } = useParams();
 
@@ -103,4 +103,4 @@ const PresentList = () => {
         </>
     );
 }
-export default PresentList;
+export default CheckList;

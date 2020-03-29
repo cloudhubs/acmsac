@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 import { AcademicArticle } from "../../model/AcademicArticle";
 import { Person } from "../../model/Person";
 import { dispatch, useGlobalState } from "../../state";
-import { Author } from "./Author";
+import { Author } from "../../pages/public/Author";
 import { Slides } from "./Slides";
 import { Video } from "./Video";
 
@@ -19,7 +19,7 @@ const setSelectedPaper = (selectedPaper: AcademicArticle) => dispatch({
 });
 
 
-const PresentDetail = () => {
+const PaperDetail = () => {
 
     let { email, paperId } = useParams();
 
@@ -211,4 +211,4 @@ const PresentDetail = () => {
         </>
     );
 }
-export default PresentDetail;
+export default PaperDetail;

@@ -4,25 +4,12 @@ import Divider from '@material-ui/core/Divider';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React, { useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { AcademicArticle } from "../../model/AcademicArticle";
-import { useGlobalState } from "../../state";
-import FetchTracks from "./FetchTracks";
+import { useGlobalState } from "../../../state";
 
 
 const TrackList = () => {
 
     let { track } = useParams();
-    const history = useHistory();
-    const [token] = useGlobalState('serverToken');
-
-    const getAcademicPapers = async () => {
-        FetchTracks.getAcademicPapers(track, history, token);
-    };
-
-    useEffect(() => {
-        getAcademicPapers();
-    }, []);
-
 
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({
@@ -40,7 +27,7 @@ const TrackList = () => {
 
     const classes = useStyles();
 
-    const [academicPapers] = useGlobalState('academicPapers');
+    const [tracks] = useGlobalState('tracks');
 
     const onClick = (event: React.MouseEvent<HTMLElement>, id) => {
         event.preventDefault();
@@ -52,18 +39,18 @@ const TrackList = () => {
             <Container maxWidth="md" component="main" className={classes.heroContent}>
                 <Box>
 
-                    <List component="nav" aria-label="main mailbox folders">
-                        {academicPapers && academicPapers.map((p: AcademicArticle) => (
-                            <>
-                                {p.title} - {p.date}
-                            </>
-                        ))
-                        }
-                    </List>
+                    {/*<List component="nav" aria-label="main mailbox folders">*/}
+                    {/*    {academicPapers && academicPapers.map((p: AcademicArticle) => (*/}
+                    {/*        <>*/}
+                    {/*            {p.title} - {p.date}*/}
+                    {/*        </>*/}
+                    {/*    ))*/}
+                    {/*    }*/}
+                    {/*</List>*/}
                     <Divider />
                 </Box>
             </Container>
-            {/* <AppDrawer/> */}
+            {/* <TrackDrawer/> */}
 
         </>
     );
