@@ -18,7 +18,7 @@ services:
     depends_on:
       - app-server
     environment:
-      GA_TRACKING_ID: ${GA_TRACKING_ID:?}
+      REACT_APP_GA_TRACKING_ID: ${GA_TRACKING_ID:?}
     volumes:
       - ./ssl:/etc/ssl
     networks:

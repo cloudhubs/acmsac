@@ -42,7 +42,14 @@ $ cd /acmsac
 $ curl -O https://raw.githubusercontent.com/cloudhubs/acmsac/master/docker-compose.yml
 ```
 
-- Change passwords in `docker-compose.yml` file
+- Add following environment variables `.env` file
+
+```
+$ cat .env
+GA_TRACKING_ID=*****
+MYSQL_ROOT_PASSWORD=*****
+APP_ADMIN_PASSWORD=*****
+```
 
 - Make sure `/acmsac/ssl` folder exists
 
