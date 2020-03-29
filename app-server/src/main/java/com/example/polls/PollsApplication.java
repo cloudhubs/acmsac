@@ -1,10 +1,8 @@
 package com.example.polls;
 
 import com.example.polls.exception.AppException;
-import com.example.polls.model.Role;
-import com.example.polls.model.RoleName;
-import com.example.polls.model.Track;
-import com.example.polls.model.User;
+import com.example.polls.model.*;
+import com.example.polls.repository.AcmInfoRepository;
 import com.example.polls.repository.RoleRepository;
 import com.example.polls.repository.TrackRepository;
 import com.example.polls.repository.UserRepository;
@@ -66,10 +64,16 @@ public class PollsApplication {
             private RoleRepository roleRepository;
 
             @Autowired
+            private AcmInfoRepository acmInfoRepository;
+
+            @Autowired
             PasswordEncoder passwordEncoder;
 
             @Value("classpath:track_codes.xlsx")
             private Resource trackCodesResource;
+
+            @Value("classpath:acm_info.xlsx")
+            private Resource acmResource;
 
             @Override
             public void run(String... args) throws Exception {
@@ -84,6 +88,20 @@ public class PollsApplication {
                         track.setCode(row.getCell(0).toString());
                         track.setName(row.getCell(1).toString());
                         trackRepository.save(track);
+                    }
+                }
+
+                // if the DOI info hasn't been loaded, do it
+                if (acmInfoRepository.count() == 0) {
+                    XSSFWorkbook workbook = new XSSFWorkbook(acmResource.getInputStream());
+                    XSSFSheet worksheet = workbook.getSheetAt(0);
+                    for (int i = 1; i < worksheet.getPhysicalNumberOfRows(); i++) {
+                        XSSFRow row = worksheet.getRow(i);
+                        AcmInfo info = new AcmInfo();
+                        info.setPaperId((int) row.getCell(0).getNumericCellValue());
+                        info.setDoiUrl(row.getCell(1).toString());
+                        info.setAcmUrl(row.getCell(2).toString());
+                        acmInfoRepository.save(info);
                     }
                 }
 
@@ -108,6 +126,7 @@ public class PollsApplication {
 
                     userRepository.save(admin);
                 }
+
             }
         };
     }

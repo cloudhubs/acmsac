@@ -54,6 +54,7 @@ public class User {
     @Lob
     private String bio;
 
+    @Lob
     private String picUrl;
 
     @ManyToMany(fetch = FetchType.LAZY)
