@@ -8,8 +8,10 @@ import { SignInUser } from "./model/SignInUser";
 import { SignUpUser } from "./model/SignUpUser";
 import { Action } from "./state/action";
 import { State } from "./state/typeState";
+import {Track} from "./model/Track";
 
 const defaultState: State = {
+  trackDetail: new Track(),
   tracks: [],
   selectedPaper: {
     id: 0,
@@ -104,6 +106,11 @@ export const reducer = (state = initialState, action: Action) => {
       return {
         ...state,
         tracks: action.tracks
+      }
+    case "setTrackDetail":
+      return {
+        ...state,
+        trackDetail: action.trackDetail
       }
     default:
       return state;

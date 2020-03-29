@@ -14,7 +14,7 @@ const TrackDetail = () => {
     const classes = useStyles();
     return (
         <div>
-            This is login.
+            Track Detail
         </div>
     );
 }

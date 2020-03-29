@@ -6,6 +6,7 @@ import { SignUpUser } from '../model/SignUpUser';
 import { Track } from '../model/Track';
 
 export type State = {
+    trackDetail: Track,
     tracks: Track[];
     selectedPaper: AcademicArticle;
     academicPapers: AcademicArticle[];

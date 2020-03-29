@@ -35,7 +35,6 @@ const TrackList = () => {
 
     return (
         <>
-            <h1>Tracks</h1>
             <TrackTable/>
         </>
     );
