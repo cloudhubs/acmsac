@@ -56,7 +56,7 @@ const PaperTable = () => {
 
             <Container maxWidth="lg" component="main" className={classes.heroContent}>
                 <Typography variant="h4" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
-                    Tracks
+                    Papers
                 </Typography>
                 <TableContainer component={Paper}>
                     <Table aria-label="simple table">
@@ -70,22 +70,18 @@ const PaperTable = () => {
                         </TableHead>
                         <TableBody>
                             {academicPapers.map( (row: AcademicArticle ) => (
-
                                 <TableRow key={row.id} hover role="checkbox" className={classes.rowClick}>
                                     <TableCell>{row.title}</TableCell>
                                     <TableCell align="right">{row.presenter.name}</TableCell>
-                                    <TableCell align="right">{row.paperAbstract}</TableCell>
-                                    {/*<TableCell align="right">{<Link target="_blank" href={row && row.trackUrl}>{row.trackUrl}</Link>}</TableCell>*/}
-                                    <ButtonBase>
+                                    <TableCell align="left">{row.paperAbstract}</TableCell>
                                         <TableCell>
+                                            <ButtonBase>
                                             <IconButton onClick={(event) => {goDetail(event, row)}}>
                                                 <MoreVertIcon />
                                             </IconButton>
+                                            </ButtonBase>
                                         </TableCell>
-                                    </ButtonBase>
                                 </TableRow>
-
-
                             ))}
                         </TableBody>
                     </Table>

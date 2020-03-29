@@ -10,11 +10,8 @@ const setTrackDetail = (trackDetail: Track) => dispatch({
 });
 
 const FetchTrackByCode = {
-
-    async getTrackByCode(history, token: ServerToken, code: string) {
-
+    async getTrackByCode(token: ServerToken, code: string) {
         const response = await fetch(process.env.REACT_APP_API_BASE_URL +  '/tracks/' + code  , {
-
             method: 'GET',
             headers : {
                 'Content-Type': 'application/json',

@@ -26,7 +26,7 @@ const TrackTable = () => {
 
     const goDetail = (event: React.MouseEvent<HTMLElement>, row: Track) => {
         event.preventDefault();
-        history.push("/beta/track/" + row.id);
+        history.push("/beta/track/" + row.code);
     }
 
     const useStyles = makeStyles((theme: Theme) =>
@@ -42,7 +42,10 @@ const TrackTable = () => {
             },
             rowClick: {
                 //cursor: 'pointer'
-            }
+            },
+            subHeroContent: {
+                padding: theme.spacing(4, 0, 3),
+            },
         }),
     );
     const classes = useStyles();
@@ -51,7 +54,9 @@ const TrackTable = () => {
         <div>
 
             <Container maxWidth="lg" component="main" className={classes.heroContent}>
-                <h2>Track Table</h2>
+                <Typography variant="h4" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
+                    Tracks
+                </Typography>
                     <TableContainer component={Paper}>
                         <Table aria-label="simple table">
                             <TableHead>
