@@ -2,10 +2,11 @@ import { useHistory, useParams } from "react-router-dom";
 import { AcademicArticle } from "../model/AcademicArticle";
 import { dispatch, useGlobalState } from "../state";
 import { ServerToken } from "../model/ServerToken";
+import {Track} from "../model/Track";
 
-const setAuthorsPapers = (authorsPapers: AcademicArticle[]) => dispatch({
-    academicPapers: authorsPapers,
-    type: 'setAcademicPapers',
+const setTracks = (tracks: Track[]) => dispatch({
+    tracks: tracks,
+    type: 'setTracks',
   });
 
 const FetchTracks = {
@@ -25,7 +26,7 @@ const FetchTracks = {
                 const body = await response.json();
                 console.log(body);
                 if (!body.error) {
-                    setAuthorsPapers(body)
+                    setTracks(body)
                 } else {
                   console.log(body.message);
                 }

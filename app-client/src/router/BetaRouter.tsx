@@ -67,11 +67,9 @@ const BetaRouter = () => {
                     <Switch>
                         <Route exact path="/beta" component={Login} />
                         <Route exact path="/beta/register" component={Signup} />
-                        <PrivateRoute exact path="/beta/app/:track">
+
+                        <PrivateRoute exact path="/beta/track/:code">
                             <TrackList/>
-                        </PrivateRoute>
-                        <PrivateRoute exact path="/beta/app/:track/:code">
-                            {/*<AppPaperDetail/>*/}
                         </PrivateRoute>
                     </Switch>
                 </div>

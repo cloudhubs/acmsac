@@ -5,11 +5,10 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React, { useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useGlobalState } from "../../../state";
-
+import {Track} from "../../../model/Track";
+import TrackTable from "../../../components/track/TrackTable";
 
 const TrackList = () => {
-
-    let { track } = useParams();
 
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({
@@ -27,7 +26,7 @@ const TrackList = () => {
 
     const classes = useStyles();
 
-    const [tracks] = useGlobalState('tracks');
+    let { track } = useParams();
 
     const onClick = (event: React.MouseEvent<HTMLElement>, id) => {
         event.preventDefault();
@@ -36,22 +35,8 @@ const TrackList = () => {
 
     return (
         <>
-            <Container maxWidth="md" component="main" className={classes.heroContent}>
-                <Box>
-
-                    {/*<List component="nav" aria-label="main mailbox folders">*/}
-                    {/*    {academicPapers && academicPapers.map((p: AcademicArticle) => (*/}
-                    {/*        <>*/}
-                    {/*            {p.title} - {p.date}*/}
-                    {/*        </>*/}
-                    {/*    ))*/}
-                    {/*    }*/}
-                    {/*</List>*/}
-                    <Divider />
-                </Box>
-            </Container>
-            {/* <TrackDrawer/> */}
-
+            <h1>Tracks</h1>
+            <TrackTable/>
         </>
     );
 }
