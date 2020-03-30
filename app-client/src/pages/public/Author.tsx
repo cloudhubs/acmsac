@@ -13,6 +13,7 @@ type AuthorProps = {
   author: Person,
 }
 
+
 export const Author: FunctionComponent<AuthorProps> = ({ author }) => <div>
     
     <TableContainer component={Paper} >
@@ -24,7 +25,7 @@ export const Author: FunctionComponent<AuthorProps> = ({ author }) => <div>
                                 Picture
                                 </TableCell>
                                 <TableCell align="left" scope="row">
-                                    <Avatar style={{height: "auto", maxWidth: "200px", width: "auto"}} src={author.picUrl} />
+                                    <Avatar style={{height: "100px", maxWidth: "100px", width: "100px"}} src={author.picUrl} />
                                 </TableCell>
                             </TableRow>
                             
@@ -42,7 +43,7 @@ export const Author: FunctionComponent<AuthorProps> = ({ author }) => <div>
                                     Email
                                 </TableCell>
                                 <TableCell align="left" scope="row">
-                                    {author.email}
+                                    <a href={"mailto:"+author.email}>{author.email}</a>
                                 </TableCell>
                             </TableRow>
 
@@ -65,16 +66,17 @@ export const Author: FunctionComponent<AuthorProps> = ({ author }) => <div>
                                     {author.country}    
                                 </TableCell>
                             </TableRow>
-
+{!!(author.orcid) && (
                             <TableRow>
                                 <TableCell component="th">
                                 ORCID
                                 </TableCell>
                                 <TableCell align="left" scope="row">
-                                    {author.orcid}    
+                                    <a href={"https://orcid.org/" + author.orcid}>{author.orcid} </a>   
                                 </TableCell>
                             </TableRow>
-
+)}
+{!!(author.linkedInUrl) && (
                             <TableRow>
                                 <TableCell component="th">
                                 Linkedin
@@ -83,7 +85,8 @@ export const Author: FunctionComponent<AuthorProps> = ({ author }) => <div>
                                     <a href={author.linkedInUrl}>{author.linkedInUrl}</a>
                                 </TableCell>
                             </TableRow>
-
+)}
+{!!(author.googleScholarUrl) && (
                             <TableRow>
                                 <TableCell component="th">
                                 Google Scholar
@@ -92,7 +95,8 @@ export const Author: FunctionComponent<AuthorProps> = ({ author }) => <div>
                                     <a href={author.googleScholarUrl}>{author.googleScholarUrl}</a>
                                 </TableCell>
                             </TableRow>
-
+)}
+{!!(author.bio) && (
                             <TableRow>
                                 <TableCell component="th">
                                 Bio
@@ -101,7 +105,7 @@ export const Author: FunctionComponent<AuthorProps> = ({ author }) => <div>
                                     {author.bio}    
                                 </TableCell>
                             </TableRow>
-
+)}
                             
 
                             </TableBody>

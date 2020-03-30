@@ -85,7 +85,10 @@ const PaperDetail = () => {
         <>
 
             <Container maxWidth="xl" component="main" className='paperDetail {classes.heroContent}'>
-
+                <div className="breadcrumbs"><a href={"/#/beta"}>ACM SAC 2020</a> >&nbsp; 
+                <a href={"/#/beta/track"}>TRACKS</a> >&nbsp;
+                <a href={"/#/beta/track/" + selectedPaper.trackCode}>{selectedPaper.trackCode}</a> >&nbsp;
+                {selectedPaper.sessionCode}</div>
                 <Typography variant="h4" align="center" color="textPrimary" component="h1">
                     {selectedPaper.title}
                 </Typography>
@@ -97,7 +100,7 @@ const PaperDetail = () => {
                         <Typography variant="h6" align="center" color="textSecondary" component="p">
                             Video
                     </Typography>
-                        <Paper style={{ textAlign: "center", padding: "15px", minHeight: "100%", paddingTop: "15%" }}>
+                        <Paper className="videoBox" style={{ textAlign: "center", padding: "15px", minHeight: "100%"}}>
                             <Video url={selectedPaper.videoEmbed} />
                         </Paper>
                     </Grid>
@@ -106,7 +109,7 @@ const PaperDetail = () => {
                             <Typography variant="h6" align="center" color="textSecondary" component="p">
                                 Slides ({<Link target="_blank" href={selectedPaper && selectedPaper.presentation.download}>External Link</Link>})
                     </Typography>
-                            <Paper style={{ textAlign: "center", padding: "15px", minHeight: "100%" }}>
+                            <Paper className="paperBox" style={{ textAlign: "center", padding: "15px", minHeight: "100%" }}>
                                 <Slides url={selectedPaper && selectedPaper.presentation.embed} />
 
                             </Paper>
@@ -118,6 +121,16 @@ const PaperDetail = () => {
                 <br />
                 <br />
                 <br />
+                <Container maxWidth="xl" component="main" className="chatContainer">
+                    <Grid container spacing={4}>
+
+                        <Grid item md={12}>
+                            <Chat/>
+
+                        </Grid>
+                    </Grid>
+                </Container>
+
 
                 <Grid container spacing={2} className='authorMeta'>
 
@@ -166,10 +179,10 @@ const PaperDetail = () => {
                                                 {
                                                     affiliations.map((affiliation, ndx) => {
                                                         return (
-                                                            <div>
+                                                            <div><sup>
                                                                 {
-                                                                (ndx + 1)+ " - " + affiliation
-                                                                }
+                                                                (ndx + 1) +"  "  
+                                                                }</sup>{affiliation}
                                                                 <br />
                                                             </div>
                                                         );
@@ -190,7 +203,7 @@ const PaperDetail = () => {
 
                                     <TableRow>
                                         <TableCell component="th">
-                                            ACM url
+                                            ACM URL
                                         </TableCell>
                                         <TableCell align="left" scope="row">
                                             <a href={selectedPaper.acmUrl} target="_blank">{selectedPaper.acmUrl}</a>
@@ -199,22 +212,32 @@ const PaperDetail = () => {
 
                                     <TableRow>
                                         <TableCell component="th">
+                                            DOI
+                                        </TableCell>
+                                        <TableCell align="left" scope="row">
+                                            <a href={selectedPaper.doiUrl} target="_blank">{!!(selectedPaper.doiUrl)?selectedPaper.doiUrl.substring(16):""}</a>
+                                        </TableCell>
+                                    </TableRow>
+{!!(selectedPaper.pageNumbers) && (
+                                    <TableRow>
+                                        <TableCell component="th">
                                             Page Numbers
-                                </TableCell>
+                                        </TableCell>
                                         <TableCell align="left" scope="row">
                                             {selectedPaper.pageNumbers}
                                         </TableCell>
                                     </TableRow>
-
+)}
+{!!(selectedPaper.acknowledgements) && (
                                     <TableRow>
                                         <TableCell component="th">
                                             Acknowledgements
-                                </TableCell>
+                                        </TableCell>
                                         <TableCell align="left" scope="row">
                                             {selectedPaper.acknowledgements}
                                         </TableCell>
                                     </TableRow>
-
+)}
 
                                 </TableBody>
                             </Table>

@@ -61,6 +61,10 @@ h1 {
    margin-top: 30px !important;
   }
   
+.paperDetail {
+ margin : 0 !important; 
+}
+
 .paperDetail h1 {
     font-size:2vw !important;
     margin: 85px 1.1em 2em !important;
@@ -136,7 +140,7 @@ main .MuiPaper-root {
 
 
 
-.MuiGrid-container:nth-of-type(2) {
+.authorMeta {
  background-color: #4c4c4c !important;
  color: #fff !important;
  font-weight: 300 !important;
@@ -144,21 +148,21 @@ main .MuiPaper-root {
  padding-bottom: 4em !important;
 }
 
-.MuiGrid-container:nth-of-type(2) a{ 
+.authorMeta a{ 
  color: #fff !important;
 }
 
 /* .MuiGrid-container:nth-of-type(2) p.MuiTypography-root { */
 /* color: #92D400; */
 /* } */
-.MuiGrid-container:nth-of-type(2) .MuiTableCell-body {  
+.authorMeta .MuiTableCell-body {  
    color: #fff;
 }
-.MuiGrid-container:nth-of-type(2) th {
+.authorMeta th {
  color: #92D400 !important;
 }
 
-.MuiGrid-container:nth-of-type(2) .MuiTableCell-root {
+.authorMeta .MuiTableCell-root {
   border: 0; 
 }
 
@@ -197,13 +201,34 @@ main .MuiPaper-root .chatRow,
   margin: 10px 0;
 }
 main .MuiPaper-root .chatRow .chatReply {
-  border-color: #ccc;
-  background-color: #ddd;
+  border: 1px solid #ddd;
+  background-color: #fff;
   border-radius: 5px  !important;
   padding: 10px;
-  margin: 10px 0;
+  margin: 5px 0;
 }
 
+.chatRow .MuiExpansionPanelSummary-content.Mui-expanded {
+  margin-top: 10px; 
+  margin-bottom: 10px; 
+}
+
+.chatContainer .MuiExpansionPanelDetails-root {
+  padding: 8px 24px 14px;
+}
+.chatContainer .replies {
+      font-size: 0.8em;
+    vertical-align: top;
+    color: #a06801;
+    padding: 0em;
+    display: block;
+    clear: both;
+}
+
+.chatRow .MuiButtonBase-root.MuiIconButton-root.MuiExpansionPanelSummary-expandIcon.MuiIconButton-edgeEnd {
+      background: #fbd294;
+    border: 1px solid orange;
+}
 
 .chatActions button,
 .chatPostNew button {
@@ -214,7 +239,26 @@ main .MuiPaper-root .chatRow .chatReply {
     background: #505050 !important;
 
 }
+.chatRow .header {
+  width: 100%;
+}
 
+
+.chatRow  .time {
+float:right;
+font-family: Oswald !important;
+font-size:.8em;
+padding-right:1em;
+}
+
+
+.chatRow span.img {
+  float: left;
+  max-width: 75px;
+  width: 100%;
+  margin-right: 10px;
+
+}
 
 .chatPostNew::after {
   content: "";
@@ -239,6 +283,43 @@ main:nth-of-type(2) {
  /* background: black !important; */
  /* display: none !important; */
 /* height: 0px; */
+}
+
+
+div.hideAbstract {
+  display: none;
+}
+
+a:hoverMe + div.hideAbstract {
+    display: block;
+}
+
+
+.breadcrumbs {
+    margin-top: 75px;
+  margin-left: .5em;
+    margin-bottom: -60px;
+    font-size: 1.4em;
+}
+.breadcrumbs a {
+    color: #120f9a;
+}
+
+.videoBox {
+  position: relative;
+}
+
+.chatRow .MuiExpansionPanelSummary-root {
+  padding-left: 10px;
+}
+ 
+.videoInner {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 }
 
 /* @media all and (max-width: 959px) { */

@@ -15,6 +15,10 @@ import {useState} from "react";
 import {dispatch, useGlobalState} from "../../state";
 import {AcademicArticle} from "../../model/AcademicArticle";
 import {Track} from "../../model/Track";
+import Link from "@material-ui/core/Link";
+import EmailIcon from '@material-ui/icons/Email';
+import SearchIcon from '@material-ui/icons/Search';
+import Avatar from "@material-ui/core/Avatar";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -95,9 +99,15 @@ const ChatRow = (props) => {
     return (
         <ExpansionPanel className='chatRow'  expanded={expanded} onChange={() => setExpanded(!expanded)}>
             <ExpansionPanelSummary className={classes.summary} expandIcon={<ExpandMoreIcon />}>
-                <Typography>
-                    <b>{props.data.user.name}</b> <br/>
+                <Typography className="header">
+                    <span className="img" >
+                        
+                    <Avatar className="img" style={{height: "60px", maxWidth: "60px", width: "60px"}} src={props.data.user.picUrl} />
+                    <span className="replies">{props.data.replies.length} {props.data.replies.length==1?'reply':'replies'}</span> 
+                    </span>
+                    <b>{props.data.user.name}</b> <Link href={"mailto:" + props.data.user.email}><EmailIcon style={{paddingTop: '5px'}} /></Link> <Link href={"https://acmsac.ecs.baylor.edu/#/api/check/" + props.data.user.email}><SearchIcon style={{paddingTop: '5px'}} /></Link><br/>
                     {props.data.content}
+                    <span className="time">{props.data.date.substr(5,5)} at {props.data.date.substr(11,5)}</span>
                 </Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails className='chatRowDetails'>
@@ -108,8 +118,13 @@ const ChatRow = (props) => {
                                 <>
                                     <Grid item className='chatReply' style={{marginLeft: "30px"}} xs={12}>
                                         <Typography>
-                                            <b>{reply.user.name}</b> <br/>
+                                            <span className="img" >
+                        
+                                            <Avatar className="img" style={{height: "60px", maxWidth: "60px", width: "60px"}} src={reply.user.picUrl} />
+                                            </span>
+                                            <b>{reply.user.name}</b> <Link href={"mailto:" + reply.user.email}><EmailIcon style={{paddingTop: '5px'}} /></Link> <Link href={"https://acmsac.ecs.baylor.edu/#/api/check/" + reply.user.email}><SearchIcon style={{paddingTop: '5px'}} /></Link><br/>
                                             {reply.content}
+                                            <span className="time">{reply.date.substr(5,5)} at {reply.date.substr(11,5)}</span>
                                         </Typography>
                                         <Divider/>
                                     </Grid>
@@ -117,7 +132,7 @@ const ChatRow = (props) => {
                             );
                         })
                     :
-                       <Typography>
+                       <Typography className='chatReply'>
                            No replies yet
                        </Typography>
                     }
@@ -128,7 +143,7 @@ const ChatRow = (props) => {
                 <Grid container className='chatNew'>
                     <Grid item xs={11} >
                         <TextField className='chatInput'
-                            style={{minWidth: '85%'}}
+                            style={{minWidth: '95%'}}
                             placeholder={"Reply"}
                             value={replyText}
                             onChange={(event) => setReply(event.target.value)}

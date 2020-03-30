@@ -36,7 +36,7 @@ const PrivateHeader = () => {
                         ACM SAC 2020
                     </Typography>
                     <Button color="primary" variant="outlined" className={classes.link}>
-                        <Link to="/">Tracks</Link>
+                        <Link to="/beta/track">Tracks</Link>
                     </Button>
                     <Button color="primary" variant="outlined" className={classes.link}>
                         <Link to="/search">Logout</Link>

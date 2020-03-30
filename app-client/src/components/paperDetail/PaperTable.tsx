@@ -62,18 +62,29 @@ const PaperTable = () => {
                     <Table aria-label="simple table">
                         <TableHead>
                             <TableRow>
+                                <TableCell align="left">Session</TableCell>
                                 <TableCell>Title</TableCell>
                                 <TableCell align="right">Presenter</TableCell>
-                                <TableCell align="right">Abstract</TableCell>
+                                {/**<TableCell align="right">Abstract</TableCell>*/}
                                 <TableCell >Detail</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {academicPapers.map( (row: AcademicArticle ) => (
-                                <TableRow key={row.id} hover role="checkbox" className={classes.rowClick}>
+                            {academicPapers.slice().sort((a: AcademicArticle, b: AcademicArticle) => {
+                                return a.sessionCode.localeCompare(b.sessionCode);
+                            }).map( (row: AcademicArticle ) => (
+                                <TableRow key={row.id} hover role="checkbox" className={classes.rowClick} onClick={(event) => {goDetail(event, row)}}>
+                                    <TableCell align="left">{row.sessionCode}</TableCell>
                                     <TableCell>{row.title}</TableCell>
                                     <TableCell align="right">{row.presenter.name}</TableCell>
-                                    <TableCell align="left">{row.paperAbstract}</TableCell>
+                                    {/**
+                                    <TableCell align="left">
+                                        <a className="hoverMe">Show abstract..</a>
+                                        <div className="hideAbstract">
+                                            {row.paperAbstract}
+                                        </div>
+                                    </TableCell>
+                                    */}
                                         <TableCell>
                                             <ButtonBase>
                                             <IconButton onClick={(event) => {goDetail(event, row)}}>
