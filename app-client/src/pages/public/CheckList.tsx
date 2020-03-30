@@ -27,30 +27,35 @@ const CheckList = () => {
     const getAcademicPapers = async () => {
 
         let token: string = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTg1MzAxMDAyLCJleHAiOjE1ODU5MDU4MDJ9.mjgyoExoVU5UwKneeUctDGjwEviErcZxmPUeQQew1KIX0ZDHI7fv4a36xoxgZq-iMcuN8F-Gxfllmx__y8sxCg";
-    
-        const response = await fetch(process.env.REACT_APP_API_BASE_URL +  '/check/' + email, {            
+        try {
+            const response = await fetch(process.env.REACT_APP_API_BASE_URL +  '/check/' + email, {
 
-            method: 'GET',
-            headers : {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                //'Authorization': `Bearer ${token}`
-            }
+                method: 'GET',
+                headers : {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    //'Authorization': `Bearer ${token}`
+                }
             });
             if (response != null){
                 const body = await response.json();
-                console.log(body);
                 if (!body.error) {
                     setAuthorsPapers(body)
                 } else {
-                  console.log(body.message);
+                    console.log(body.message);
                 }
             } else {
-              console.log("server error");
+                console.log("server error");
             }
+        } catch (e) {
+            console.log(e);
+            
+        }
+        
     };
     
     useEffect(() => {
+        localStorage.removeItem("MY_LOCAL_STORAGE_KEY");
         getAcademicPapers();
     }, []);
 

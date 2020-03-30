@@ -182,9 +182,18 @@ const PaperDetail = () => {
                                     <TableRow>
                                         <TableCell component="th">
                                             Paper Abstract
-                                </TableCell>
+                                    </TableCell>
                                         <TableCell align="left" scope="row">
                                             {selectedPaper.paperAbstract}
+                                        </TableCell>
+                                    </TableRow>
+
+                                    <TableRow>
+                                        <TableCell component="th">
+                                            ACM url
+                                        </TableCell>
+                                        <TableCell align="left" scope="row">
+                                            <a href={selectedPaper.acmUrl} target="_blank">{selectedPaper.acmUrl}</a>
                                         </TableCell>
                                     </TableRow>
 

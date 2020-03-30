@@ -25,6 +25,8 @@ const defaultState: State = {
     pageNumbers: "",
     acknowledgements: "",
     videoEmbed: "",
+    acmUrl: "",
+    doiUrl: "",
     presentation: {
       original: "",
       download: "",

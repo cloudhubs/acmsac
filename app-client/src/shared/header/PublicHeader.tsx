@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom'
 
+//                borderBottom: `1px solid ${theme.palette.divider}`,
 const PublicHeader = () => {
 
     const useStyles = makeStyles((theme: Theme) =>
@@ -24,6 +25,7 @@ const PublicHeader = () => {
               link: {
                 margin: theme.spacing(1, 1.5),
               },
+
             
         }),
     );

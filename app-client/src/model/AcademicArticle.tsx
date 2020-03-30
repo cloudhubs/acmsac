@@ -14,6 +14,8 @@ export type AcademicArticle = {
     pageNumbers: string;
     acknowledgements: string;
     videoEmbed: string;
+    doiUrl: string;
+    acmUrl: string;
     presentation: Presentation;
     presenter: Person;
     authors: Person[];

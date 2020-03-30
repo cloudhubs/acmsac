@@ -15,6 +15,7 @@ const onSubmit = (event: React.MouseEvent<HTMLElement>, email: string, history) 
 const Search = () => {
 
     const history = useHistory();
+    localStorage.removeItem("MY_LOCAL_STORAGE_KEY");
 
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({

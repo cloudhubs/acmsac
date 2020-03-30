@@ -43,6 +43,7 @@ const onSubmit = async (event: React.MouseEvent<HTMLElement>, signInUser, histor
         if (!body.error){
           setServerToken(body);
           setAuthenticated();
+
           history.push("/beta/track");
         } else {
           console.log(body.message);
@@ -50,6 +51,8 @@ const onSubmit = async (event: React.MouseEvent<HTMLElement>, signInUser, histor
     } else {
       console.log("server error");
     }
+
+    //GET https://acmsac.ecs.baylor.edu/api/auth/resetPassword/{email}
 }
 
 
