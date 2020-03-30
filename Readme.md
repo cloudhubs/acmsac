@@ -35,6 +35,8 @@ $ docker-compose build
 $ docker-compose push
 ```
 
+Note: In order to push you need to login to `cloudhubs2` docker account. Run `$ docker login` to login.
+
 - Download recent `docker-compose.yml` file in production machine:
 
 ```
@@ -46,7 +48,6 @@ $ curl -O https://raw.githubusercontent.com/cloudhubs/acmsac/master/docker-compo
 
 ```
 $ cat .env
-GA_TRACKING_ID=*****
 MYSQL_ROOT_PASSWORD=*****
 APP_ADMIN_PASSWORD=*****
 ```
