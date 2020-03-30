@@ -15,6 +15,9 @@ import {useState} from "react";
 import {dispatch, useGlobalState} from "../../state";
 import {AcademicArticle} from "../../model/AcademicArticle";
 import {Track} from "../../model/Track";
+import Link from "@material-ui/core/Link";
+import EmailIcon from '@material-ui/icons/Email';
+import SearchIcon from '@material-ui/icons/Search';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -96,7 +99,7 @@ const ChatRow = (props) => {
         <ExpansionPanel className='chatRow'  expanded={expanded} onChange={() => setExpanded(!expanded)}>
             <ExpansionPanelSummary className={classes.summary} expandIcon={<ExpandMoreIcon />}>
                 <Typography>
-                    <b>{props.data.user.name}</b> <br/>
+                    <b>{props.data.user.name}</b> <Link href={"mailto:" + props.data.user.email}><EmailIcon style={{paddingTop: '5px'}} /></Link> <Link href={"https://acmsac.ecs.baylor.edu/#/api/check/" + props.data.user.email}><SearchIcon style={{paddingTop: '5px'}} /></Link><br/>
                     {props.data.content}
                 </Typography>
             </ExpansionPanelSummary>
@@ -108,7 +111,7 @@ const ChatRow = (props) => {
                                 <>
                                     <Grid item className='chatReply' style={{marginLeft: "30px"}} xs={12}>
                                         <Typography>
-                                            <b>{reply.user.name}</b> <br/>
+                                            <b>{reply.user.name}</b> <Link href={"mailto:" + reply.user.email}><EmailIcon style={{paddingTop: '5px'}} /></Link> <Link href={"https://acmsac.ecs.baylor.edu/#/api/check/" + reply.user.email}><SearchIcon style={{paddingTop: '5px'}} /></Link><br/>
                                             {reply.content}
                                         </Typography>
                                         <Divider/>
