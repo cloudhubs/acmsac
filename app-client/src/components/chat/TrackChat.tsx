@@ -86,7 +86,7 @@ const TrackChat = () => {
                 Chat
             </Typography>
             <Paper className={classes.paper} elevation={3}>
-                {trackDetail && trackDetail.comments.length > 0 ?
+                {trackDetail && trackDetail.comments && trackDetail.comments.length > 0 ?
                     trackDetail.comments.map((comment: Comment) => {
                         return (<TrackChatRow commentId={comment.id} data={comment}/>);
                     })
