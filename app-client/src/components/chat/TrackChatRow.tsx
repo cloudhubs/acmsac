@@ -93,20 +93,20 @@ const ChatRow = (props) => {
     };
 
     return (
-        <ExpansionPanel expanded={expanded} onChange={() => setExpanded(!expanded)}>
+        <ExpansionPanel className='chatRow'  expanded={expanded} onChange={() => setExpanded(!expanded)}>
             <ExpansionPanelSummary className={classes.summary} expandIcon={<ExpandMoreIcon />}>
                 <Typography>
                     <b>{props.data.user.name}</b> <br/>
                     {props.data.content}
                 </Typography>
             </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
+            <ExpansionPanelDetails className='chatRowDetails'>
                 <Grid container={true}>
                     {props.data.replies.length > 0 ?
                         props.data.replies.map((reply: Reply) => {
                             return (
                                 <>
-                                    <Grid item style={{marginLeft: "30px"}} xs={12}>
+                                    <Grid item className='chatReply' style={{marginLeft: "30px"}} xs={12}>
                                         <Typography>
                                             <b>{reply.user.name}</b> <br/>
                                             {reply.content}
@@ -124,11 +124,11 @@ const ChatRow = (props) => {
                 </Grid>
             </ExpansionPanelDetails>
             <Divider />
-            <ExpansionPanelActions>
-                <Grid container>
+            <ExpansionPanelActions className='chatActions'>
+                <Grid container className='chatNew'>
                     <Grid item xs={11} >
-                        <TextField
-                            style={{minWidth: '100%'}}
+                        <TextField className='chatInput'
+                            style={{minWidth: '85%'}}
                             placeholder={"Reply"}
                             value={replyText}
                             onChange={(event) => setReply(event.target.value)}
