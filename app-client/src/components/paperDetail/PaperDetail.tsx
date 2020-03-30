@@ -176,10 +176,10 @@ const PaperDetail = () => {
                                                 {
                                                     affiliations.map((affiliation, ndx) => {
                                                         return (
-                                                            <div>
+                                                            <div><sup>
                                                                 {
-                                                                (ndx + 1)+ " - " + affiliation
-                                                                }
+                                                                (ndx + 1) +"  "  
+                                                                }</sup>{affiliation}
                                                                 <br />
                                                             </div>
                                                         );
@@ -200,7 +200,7 @@ const PaperDetail = () => {
 
                                     <TableRow>
                                         <TableCell component="th">
-                                            ACM url
+                                            ACM URL
                                         </TableCell>
                                         <TableCell align="left" scope="row">
                                             <a href={selectedPaper.acmUrl} target="_blank">{selectedPaper.acmUrl}</a>
@@ -209,22 +209,31 @@ const PaperDetail = () => {
 
                                     <TableRow>
                                         <TableCell component="th">
-                                            Page Numbers
-                                </TableCell>
+                                            DOI
+                                        </TableCell>
                                         <TableCell align="left" scope="row">
-                                            {selectedPaper.pageNumbers}
+                                            <a href={selectedPaper.doiUrl} target="_blank">{!!(selectedPaper.doiUrl)?selectedPaper.doiUrl.substring(16):""}</a>
                                         </TableCell>
                                     </TableRow>
 
                                     <TableRow>
                                         <TableCell component="th">
+                                            Page Numbers
+                                        </TableCell>
+                                        <TableCell align="left" scope="row">
+                                            {selectedPaper.pageNumbers}
+                                        </TableCell>
+                                    </TableRow>
+{!!(selectedPaper.acknowledgements) && (
+                                    <TableRow>
+                                        <TableCell component="th">
                                             Acknowledgements
-                                </TableCell>
+                                        </TableCell>
                                         <TableCell align="left" scope="row">
                                             {selectedPaper.acknowledgements}
                                         </TableCell>
                                     </TableRow>
-
+)}
 
                                 </TableBody>
                             </Table>

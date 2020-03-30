@@ -71,7 +71,7 @@ export const Author: FunctionComponent<AuthorProps> = ({ author }) => <div>
                                 ORCID
                                 </TableCell>
                                 <TableCell align="left" scope="row">
-                                    {author.orcid}    
+                                    <a href={"https://orcid.org/" + author.orcid}>{author.orcid} </a>   
                                 </TableCell>
                             </TableRow>
 
