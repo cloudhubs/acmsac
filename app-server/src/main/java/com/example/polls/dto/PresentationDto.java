@@ -31,6 +31,7 @@ public class PresentationDto {
   private String doiUrl;
   private String acmUrl;
   private UserDto presenter;
+  private String type;
   private List<UserDto> authors = new ArrayList<>();
   private List<Comment> comments = new ArrayList<>();
 
@@ -50,6 +51,7 @@ public class PresentationDto {
     this.presenter = new UserDto(presentation.getPresenter());
     this.authors = presentation.getAuthors().stream().map(u -> new UserDto(u)).collect(Collectors.toList());
     this.comments = presentation.getComments();
+    this.type = presentation.getType();
   }
 
   public Long getId() {
@@ -188,5 +190,11 @@ public class PresentationDto {
       this.comments = comments;
   }
 
+  public String getType() {
+    return type;
+  }
 
+  public void setType(String type) {
+    this.type = type;
+  }
 }

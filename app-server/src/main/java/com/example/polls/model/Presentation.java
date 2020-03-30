@@ -53,6 +53,8 @@ public class Presentation {
   @JoinColumn(name = "user_id")
   private User presenter;
 
+  private String type;
+
   @ManyToMany
   private List<User> authors = new ArrayList<>();
 
@@ -65,7 +67,7 @@ public class Presentation {
 
   public Presentation(String title, int paperId, String authorsString, String trackCode, String sessionCode,
                       String sessionChair, LocalDate date, String paperAbstract, String pageNumbers,
-                      String acknowledgements, String videoEmbed, String slidesUrl, User presenter) {
+                      String acknowledgements, String videoEmbed, String slidesUrl, User presenter, String type) {
     this.title = title;
     this.paperId = paperId;
     this.authorsString = authorsString;
@@ -79,6 +81,7 @@ public class Presentation {
     this.videoEmbed = videoEmbed;
     this.slidesUrl = slidesUrl;
     this.presenter = presenter;
+    this.type = type;
   }
 
   public Long getId() {
@@ -215,5 +218,13 @@ public class Presentation {
 
   public void setComments(List<Comment> comments) {
     this.comments = comments;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
   }
 }
