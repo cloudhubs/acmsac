@@ -5,6 +5,7 @@ import PaperTable from "../../../components/paperDetail/PaperTable";
 import {useGlobalState} from "../../../state";
 import FetchTrackByCode from "../../../http/FetchTrackByCode";
 import FetchAcademicPapers from "../../../http/FetchAcademicPapers";
+import TrackChat from "../../../components/chat/TrackChat";
 
 
 const TrackDetail = () => {
@@ -35,6 +36,7 @@ const TrackDetail = () => {
     return (
         <div>
             <PaperTable/>
+            <TrackChat/>
         </div>
     );
 }

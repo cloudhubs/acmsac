@@ -1,4 +1,5 @@
 import { Person } from "./Person";
+import { Comment } from "./Comment";
 
 export class Track {
     id: number;
@@ -8,4 +9,5 @@ export class Track {
     videoEmbed: string;
     message: string;
     chairs: Person[];
+    comments: Comment[];
   }
