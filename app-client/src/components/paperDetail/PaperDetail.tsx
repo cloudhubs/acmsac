@@ -85,7 +85,7 @@ const PaperDetail = () => {
         <>
 
             <Container maxWidth="xl" component="main" className='paperDetail {classes.heroContent}'>
-
+    <div className="breadcrumbs"><a>ACM SAC 2020</a>/<a>{selectedPaper.trackCode}</a>/{selectedPaper.sessionCode}</div>
                 <Typography variant="h4" align="center" color="textPrimary" component="h1">
                     {selectedPaper.title}
                 </Typography>

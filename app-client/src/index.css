@@ -270,6 +270,11 @@ a:hoverMe + div.hideAbstract {
 }
 
 
+.breadcrumbs {
+  margin-top: 70px;
+  margin-bottom: -70px;
+}
+
 .videoBox {
   position: relative;
 }
