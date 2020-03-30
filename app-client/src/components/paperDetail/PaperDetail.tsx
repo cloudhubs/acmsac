@@ -215,7 +215,7 @@ const PaperDetail = () => {
                                             <a href={selectedPaper.doiUrl} target="_blank">{!!(selectedPaper.doiUrl)?selectedPaper.doiUrl.substring(16):""}</a>
                                         </TableCell>
                                     </TableRow>
-
+{!!(selectedPaper.pageNumbers) && (
                                     <TableRow>
                                         <TableCell component="th">
                                             Page Numbers
@@ -224,6 +224,7 @@ const PaperDetail = () => {
                                             {selectedPaper.pageNumbers}
                                         </TableCell>
                                     </TableRow>
+)}
 {!!(selectedPaper.acknowledgements) && (
                                     <TableRow>
                                         <TableCell component="th">
