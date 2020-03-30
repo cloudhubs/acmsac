@@ -37,6 +37,7 @@ const CheckDetail = () => {
 
     useEffect(() => {
         getAcademicPaper();
+        localStorage.removeItem("MY_LOCAL_STORAGE_KEY");
     }, []);
 
     return (

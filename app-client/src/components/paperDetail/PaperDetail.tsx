@@ -220,13 +220,7 @@ const PaperDetail = () => {
                     </Grid>
                 </Grid>
 
-                <Grid container spacing={4}>
 
-                    <Grid item md={12}>
-                        <Chat/>
-
-                    </Grid>
-                </Grid>
 
             </Container>
 
