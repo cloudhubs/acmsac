@@ -85,6 +85,7 @@ const PaperTable = () => {
                     <Table aria-label="simple table">
                         <TableHead>
                             <TableRow>
+                                <TableCell align="left">Type</TableCell>
                                 <TableCell align="left">Session</TableCell>
                                 <TableCell>Title</TableCell>
                                 <TableCell align="right">Presenter</TableCell>
@@ -97,6 +98,7 @@ const PaperTable = () => {
                                 return a.sessionCode.localeCompare(b.sessionCode);
                             }).map( (row: AcademicArticle ) => (
                                 <TableRow key={row.id} hover role="checkbox" className={classes.rowClick} onClick={(event) => {goDetail(event, row)}}>
+                                    <TableCell align="left">{row.type}</TableCell>
                                     <TableCell align="left">{row.sessionCode}</TableCell>
                                     <TableCell>{row.title}</TableCell>
                                     <TableCell align="right">{row.presenter.name}</TableCell>
