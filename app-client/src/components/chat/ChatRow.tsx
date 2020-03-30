@@ -96,11 +96,17 @@ const ChatRow = (props) => {
     return (
         <ExpansionPanel className='chatRow' expanded={expanded} onChange={() => setExpanded(!expanded)}>
             <ExpansionPanelSummary className='chatRowMain' expandIcon={<ExpandMoreIcon />}>
-                <Typography>
+                <Typography className="header">
                     <span className="replies">({props.data.replies.length} replies)</span> 
-                    <b>{props.data.user.name}</b> <Link href={"mailto:" + props.data.user.email}><EmailIcon style={{paddingTop: '5px'}} /></Link> <Link href={"https://acmsac.ecs.baylor.edu/#/api/check/" + props.data.user.email}><SearchIcon style={{paddingTop: '5px'}} /></Link><br/>
+                    <b>{props.data.user.name}</b> <Link className={"user-"+props.data.user.id} href={"mailto:" + props.data.user.email}><EmailIcon style={{paddingTop: '5px'}} /></Link> 
+                    <Link href={"https://acmsac.ecs.baylor.edu/#/api/check/" + props.data.user.email}><SearchIcon style={{paddingTop: '5px'}} /></Link>
+                    <span className="photo">{props.data.user.picUrl}</span>
+                    
+                    <br/>
                     {props.data.content}
+                    <span className="time">{props.data.date.substr(5,5)} at {props.data.date.substr(11,5)}</span>
                 </Typography>
+                    
             </ExpansionPanelSummary>
             <ExpansionPanelDetails className='chatRowDetails'>
                 <Grid container={true}>
@@ -112,6 +118,7 @@ const ChatRow = (props) => {
                                         <Typography>
                                             <b>{reply.user.name}</b> <Link href={"mailto:" + reply.user.email}><EmailIcon style={{paddingTop: '5px'}} /></Link> <Link href={"https://acmsac.ecs.baylor.edu/#/api/check/" + reply.user.email}><SearchIcon style={{paddingTop: '5px'}} /></Link><br/>
                                             {reply.content}
+                                            <span className="time">{reply.date.substr(5,5)} at {reply.date.substr(11,5)}</span>
                                         </Typography>
                                         <Divider/>
                                     </Grid>

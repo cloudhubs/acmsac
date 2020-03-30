@@ -233,6 +233,17 @@ main .MuiPaper-root .chatRow .chatReply {
     background: #505050 !important;
 
 }
+.chatRow .header {
+  width: 100%;
+}
+
+
+.chatRow  .time {
+float:right;
+font-family: Oswald !important;
+font-size:.8em;
+padding-right:1em;
+}
 
 
 .chatPostNew::after {
@@ -271,8 +282,12 @@ a:hoverMe + div.hideAbstract {
 
 
 .breadcrumbs {
-  margin-top: 70px;
-  margin-bottom: -70px;
+    margin-top: 75px;
+    margin-bottom: -60px;
+    font-size: 1.4em;
+}
+.breadcrumbs a {
+    color: #120f9a;
 }
 
 .videoBox {
