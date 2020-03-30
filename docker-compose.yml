@@ -17,8 +17,8 @@ services:
     restart: always
     depends_on:
       - app-server
-    environment:
-      REACT_APP_GA_TRACKING_ID: ${GA_TRACKING_ID:?}
+    #environment:
+    #  REACT_APP_GA_TRACKING_ID: ${GA_TRACKING_ID:?}
     volumes:
       - ./ssl:/etc/ssl
     networks:
