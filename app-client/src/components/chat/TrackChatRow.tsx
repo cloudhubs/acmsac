@@ -99,6 +99,7 @@ const ChatRow = (props) => {
         <ExpansionPanel className='chatRow'  expanded={expanded} onChange={() => setExpanded(!expanded)}>
             <ExpansionPanelSummary className={classes.summary} expandIcon={<ExpandMoreIcon />}>
                 <Typography>
+                    <span className="replies">({props.data.replies.length} replies)</span> 
                     <b>{props.data.user.name}</b> <Link href={"mailto:" + props.data.user.email}><EmailIcon style={{paddingTop: '5px'}} /></Link> <Link href={"https://acmsac.ecs.baylor.edu/#/api/check/" + props.data.user.email}><SearchIcon style={{paddingTop: '5px'}} /></Link><br/>
                     {props.data.content}
                 </Typography>
@@ -120,7 +121,7 @@ const ChatRow = (props) => {
                             );
                         })
                     :
-                       <Typography>
+                       <Typography className='chatReply'>
                            No replies yet
                        </Typography>
                     }
@@ -131,7 +132,7 @@ const ChatRow = (props) => {
                 <Grid container className='chatNew'>
                     <Grid item xs={11} >
                         <TextField className='chatInput'
-                            style={{minWidth: '85%'}}
+                            style={{minWidth: '95%'}}
                             placeholder={"Reply"}
                             value={replyText}
                             onChange={(event) => setReply(event.target.value)}

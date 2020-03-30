@@ -197,13 +197,32 @@ main .MuiPaper-root .chatRow,
   margin: 10px 0;
 }
 main .MuiPaper-root .chatRow .chatReply {
-  border-color: #ccc;
-  background-color: #ddd;
+  border: 1px solid #ddd;
+  background-color: #fff;
   border-radius: 5px  !important;
   padding: 10px;
-  margin: 10px 0;
+  margin: 5px 0;
 }
 
+.chatRow .MuiExpansionPanelSummary-content.Mui-expanded {
+  margin-top: 10px; 
+  margin-bottom: 10px; 
+}
+
+.chatContainer .MuiExpansionPanelDetails-root {
+  padding: 8px 24px 14px;
+}
+.chatContainer .replies {
+      font-size: 0.8em;
+    vertical-align: top;
+    color: #a06801;
+    padding: 0 .3em;
+}
+
+.chatRow .MuiButtonBase-root.MuiIconButton-root.MuiExpansionPanelSummary-expandIcon.MuiIconButton-edgeEnd {
+      background: #fbd294;
+    border: 1px solid orange;
+}
 
 .chatActions button,
 .chatPostNew button {
