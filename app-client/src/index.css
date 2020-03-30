@@ -122,7 +122,8 @@ main .MuiPaper-root {
 /* } */
 
  main.makeStyles-heroContent-280,
- main.makeStyles-heroContent-322 {
+ main.makeStyles-heroContent-322,
+ main.makeStyles-heroContent-358 {
    padding-left: 0 !important;
    padding-right: 0 !important;
    margin-left: 0 !important;
@@ -186,7 +187,18 @@ main:nth-of-type(2) {
  }
 }
 
-@media (max-width: 1149px) {
+@media (max-width: 1349px) {
+
+  main.MuiContainer-root.MuiContainer-root.makeStyles-heroContent-280
+.MuiGrid-spacing-xs-2 > .MuiGrid-item ,
+main.MuiContainer-root.MuiContainer-root.makeStyles-heroContent-322
+.MuiGrid-spacing-xs-2 > .MuiGrid-item {
+   padding-left: 1em !important;
+   padding-right: 1em !important;  
+}
+
+}
+  @media (max-width: 1149px) {
 .MuiGrid-grid-md-6 {
     max-width: 100% !important;
     flex-basis: 100% !important;
