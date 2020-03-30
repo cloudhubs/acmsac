@@ -167,6 +167,7 @@ public class ImportService {
       presentation.setVideoEmbed(row.getCell(17, Row.CREATE_NULL_AS_BLANK).toString());
       presentation.setSlidesUrl(row.getCell(18, Row.CREATE_NULL_AS_BLANK).toString());
       presentation.setPresenter(presenter);
+      presentation.setType(row.getCell(3, Row.CREATE_NULL_AS_BLANK).toString());
       return presentationRepository.save(presentation);
     } catch (Exception e) {
       throw new ImportException("Could not create presentation! " + e.getMessage(), e);
