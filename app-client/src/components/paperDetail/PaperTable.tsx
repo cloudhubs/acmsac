@@ -4,6 +4,7 @@ import {Track} from "../../model/Track";
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {useGlobalState} from "../../state";
 import {
+    Box,
     ButtonBase,
     Container, IconButton,
     Link,
@@ -24,6 +25,7 @@ const PaperTable = () => {
     console.log(academicPapers);
     let history = useHistory();
     let {code} = useParams();
+    const [trackDetail] = useGlobalState('trackDetail');
 
     const goDetail = (event: React.MouseEvent<HTMLElement>, row: AcademicArticle) => {
         event.preventDefault();
@@ -47,6 +49,9 @@ const PaperTable = () => {
             subHeroContent: {
                 padding: theme.spacing(4, 0, 3),
             },
+            boxContent: {
+                padding: theme.spacing(2),
+            }
         }),
     );
     const classes = useStyles();
@@ -54,10 +59,28 @@ const PaperTable = () => {
     return (
         <div>
 
+                <div className="breadcrumbs"><a href={"/#/beta"}>ACM SAC 2020</a> >&nbsp; 
+                <a href={"/#/beta/track"}>TRACKS</a> >&nbsp;
+                {code}</div>
+
+            <Container maxWidth="lg" component="main" className={classes.heroContent}>
+
+            </Container>
+
             <Container maxWidth="lg" component="main" className={classes.heroContent}>
                 <Typography variant="h4" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
-                    Papers
+                    {code} has {academicPapers.length} papers available
                 </Typography>
+
+                <Typography color="textSecondary" component="p" className={classes.subHeroContent}>
+                    <Box boxShadow={3}>
+                        <Paper className={classes.boxContent}>
+                            <h4>{'Track chair message'}</h4>
+                            {trackDetail.message}Message message message
+                        </Paper>
+                    </Box>
+                </Typography>
+
                 <TableContainer component={Paper}>
                     <Table aria-label="simple table">
                         <TableHead>
