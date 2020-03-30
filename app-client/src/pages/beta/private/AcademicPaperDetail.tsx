@@ -25,15 +25,15 @@ const AcademicPaperDetail = () => {
     return (
         <>
             <PaperDetail />
-            <Container maxWidth="xl" component="main" className="chatContainer">
-                <Grid container spacing={4}>
+            {/*<Container maxWidth="xl" component="main" className="chatContainer">*/}
+            {/*    <Grid container spacing={4}>*/}
 
-                    <Grid item md={12}>
-                        <Chat/>
+            {/*        <Grid item md={12}>*/}
+            {/*            <Chat/>*/}
 
-                    </Grid>
-                </Grid>
-            </Container>
+            {/*        </Grid>*/}
+            {/*    </Grid>*/}
+            {/*</Container>*/}
 
 
         </>
