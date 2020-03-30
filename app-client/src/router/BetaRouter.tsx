@@ -19,13 +19,13 @@ const BetaRouter = () => {
     const [token] = useGlobalState('serverToken');
     const history = useHistory();
 
-    const getAcademicPapers = async () => {
-        FetchTracks.getAllTracks(history, token);
-    };
-
-    useEffect(() => {
-        getAcademicPapers();
-    }, []);
+    // const getAcademicPapers = async () => {
+    //     FetchTracks.getAllTracks(history, token);
+    // };
+    //
+    // useEffect(() => {
+    //     getAcademicPapers();
+    // }, []);
 
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({

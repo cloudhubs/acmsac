@@ -7,6 +7,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { useGlobalState } from "../../../state";
 import {Track} from "../../../model/Track";
 import TrackTable from "../../../components/track/TrackTable";
+import FetchTracks from "../../../http/FetchTracks";
 
 const TrackList = () => {
 
@@ -28,7 +29,16 @@ const TrackList = () => {
 
     let { track } = useParams();
 
+    const [token] = useGlobalState('serverToken');
+    const history = useHistory();
 
+    const getAcademicPapers = async () => {
+        FetchTracks.getAllTracks(history, token);
+    };
+
+    useEffect(() => {
+        getAcademicPapers();
+    }, []);
 
     return (
         <>
