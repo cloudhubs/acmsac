@@ -87,7 +87,7 @@ const Chat = () => {
                 Chat
             </Typography>
             <Paper className={classes.paper} elevation={3}>
-                {selectedPaper.comments.length > 0 ?
+                {selectedPaper && selectedPaper.comments.length > 0 ?
                     selectedPaper.comments.map((comment: Comment) => {
                         return (<ChatRow commentId={comment.id} data={comment}/>);
                     })
