@@ -70,7 +70,9 @@ const PaperTable = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {academicPapers.map( (row: AcademicArticle ) => (
+                            {academicPapers.slice().sort((a: AcademicArticle, b: AcademicArticle) => {
+                                return a.sessionCode.localeCompare(b.sessionCode);
+                            }).map( (row: AcademicArticle ) => (
                                 <TableRow key={row.id} hover role="checkbox" className={classes.rowClick} onClick={(event) => {goDetail(event, row)}}>
                                     <TableCell align="left">{row.sessionCode}</TableCell>
                                     <TableCell>{row.title}</TableCell>
