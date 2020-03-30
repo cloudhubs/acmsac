@@ -39,8 +39,13 @@ const App = () => {
 
     // Initialize google analytics page view tracking
     history.listen(location => {
-        ReactGA.set({ page: location.pathname }); // Update the user's current page
-        ReactGA.pageview(location.pathname); // Record a pageview for the given page
+        let hash = location.hash;
+        if(hash[0] === '#'){
+            hash = hash.substr(1);
+        }
+
+        ReactGA.set({ page: hash }); // Update the user's current page
+        ReactGA.pageview(hash); // Record a pageview for the given page
     });
 
     // const [rows, uRows] = useGlobalState('academicPapers');
