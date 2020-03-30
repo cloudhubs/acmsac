@@ -81,35 +81,38 @@ const Chat = () => {
     };
 
     return (
-        <Paper className={classes.paper} elevation={3}>
-            <h3>Chat</h3>
+        <>
+            <Typography variant="h6" align="center" color="textSecondary" component="p">
+                Chat
+            </Typography>
+            <Paper className={classes.paper} elevation={3}>
+                {selectedPaper.comments.length > 0 ?
+                    selectedPaper.comments.map((comment: Comment) => {
+                        return (<ChatRow commentId={comment.id} data={comment}/>);
+                    })
+                :
+                    <Typography className={classes.secondaryHeading}>
+                        No comments yet
+                    </Typography>
+                }
 
-            {selectedPaper.comments.length > 0 ?
-                selectedPaper.comments.map((comment: Comment) => {
-                    return (<ChatRow commentId={comment.id} data={comment}/>);
-                })
-            :
-                <Typography className={classes.secondaryHeading}>
-                    No comments yet
-                </Typography>
-            }
+                <br/>
 
-            <br/>
+                <form>
+                    <TextField
+                        placeholder={"Comment"}
+                        value={commentText}
+                        onChange={(event) => setComment(event.target.value)}
+                        style={{minWidth: '75%'}}
+                    />
 
-            <form>
-                <TextField
-                    placeholder={"Comment"}
-                    value={commentText}
-                    onChange={(event) => setComment(event.target.value)}
-                    style={{minWidth: '75%'}}
-                />
+                    <Button size="small" color="primary" style={{marginLeft: '15px'}} onClick={onSubmit}>
+                        Submit
+                    </Button>
+                </form>
 
-                <Button size="small" color="primary" style={{marginLeft: '15px'}} onClick={onSubmit}>
-                    Submit
-                </Button>
-            </form>
-
-        </Paper>
+            </Paper>
+        </>
 
     );
 };

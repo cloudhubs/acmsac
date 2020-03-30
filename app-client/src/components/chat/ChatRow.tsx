@@ -127,7 +127,6 @@ const ChatRow = (props) => {
                     <Grid item xs={11} >
                         <TextField
                             style={{minWidth: '100%'}}
-                            label={"Reply"}
                             placeholder={"Reply"}
                             value={replyText}
                             onChange={(event) => setReply(event.target.value)}
