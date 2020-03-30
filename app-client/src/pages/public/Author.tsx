@@ -13,6 +13,7 @@ type AuthorProps = {
   author: Person,
 }
 
+
 export const Author: FunctionComponent<AuthorProps> = ({ author }) => <div>
     
     <TableContainer component={Paper} >
@@ -42,7 +43,7 @@ export const Author: FunctionComponent<AuthorProps> = ({ author }) => <div>
                                     Email
                                 </TableCell>
                                 <TableCell align="left" scope="row">
-                                    {author.email}
+                                    <a href={"mailto:"+author.email}>{author.email}</a>
                                 </TableCell>
                             </TableRow>
 

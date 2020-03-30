@@ -97,7 +97,7 @@ const PaperDetail = () => {
                         <Typography variant="h6" align="center" color="textSecondary" component="p">
                             Video
                     </Typography>
-                        <Paper style={{ textAlign: "center", padding: "15px", minHeight: "100%", paddingTop: "15%" }}>
+                        <Paper className="videoBox" style={{ textAlign: "center", padding: "15px", minHeight: "100%"}}>
                             <Video url={selectedPaper.videoEmbed} />
                         </Paper>
                     </Grid>
@@ -106,7 +106,7 @@ const PaperDetail = () => {
                             <Typography variant="h6" align="center" color="textSecondary" component="p">
                                 Slides ({<Link target="_blank" href={selectedPaper && selectedPaper.presentation.download}>External Link</Link>})
                     </Typography>
-                            <Paper style={{ textAlign: "center", padding: "15px", minHeight: "100%" }}>
+                            <Paper className="paperBox" style={{ textAlign: "center", padding: "15px", minHeight: "100%" }}>
                                 <Slides url={selectedPaper && selectedPaper.presentation.embed} />
 
                             </Paper>

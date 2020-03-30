@@ -260,6 +260,29 @@ main:nth-of-type(2) {
 /* height: 0px; */
 }
 
+
+div.hideAbstract {
+  display: none;
+}
+
+a:hoverMe + div.hideAbstract {
+    display: block;
+}
+
+
+.videoBox {
+  position: relative;
+}
+ 
+.videoInner {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
 /* @media all and (max-width: 959px) { */
 @media all and (max-width: 1149px) {
  .MuiGrid-grid-xs-6 {

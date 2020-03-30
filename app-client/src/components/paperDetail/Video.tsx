@@ -13,7 +13,7 @@ type SlidesProps = {
 
 export const Video: FunctionComponent<SlidesProps> = ({ url }) => <div>
     
-    <div>
+    <div className="videoInner">
                                 <div dangerouslySetInnerHTML={{__html: url}} />
                             </div>
   

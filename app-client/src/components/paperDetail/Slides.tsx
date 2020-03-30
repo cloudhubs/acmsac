@@ -16,7 +16,7 @@ function getFrame(url){
 
 export const Slides: FunctionComponent<SlidesProps> = ({ url }) => <div>
     
-    <div>
+    <div  className="paperInner">
                                 <div dangerouslySetInnerHTML={{__html: getFrame(url)}} />
                             </div>
     
