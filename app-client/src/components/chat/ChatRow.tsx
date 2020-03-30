@@ -17,6 +17,7 @@ import {AcademicArticle} from "../../model/AcademicArticle";
 import Link from "@material-ui/core/Link";
 import EmailIcon from '@material-ui/icons/Email';
 import SearchIcon from '@material-ui/icons/Search';
+import Avatar from "@material-ui/core/Avatar";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -97,11 +98,13 @@ const ChatRow = (props) => {
         <ExpansionPanel className='chatRow' expanded={expanded} onChange={() => setExpanded(!expanded)}>
             <ExpansionPanelSummary className='chatRowMain' expandIcon={<ExpandMoreIcon />}>
                 <Typography className="header">
-                    <span className="replies">({props.data.replies.length} replies)</span> 
+                    <span className="img" >
+                        
+                    <Avatar className="img" style={{height: "60px", maxWidth: "60px", width: "60px"}} src={props.data.user.picUrl} />
+                    <span className="replies">{props.data.replies.length} {props.data.replies.length==1?'reply':'replies'}</span> 
+                    </span>
                     <b>{props.data.user.name}</b> <Link className={"user-"+props.data.user.id} href={"mailto:" + props.data.user.email}><EmailIcon style={{paddingTop: '5px'}} /></Link> 
                     <Link href={"https://acmsac.ecs.baylor.edu/#/api/check/" + props.data.user.email}><SearchIcon style={{paddingTop: '5px'}} /></Link>
-                    <span className="photo">{props.data.user.picUrl}</span>
-                    
                     <br/>
                     {props.data.content}
                     <span className="time">{props.data.date.substr(5,5)} at {props.data.date.substr(11,5)}</span>
@@ -116,6 +119,10 @@ const ChatRow = (props) => {
                                 <>
                                     <Grid item className='chatReply' style={{marginLeft: "30px"}} xs={12}>
                                         <Typography>
+                                            <span className="img" >
+                        
+                                            <Avatar className="img" style={{height: "60px", maxWidth: "60px", width: "60px"}} src={reply.user.picUrl} />
+                                            </span>
                                             <b>{reply.user.name}</b> <Link href={"mailto:" + reply.user.email}><EmailIcon style={{paddingTop: '5px'}} /></Link> <Link href={"https://acmsac.ecs.baylor.edu/#/api/check/" + reply.user.email}><SearchIcon style={{paddingTop: '5px'}} /></Link><br/>
                                             {reply.content}
                                             <span className="time">{reply.date.substr(5,5)} at {reply.date.substr(11,5)}</span>

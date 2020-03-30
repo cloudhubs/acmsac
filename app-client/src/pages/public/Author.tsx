@@ -25,7 +25,7 @@ export const Author: FunctionComponent<AuthorProps> = ({ author }) => <div>
                                 Picture
                                 </TableCell>
                                 <TableCell align="left" scope="row">
-                                    <Avatar style={{height: "auto", maxWidth: "200px", width: "auto"}} src={author.picUrl} />
+                                    <Avatar style={{height: "100px", maxWidth: "100px", width: "100px"}} src={author.picUrl} />
                                 </TableCell>
                             </TableRow>
                             
