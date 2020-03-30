@@ -6,6 +6,8 @@ import FetchAcademicPapers from "../../../http/FetchAcademicPapers";
 import { useParams } from "react-router-dom";
 import PaperDetail from "../../../components/paperDetail/PaperDetail";
 import FetchPresentationById from "../../../http/FetchPresentationById";
+import {Container, Grid} from "@material-ui/core";
+import Chat from "../../../components/chat/Chat";
 
 const AcademicPaperDetail = () => {
 
@@ -21,9 +23,20 @@ const AcademicPaperDetail = () => {
     }, []);
 
     return (
-        <div>
+        <>
             <PaperDetail />
-        </div>
+            <Container maxWidth="xl" component="main">
+                <Grid container spacing={4}>
+
+                    <Grid item md={12}>
+                        <Chat/>
+
+                    </Grid>
+                </Grid>
+            </Container>
+
+
+        </>
     );
 }
 export default AcademicPaperDetail;
