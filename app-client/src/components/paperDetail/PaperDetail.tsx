@@ -84,7 +84,7 @@ const PaperDetail = () => {
     return (
         <>
 
-            <Container maxWidth="xl" component="main" className={classes.heroContent}>
+            <Container maxWidth="xl" component="main" className='paperDetail {classes.heroContent}'>
 
                 <Typography variant="h4" align="center" color="textPrimary" component="h1">
                     {selectedPaper.title}
@@ -92,7 +92,7 @@ const PaperDetail = () => {
 
                 <br />
 
-                <Grid container spacing={2}>
+                <Grid container spacing={2} className='slidesVideo'>
                     <Grid item md={6}>
                         <Typography variant="h6" align="center" color="textSecondary" component="p">
                             Video
@@ -119,7 +119,7 @@ const PaperDetail = () => {
                 <br />
                 <br />
 
-                <Grid container spacing={2}>
+                <Grid container spacing={2} className='authorMeta'>
 
                     <Grid item md={6}>
                         <Typography variant="h6" align="center" color="textSecondary" component="p">

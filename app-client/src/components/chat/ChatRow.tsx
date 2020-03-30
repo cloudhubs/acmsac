@@ -91,7 +91,7 @@ const ChatRow = (props) => {
     };
 
     return (
-        <ExpansionPanel expanded={expanded} onChange={() => setExpanded(!expanded)}>
+        <ExpansionPanel className='chatRow' expanded={expanded} onChange={() => setExpanded(!expanded)}>
             <ExpansionPanelSummary className={classes.summary} expandIcon={<ExpandMoreIcon />}>
                 <Typography>
                     <b>{props.data.user.name}</b> <br/>
