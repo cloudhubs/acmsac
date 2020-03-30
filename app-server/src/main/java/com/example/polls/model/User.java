@@ -43,12 +43,16 @@ public class User {
     @Lob
     private String affiliation;
 
+    @Lob
     private String country;
 
+    @Lob
     private String orcid;
 
+    @Lob
     private String linkedInUrl;
 
+    @Lob
     private String googleScholarUrl;
 
     @Lob
