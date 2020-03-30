@@ -1,3 +1,4 @@
+import { Container, Grid, Link, Paper, TableCell, Typography } from "@material-ui/core";
 import React, {useEffect} from "react";
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { BrowserRouter as Router, useHistory, useParams } from "react-router-dom";
@@ -36,7 +37,9 @@ const TrackDetail = () => {
     return (
         <div>
             <PaperTable/>
-            <TrackChat/>
+            <Container maxWidth="xl" component="main" className="chatContainer">
+                <TrackChat/>
+            </Container>
         </div>
     );
 }

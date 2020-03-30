@@ -81,7 +81,7 @@ const TrackChat = () => {
 
     return (
         <>
-            <Typography variant="h6" align="center" color="textSecondary" component="p">
+            <Typography variant="h6" align="center" color="textSecondary" className="chatHeader" component="p">
                 Chat
             </Typography>
             <Paper className={classes.paper} elevation={3}>

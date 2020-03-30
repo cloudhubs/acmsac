@@ -82,7 +82,7 @@ const Chat = () => {
 
     return (
         <>
-            <Typography variant="h6" align="center" color="textSecondary" component="p">
+            <Typography variant="h6" className="chatHeader" align="center" color="textSecondary" component="p">
                 Chat
             </Typography>
             <Paper className={classes.paper} elevation={3}>
