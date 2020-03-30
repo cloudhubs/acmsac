@@ -70,7 +70,7 @@ const PaperTable = () => {
                         </TableHead>
                         <TableBody>
                             {academicPapers.map( (row: AcademicArticle ) => (
-                                <TableRow key={row.id} hover role="checkbox" className={classes.rowClick}>
+                                <TableRow key={row.id} hover role="checkbox" className={classes.rowClick} onClick={(event) => {goDetail(event, row)}}>
                                     <TableCell>{row.title}</TableCell>
                                     <TableCell align="right">{row.presenter.name}</TableCell>
                                     <TableCell align="left">{row.paperAbstract}</TableCell>
