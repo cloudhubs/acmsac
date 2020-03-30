@@ -54,9 +54,15 @@ const PaperTable = () => {
     return (
         <div>
 
+                <div className="breadcrumbs"><a href={"/#/beta"}>ACM SAC 2020</a> >&nbsp; 
+                <a href={"/#/beta/track"}>TRACKS</a> >&nbsp;
+                {code}</div>
+
+TODO add detail here
+
             <Container maxWidth="lg" component="main" className={classes.heroContent}>
                 <Typography variant="h4" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
-                    Papers
+                    {code} has {academicPapers.length} papers available
                 </Typography>
                 <TableContainer component={Paper}>
                     <Table aria-label="simple table">

@@ -62,8 +62,7 @@ const TrackTable = () => {
                             <TableHead>
                                 <TableRow>
                                     <TableCell>Code</TableCell>
-                                    <TableCell align="right">Name</TableCell>
-                                    <TableCell align="right">Track URL</TableCell>
+                                    <TableCell align="center">Name</TableCell>
                                     <TableCell >Detail</TableCell>
                                 </TableRow>
                             </TableHead>
@@ -72,8 +71,7 @@ const TrackTable = () => {
 
                                         <TableRow key={row.id} hover role="checkbox" className={classes.rowClick} onClick={(event) => {goDetail(event, row)}}>
                                             <TableCell>{row.code}</TableCell>
-                                            <TableCell align="right">{row.name}</TableCell>
-                                            <TableCell align="right">{<Link target="_blank" href={row && row.trackUrl}>{row.trackUrl}</Link>}</TableCell>
+                                            <TableCell align="center">{row.name}</TableCell>
                                             <ButtonBase>
                                             <TableCell>
                                                 <IconButton onClick={(event) => {goDetail(event, row)}}>
