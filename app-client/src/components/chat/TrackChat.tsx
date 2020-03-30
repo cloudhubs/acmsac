@@ -1,3 +1,4 @@
+import { Container, Grid, Link, TableCell } from "@material-ui/core";
 import * as React from 'react';
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -96,19 +97,20 @@ const TrackChat = () => {
                 }
 
                 <br/>
+                <Grid className="chatPostNew">
+                    <form>
+                        <TextField
+                            placeholder={"Comment"}
+                            value={commentText}
+                            onChange={(event) => setComment(event.target.value)}
+                            style={{minWidth: '75%'}}
+                        />
 
-                <form>
-                    <TextField
-                        placeholder={"Comment"}
-                        value={commentText}
-                        onChange={(event) => setComment(event.target.value)}
-                        style={{minWidth: '75%'}}
-                    />
-
-                    <Button size="small" color="primary" style={{marginLeft: '15px'}} onClick={onSubmit}>
-                        Submit
-                    </Button>
-                </form>
+                        <Button size="small" color="primary" style={{marginLeft: '15px'}} onClick={onSubmit}>
+                            Submit
+                        </Button>
+                    </form>
+                </Grid>
 
             </Paper>
         </>
