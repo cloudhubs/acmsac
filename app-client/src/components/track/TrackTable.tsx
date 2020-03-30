@@ -70,7 +70,7 @@ const TrackTable = () => {
                             <TableBody>
                                 {tracks.map(row => (
 
-                                        <TableRow key={row.id} hover role="checkbox" className={classes.rowClick}>
+                                        <TableRow key={row.id} hover role="checkbox" className={classes.rowClick} onClick={(event) => {goDetail(event, row)}}>
                                             <TableCell>{row.code}</TableCell>
                                             <TableCell align="right">{row.name}</TableCell>
                                             <TableCell align="right">{<Link target="_blank" href={row && row.trackUrl}>{row.trackUrl}</Link>}</TableCell>
