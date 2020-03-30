@@ -64,6 +64,7 @@ const CheckList = () => {
             },
             heroContent: {
                 padding: theme.spacing(8, 0, 6),
+
             }
             
         }),
