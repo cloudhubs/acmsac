@@ -118,6 +118,16 @@ const PaperDetail = () => {
                 <br />
                 <br />
                 <br />
+                <Container maxWidth="xl" component="main" className="chatContainer">
+                    <Grid container spacing={4}>
+
+                        <Grid item md={12}>
+                            <Chat/>
+
+                        </Grid>
+                    </Grid>
+                </Container>
+
 
                 <Grid container spacing={2} className='authorMeta'>
 
