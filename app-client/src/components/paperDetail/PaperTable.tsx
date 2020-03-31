@@ -58,19 +58,20 @@ const PaperTable = () => {
     );
     const classes = useStyles();
 
-    // let affiliationSet = new Set<string>();
-    //    trackDetail.chairs.forEach((chair: Person) => {
-    //        affiliationSet.add(chair.affiliation);
-    //    });
-    //    let affiliations: Array<string> = Array.from(affiliationSet.keys());
-    //
-    //    let chairList: string[] = [];
-    //    let affiliationList: number[] = [];
-    //    trackDetail.chairs.forEach((chair) => {
-    //        chairList.push(chair.name);
-    //        affiliationList.push(affiliations.indexOf(chair.affiliation) + 1);
-    //    });
+    console.log(trackDetail.chairs);
 
+    let affiliationSet = new Set<string>();
+    trackDetail.chairs.forEach((chair: Person) => {
+        affiliationSet.add(chair.affiliation);
+    });
+    let affiliations: Array<string> = Array.from(affiliationSet.keys());
+
+    let chairList: string[] = [];
+    let affiliationList: number[] = [];
+    trackDetail.chairs.forEach((chair) => {
+        chairList.push(chair.name);
+        affiliationList.push(affiliations.indexOf(chair.affiliation) + 1);
+    });
 
     return (
         <div>
@@ -109,28 +110,43 @@ const PaperTable = () => {
                     </div>
                 <h4>{'Track chair message'}</h4>
                 {trackDetail.message}
-                <div>
-                    Chairs:
+
+Chairs:
                     {trackDetail && trackDetail.chairs && trackDetail.chairs.map((chair: Person) => (
-                        <p>{chair.name}</p>
+                        <div>
+                                <p>{chair.name}</p>
+                                <p>{chair.email}</p>
+                        </div>
                     ))}
+
+                <div>
+                    Chairs:{/*trackDetail.chairs*/}
+                    {
+                        trackDetail.chairs.map((chair, ndx) => {
+                            return (
+                                <span>
+                                                {chair.name}<sup>{affiliationList[ndx]}</sup>{ndx === chairList.length - 1 ? "" : ", "}
+                                            </span>
+                            );
+                        })
+                    }
                 </div>
                 <div>
                     Affiliations:
 
-                    {/*
+                    {
+                        affiliations.map((affiliation, ndx) => {
+                            return (
+                                <div><sup>
+                                    {
+                                        (ndx + 1) +"  "
+                                    }</sup>{affiliation}
+                                    <br />
+                                </div>
+                            );
+                        })
+                    }
 
-                                                    affiliations.map((affiliation, ndx) => {
-                                                        return (
-                                                            <div><sup>
-                                                                {
-                                                                (ndx + 1) +"  "  
-                                                                }</sup>{affiliation}
-                                                                <br />
-                                                            </div>
-                                                        );
-                                                    })
-                                                */}
 
                 </div>
             </Container>
