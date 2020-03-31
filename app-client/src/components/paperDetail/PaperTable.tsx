@@ -157,7 +157,7 @@ Chairs:
             <Container maxWidth="lg" component="main" className="trackContainer">
 
 
-
+ {!!(trackDetail.message) &&  !!(trackDetail.message) && ( 
                 <Typography color="textSecondary" component="p" className="trackPanel">
                     <Box boxShadow={3}>
                         <Paper className={classes.boxContent}>
@@ -174,6 +174,7 @@ Chairs:
                         </Paper>
                     </Box>
                 </Typography>
+ )}
                 <h2>Full-papers</h2>
                 <TableContainer component={Paper}>
                     <Table aria-label="simple table">
