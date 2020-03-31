@@ -16,6 +16,7 @@ import {
     TableRow, Typography
 } from "@material-ui/core";
 import { BrowserRouter as Router, useHistory, useParams } from "react-router-dom";
+import TransitionsModal from "../../shared/TransitionModal";
 
 
 
@@ -23,6 +24,8 @@ const TrackTable = () => {
     const [tracks] = useGlobalState('tracks');
     console.log(tracks);
     let history = useHistory();
+    const [open, setOpen] = React.useState(false);
+
 
     const goDetail = (event: React.MouseEvent<HTMLElement>, row: Track) => {
         event.preventDefault();
@@ -54,9 +57,15 @@ const TrackTable = () => {
         <div>
 
             <Container maxWidth="lg" component="main" className={classes.heroContent}>
+
+                <Typography variant="h4" align="right" color="textSecondary" component="p" className={classes.subHeroContent}>
+                    <TransitionsModal givenOpen={open}/>
+                </Typography>
+
                 <Typography variant="h4" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
                     Tracks
                 </Typography>
+
                     <TableContainer component={Paper}>
                         <Table aria-label="simple table">
                             <TableHead>
