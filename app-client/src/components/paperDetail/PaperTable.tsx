@@ -88,9 +88,6 @@ const PaperTable = () => {
                             <Video url={trackDetail.videoEmbed} />
                 </Paper>
 
-                <h4>{'Track chair message'}</h4>
-                            {trackDetail.message}
-
                             <div>
                                             Chairs:{/*trackDetail.chairs*/}
                                 
@@ -123,9 +120,12 @@ const PaperTable = () => {
                             </div>
             </Container>
 
-            <Container maxWidth="lg" component="main" className={classes.heroContent}>
 
-                <Typography color="textSecondary" component="p" className={classes.subHeroContent}>
+            <Container maxWidth="lg" component="main" className="trackContainer">
+
+
+
+                <Typography color="textSecondary" component="p" className="trackPanel">
                     <Box boxShadow={3}>
                         <Paper className={classes.boxContent}>
                             <h4>{'Track chair message'}</h4>
