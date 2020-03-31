@@ -9,6 +9,7 @@ import PaperDetail from "../components/paperDetail/PaperDetail";
 import CheckList from "../pages/public/CheckList";
 import Search from "../pages/public/Search";
 import CheckDetail from "../pages/public/CheckDetail";
+import BetaRouter from "./BetaRouter";
 
 const PublicRouter = () => {
 
@@ -38,6 +39,7 @@ const PublicRouter = () => {
                 <div>
                     <Switch>
                         <Route exact path="/" component={Index} />
+                        <Route exact path="/app" component={BetaRouter} />
                         <Route exact path="/search" component={Search} />
                         <Route exact path="/reminder" component={EarlyRegister} />
                         <Route exact path="/api/check/:email" component={CheckList} />

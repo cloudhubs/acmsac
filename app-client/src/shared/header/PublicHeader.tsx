@@ -53,6 +53,13 @@ const PublicHeader = () => {
         history.push("/reminder");
     }
 
+    const onLogin = async (event: React.MouseEvent<HTMLElement>) => {
+        event.preventDefault();
+        localStorage.removeItem("MY_LOCAL_STORAGE_KEY");
+        history.push("/app");
+    }
+
+
 
     const classes = useStyles();
 
@@ -80,6 +87,13 @@ const PublicHeader = () => {
                     }}>
                         Password Reminder
                     </Button>
+
+                    <Button color="primary" variant="outlined" className={classes.link} onClick={(event: React.MouseEvent<HTMLElement>) => {
+                        onLogin(event)
+                    }}>
+                        Login
+                    </Button>
+
                 </Toolbar>
             </AppBar>
         </>
