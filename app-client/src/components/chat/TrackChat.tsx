@@ -11,6 +11,8 @@ import {useState} from "react";
 import { Comment } from "../../model/Comment";
 import {AcademicArticle} from "../../model/AcademicArticle";
 import {Track} from "../../model/Track";
+import FetchPresentationById from "../../http/FetchPresentationById";
+import FetchTrackByCode from "../../http/FetchTrackByCode";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -69,8 +71,9 @@ const TrackChat = () => {
             const body = await response.json();
 
             if (!body.error) {
-                trackDetail.comments.push(body);
-                setTrackDetail(trackDetail);
+                //trackDetail.comments.push(body);
+                //setTrackDetail(trackDetail);
+                await FetchTrackByCode.getTrackByCode(token, trackDetail.code);
                 setComment("");
             } else {
                 console.log(body.message);

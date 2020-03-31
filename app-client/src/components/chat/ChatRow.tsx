@@ -18,6 +18,7 @@ import Link from "@material-ui/core/Link";
 import EmailIcon from '@material-ui/icons/Email';
 import SearchIcon from '@material-ui/icons/Search';
 import Avatar from "@material-ui/core/Avatar";
+import FetchPresentationById from "../../http/FetchPresentationById";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -79,8 +80,9 @@ const ChatRow = (props) => {
                 for(let i = 0; i < selectedPaper.comments.length; i++){
                     if(selectedPaper.comments[i].id == props.data.id){
                         //console.log(body);
-                        selectedPaper.comments[i].replies.push(body);
-                        setSelectedPaper(selectedPaper);
+                        //selectedPaper.comments[i].replies.push(body);
+                        //setSelectedPaper(selectedPaper);
+                        await FetchPresentationById.getById(token, selectedPaper.id);
                         setReply("");
                     }
                 }
