@@ -89,7 +89,7 @@ const Login = () => {
     
     return (
         <div>
-          <ApplicationBar />
+          {/*<ApplicationBar />*/}
             <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
@@ -132,10 +132,6 @@ const Login = () => {
               uSignInUser((p) => ({ ...p, password }));
             }}
           />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
           <Button
             type="submit"
             fullWidth
@@ -147,39 +143,12 @@ const Login = () => {
              }}>
             Sign In
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
         </form>
       </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
+
     </Container>
         </div>
     );
 }
-
-function Copyright() {
-    return (
-      <Typography variant="body2" color="textSecondary" align="center">
-        {'Copyright © '}
-        <Link color="inherit" href="https://material-ui.com/">
-          Your Website
-        </Link>{' '}
-        {new Date().getFullYear()}
-        {'.'}
-      </Typography>
-    );
-  }
 
 export default Login;

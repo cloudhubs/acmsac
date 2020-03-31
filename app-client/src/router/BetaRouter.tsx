@@ -11,6 +11,7 @@ import FetchTracks from "../http/FetchTracks";
 import { useHistory, useParams } from "react-router-dom";
 import TrackDetail from "../pages/beta/private/TrackDetail";
 import AcademicPaperDetail from "../pages/beta/private/AcademicPaperDetail";
+import PublicHeader from "../shared/header/PublicHeader";
 
 const BetaRouter = () => {
 
@@ -64,7 +65,8 @@ const BetaRouter = () => {
         <>
         <div className={classes.root}>
         <Router>
-                <PrivateHeader />
+            {auth && <PrivateHeader /> }
+            {!auth && <PublicHeader /> }
                 <div>
                     <Switch>
                         <Route exact path="/beta" component={Login} />
