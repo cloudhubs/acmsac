@@ -104,7 +104,7 @@ Chairs:
                                 <span className="space">{chair.affiliation}</span>
                                 <span className="space">{chair.country}</span>
      {!!(chair.orcid) && (
-                                <Link className="link space"  href={chair.orcid}>ORCID</Link>
+                                <Link className="link space" href={chair.orcid}>ORCID</Link>
                     )}
                                     {!!(chair.linkedInUrl) && (
                                 
