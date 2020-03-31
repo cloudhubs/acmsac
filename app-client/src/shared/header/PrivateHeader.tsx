@@ -5,7 +5,12 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom'
+import {dispatch} from "../../state";
+import { useHistory, useLocation } from 'react-router-dom';
 
+const logout = () => dispatch({
+    type: 'logout',
+});
 const PrivateHeader = () => {
 
     const useStyles = makeStyles((theme: Theme) =>
@@ -26,6 +31,16 @@ const PrivateHeader = () => {
         }),
     );
 
+    const history = useHistory();
+    let location = useLocation();
+
+    const onLogout = async (event: React.MouseEvent<HTMLElement>) => {
+        event.preventDefault();
+        localStorage.removeItem("MY_LOCAL_STORAGE_KEY");
+        // logout();
+        history.push("/beta");
+    }
+
     const classes = useStyles();
 
     return (
@@ -38,8 +53,10 @@ const PrivateHeader = () => {
                     <Button color="primary" variant="outlined" className={classes.link}>
                         <Link to="/beta/track">Tracks</Link>
                     </Button>
-                    <Button color="primary" variant="outlined" className={classes.link}>
-                        <Link to="/search">Logout</Link>
+                    <Button color="primary" variant="outlined" className={classes.link} onClick={(event: React.MouseEvent<HTMLElement>) => {
+                        onLogout(event)
+                    }}>
+                        Logout
                     </Button>
                 </Toolbar>
             </AppBar>
