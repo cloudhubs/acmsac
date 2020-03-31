@@ -52,7 +52,7 @@ const onSubmit = async (event: React.MouseEvent<HTMLElement>, signInUser, histor
       console.log("server error");
     }
 
-    //GET https://acmsac.ecs.baylor.edu/api/auth/resetPassword/{email}
+    //GET
 }
 
 

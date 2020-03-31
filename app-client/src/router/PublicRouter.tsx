@@ -39,7 +39,7 @@ const PublicRouter = () => {
                     <Switch>
                         <Route exact path="/" component={Index} />
                         <Route exact path="/search" component={Search} />
-                        <Route exact path="/register" component={EarlyRegister} />
+                        <Route exact path="/reminder" component={EarlyRegister} />
                         <Route exact path="/api/check/:email" component={CheckList} />
                         <Route exact path="/api/check/:email/:paperId" component={CheckDetail} />
                     </Switch>
