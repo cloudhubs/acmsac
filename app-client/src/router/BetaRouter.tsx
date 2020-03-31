@@ -12,6 +12,7 @@ import { useHistory, useParams } from "react-router-dom";
 import TrackDetail from "../pages/beta/private/TrackDetail";
 import AcademicPaperDetail from "../pages/beta/private/AcademicPaperDetail";
 import PublicHeader from "../shared/header/PublicHeader";
+import Index from "../components/Index";
 
 const BetaRouter = () => {
 
@@ -51,7 +52,7 @@ const BetaRouter = () => {
                     ) : (
                         <Redirect
                             to={{
-                                pathname: "/login",
+                                pathname: "/",
                                 state: { from: location }
                             }}
                         />
@@ -69,6 +70,7 @@ const BetaRouter = () => {
             {!auth && <PublicHeader /> }
                 <div>
                     <Switch>
+                        <Route exact path="/" component={Index} />
                         <Route exact path="/app" component={Login} />
                         <Route exact path="/app/register" component={Signup} />
                         <PrivateRoute exact path="/app/track">
@@ -80,6 +82,9 @@ const BetaRouter = () => {
                         <PrivateRoute>
                             <Route exact path="/app/track/:track/:code" component={AcademicPaperDetail}/>
                         </PrivateRoute>
+                        <Route path="*">
+                            <Redirect path="/"/>
+                        </Route>
                     </Switch>
                 </div>
                 <PublicFooter />

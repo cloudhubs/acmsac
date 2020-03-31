@@ -1,6 +1,6 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React from "react";
-import { HashRouter as Router, Route, Switch } from 'react-router-dom';
+import { HashRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 import PublicFooter from "../shared/footer/PublicFooter";
 import PublicHeader from "../shared/header/PublicHeader";
 import Index from "../components/Index";
@@ -42,6 +42,9 @@ const PublicRouter = () => {
                         <Route exact path="/reminder" component={EarlyRegister} />
                         <Route exact path="/api/check/:email" component={CheckList} />
                         <Route exact path="/api/check/:email/:paperId" component={CheckDetail} />
+                        <Route path="*">
+                            <Redirect path="/"/>
+                        </Route>
                     </Switch>
                 </div>
                 <PublicFooter />
