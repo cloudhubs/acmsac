@@ -80,12 +80,11 @@ const PaperTable = () => {
                         </Paper>
                     </Box>
                 </Typography>
-
+                <h2>Full-papers</h2>
                 <TableContainer component={Paper}>
                     <Table aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                <TableCell align="left">Type</TableCell>
                                 <TableCell align="left">Session</TableCell>
                                 <TableCell>Title</TableCell>
                                 <TableCell align="right">Presenter</TableCell>
@@ -94,12 +93,49 @@ const PaperTable = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {academicPapers.slice().sort((a: AcademicArticle, b: AcademicArticle) => {
+                            {academicPapers.filter(row => row.type != 'Poster').slice().sort((a: AcademicArticle, b: AcademicArticle) => {
                                 return a.sessionCode.localeCompare(b.sessionCode);
                             }).map( (row: AcademicArticle ) => (
                                 <TableRow key={row.id} hover role="checkbox" className={classes.rowClick} onClick={(event) => {goDetail(event, row)}}>
-                                    <TableCell align="left">{row.type}</TableCell>
                                     <TableCell align="left">{row.sessionCode}</TableCell>
+                                    <TableCell>{row.title}</TableCell>
+                                    <TableCell align="right">{row.presenter.name}</TableCell>
+                                    {/**
+                                    <TableCell align="left">
+                                        <a className="hoverMe">Show abstract..</a>
+                                        <div className="hideAbstract">
+                                            {row.paperAbstract}
+                                        </div>
+                                    </TableCell>
+                                    */}
+                                        <TableCell>
+                                            <ButtonBase>
+                                            <IconButton onClick={(event) => {goDetail(event, row)}}>
+                                                <MoreVertIcon />
+                                            </IconButton>
+                                            </ButtonBase>
+                                        </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+                <h2>Posters</h2>
+                <TableContainer component={Paper}>
+                    <Table aria-label="simple table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Title</TableCell>
+                                <TableCell align="right">Presenter</TableCell>
+                                {/**<TableCell align="right">Abstract</TableCell>*/}
+                                <TableCell >Detail</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {academicPapers.filter(row => row.type == 'Poster').slice().sort((a: AcademicArticle, b: AcademicArticle) => {
+                                return a.sessionCode.localeCompare(b.sessionCode);
+                            }).map( (row: AcademicArticle ) => (
+                                <TableRow key={row.id} hover role="checkbox" className={classes.rowClick} onClick={(event) => {goDetail(event, row)}}>
                                     <TableCell>{row.title}</TableCell>
                                     <TableCell align="right">{row.presenter.name}</TableCell>
                                     {/**
