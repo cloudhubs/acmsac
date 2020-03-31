@@ -21,7 +21,7 @@ const FetchTrackByCode = {
         });
         if (response != null){
             const body = await response.json();
-            console.log(body);
+            // console.log(body);
             if (!body.error) {
                 setTrackDetail(body)
             } else {

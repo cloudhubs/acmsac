@@ -103,7 +103,7 @@ const setTrack = (track: string) => dispatch({
 
     const onClick = async (event: React.MouseEvent<HTMLElement>, code: string) => {
         event.preventDefault();
-        history.push("/beta/track/" + code);
+        history.push("/app/track/" + code);
     }
 
     const drawer = (

@@ -73,16 +73,16 @@ const ChatRow = (props) => {
 
         if (response != null){
             const body = await response.json();
-            console.log(trackDetail);
-            console.log(body);
+            // console.log(trackDetail);
+            // console.log(body);
 
             if (!body.error) {
                 for(let i = 0; i < trackDetail.comments.length; i++){
                     if(trackDetail.comments[i].id == props.data.id){
-                        console.log(body);
+                        // console.log(body);
                         trackDetail.comments[i].replies.push(body);
                         setTrackDetail(trackDetail);
-                        console.log(trackDetail);
+                        // console.log(trackDetail);
                         setReply("");
                     }
                 }
@@ -105,7 +105,7 @@ const ChatRow = (props) => {
                     <Avatar className="img" style={{height: "60px", maxWidth: "60px", width: "60px"}} src={props.data.user.picUrl} />
                     <span className="replies">{props.data.replies.length} {props.data.replies.length==1?'reply':'replies'}</span> 
                     </span>
-                    <b>{props.data.user.name}</b> <Link href={"mailto:" + props.data.user.email}><EmailIcon style={{paddingTop: '5px'}} /></Link> <Link href={"https://acmsac.ecs.baylor.edu/#/api/check/" + props.data.user.email}><SearchIcon style={{paddingTop: '5px'}} /></Link><br/>
+                    <b className={"message-"+props.data.id+" user-"+props.data.user.id}>{props.data.user.name}</b> <Link href={"mailto:" + props.data.user.email}><EmailIcon style={{paddingTop: '5px'}} /></Link> <Link href={"https://acmsac.ecs.baylor.edu/#/api/check/" + props.data.user.email}><SearchIcon style={{paddingTop: '5px'}} /></Link><br/>
                     {props.data.content}
                     <span className="time">{props.data.date.substr(5,5)} at {props.data.date.substr(11,5)}</span>
                 </Typography>
@@ -122,7 +122,7 @@ const ChatRow = (props) => {
                         
                                             <Avatar className="img" style={{height: "60px", maxWidth: "60px", width: "60px"}} src={reply.user.picUrl} />
                                             </span>
-                                            <b>{reply.user.name}</b> <Link href={"mailto:" + reply.user.email}><EmailIcon style={{paddingTop: '5px'}} /></Link> <Link href={"https://acmsac.ecs.baylor.edu/#/api/check/" + reply.user.email}><SearchIcon style={{paddingTop: '5px'}} /></Link><br/>
+                                            <b className={"reply-"+reply.id +" user-"+props.data.user.id}>{reply.user.name}</b> <Link href={"mailto:" + reply.user.email}><EmailIcon style={{paddingTop: '5px'}} /></Link> <Link href={"https://acmsac.ecs.baylor.edu/#/api/check/" + reply.user.email}><SearchIcon style={{paddingTop: '5px'}} /></Link><br/>
                                             {reply.content}
                                             <span className="time">{reply.date.substr(5,5)} at {reply.date.substr(11,5)}</span>
                                         </Typography>

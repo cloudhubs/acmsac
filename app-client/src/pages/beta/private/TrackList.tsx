@@ -8,6 +8,7 @@ import { useGlobalState } from "../../../state";
 import {Track} from "../../../model/Track";
 import TrackTable from "../../../components/track/TrackTable";
 import FetchTracks from "../../../http/FetchTracks";
+import TransitionsModal from "../../../shared/TransitionModal";
 
 const TrackList = () => {
 
@@ -42,6 +43,7 @@ const TrackList = () => {
 
     return (
         <>
+
             <TrackTable/>
         </>
     );

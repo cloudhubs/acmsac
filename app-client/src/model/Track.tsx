@@ -8,6 +8,7 @@ export class Track {
     trackUrl: string;
     videoEmbed: string;
     message: string;
+    acknowledgement: string;
     chairs: Person[];
     comments: Comment[];
   }

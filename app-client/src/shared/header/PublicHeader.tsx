@@ -6,10 +6,15 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import { useHistory } from 'react-router-dom';
+
 import { Link } from 'react-router-dom'
 
 //                borderBottom: `1px solid ${theme.palette.divider}`,
 const PublicHeader = () => {
+
+    const history = useHistory();
+
 
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({
@@ -30,6 +35,19 @@ const PublicHeader = () => {
         }),
     );
 
+    const onHome = async (event: React.MouseEvent<HTMLElement>) => {
+        event.preventDefault();
+        localStorage.removeItem("MY_LOCAL_STORAGE_KEY");
+        history.push("/");
+    }
+
+    const onSearch = async (event: React.MouseEvent<HTMLElement>) => {
+        event.preventDefault();
+        localStorage.removeItem("MY_LOCAL_STORAGE_KEY");
+        history.push("/search");
+    }
+
+
     const classes = useStyles();
 
     return (
@@ -39,11 +57,16 @@ const PublicHeader = () => {
                     <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
                         ACM SAC 2020
                     </Typography>
-                    <Button color="primary" variant="outlined" className={classes.link}>
-                        <Link to="/">Home</Link>
+                    <Button color="primary" variant="outlined" className={classes.link} onClick={(event: React.MouseEvent<HTMLElement>) => {
+                        onHome(event)
+                    }}>
+                        Home
                     </Button>
-                    <Button color="primary" variant="outlined" className={classes.link}>
-                        <Link to="/search">Search</Link>
+
+                    <Button color="primary" variant="outlined" className={classes.link} onClick={(event: React.MouseEvent<HTMLElement>) => {
+                        onSearch(event)
+                    }}>
+                        Search
                     </Button>
                 </Toolbar>
             </AppBar>

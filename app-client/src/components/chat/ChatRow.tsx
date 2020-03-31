@@ -72,7 +72,7 @@ const ChatRow = (props) => {
 
         if (response != null){
             const body = await response.json();
-            console.log(body);
+            // console.log(body);
 
             if (!body.error) {
                 // TODO - We probably need to refresh the page, idk how to do that
@@ -103,7 +103,7 @@ const ChatRow = (props) => {
                     <Avatar className="img" style={{height: "60px", maxWidth: "60px", width: "60px"}} src={props.data.user.picUrl} />
                     <span className="replies">{props.data.replies.length} {props.data.replies.length==1?'reply':'replies'}</span> 
                     </span>
-                    <b>{props.data.user.name}</b> <Link className={"user-"+props.data.user.id} href={"mailto:" + props.data.user.email}><EmailIcon style={{paddingTop: '5px'}} /></Link> 
+                    <b className={"message-"+props.data.id+" user-"+props.data.user.id}>{props.data.user.name}</b> <Link className={"user-"+props.data.user.id} href={"mailto:" + props.data.user.email}><EmailIcon style={{paddingTop: '5px'}} /></Link> 
                     <Link href={"https://acmsac.ecs.baylor.edu/#/api/check/" + props.data.user.email}><SearchIcon style={{paddingTop: '5px'}} /></Link>
                     <br/>
                     {props.data.content}
@@ -123,7 +123,7 @@ const ChatRow = (props) => {
                         
                                             <Avatar className="img" style={{height: "60px", maxWidth: "60px", width: "60px"}} src={reply.user.picUrl} />
                                             </span>
-                                            <b>{reply.user.name}</b> <Link href={"mailto:" + reply.user.email}><EmailIcon style={{paddingTop: '5px'}} /></Link> <Link href={"https://acmsac.ecs.baylor.edu/#/api/check/" + reply.user.email}><SearchIcon style={{paddingTop: '5px'}} /></Link><br/>
+                                            <b className={"reply-"+reply.id+" user-"+props.data.user.id}>{reply.user.name}</b> <Link href={"mailto:" + reply.user.email}><EmailIcon style={{paddingTop: '5px'}} /></Link> <Link href={"https://acmsac.ecs.baylor.edu/#/api/check/" + reply.user.email}><SearchIcon style={{paddingTop: '5px'}} /></Link><br/>
                                             {reply.content}
                                             <span className="time">{reply.date.substr(5,5)} at {reply.date.substr(11,5)}</span>
                                         </Typography>
