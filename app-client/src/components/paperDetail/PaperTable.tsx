@@ -61,7 +61,7 @@ const PaperTable = () => {
     const classes = useStyles();
 
     // console.log(trackDetail.chairs);
-
+/*
     let affiliationSet = new Set<string>();
     trackDetail.chairs.forEach((chair: Person) => {
         affiliationSet.add(chair.affiliation);
@@ -75,7 +75,7 @@ const PaperTable = () => {
         affiliationList.push(affiliations.indexOf(chair.affiliation) + 1);
     });
 
-    return (
+*/    return (
         <div>
 
             <div className="breadcrumbs"><a href={"/#/beta"}>ACM SAC 2020</a> >&nbsp;
