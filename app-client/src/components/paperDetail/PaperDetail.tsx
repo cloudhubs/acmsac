@@ -85,9 +85,9 @@ const PaperDetail = () => {
         <>
 
             <Container maxWidth="xl" component="main" className='paperDetail {classes.heroContent}'>
-                <div className="breadcrumbs"><a href={"/#/beta"}>ACM SAC 2020</a> >&nbsp; 
-                <a href={"/#/beta/track"}>TRACKS</a> >&nbsp;
-                <a href={"/#/beta/track/" + selectedPaper.trackCode}>{selectedPaper.trackCode}</a> >&nbsp;
+                <div className="breadcrumbs"><a href={"/#/app"}>ACM SAC 2020</a> >&nbsp;
+                <a href={"/#/app/track"}>TRACKS</a> >&nbsp;
+                <a href={"/#/app/track/" + selectedPaper.trackCode}>{selectedPaper.trackCode}</a> >&nbsp;
                 {selectedPaper.sessionCode}</div>
                 <Typography variant="h4" align="center" color="textPrimary" component="h1">
                     {selectedPaper.title}

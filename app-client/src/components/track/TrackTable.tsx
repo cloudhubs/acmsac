@@ -29,7 +29,7 @@ const TrackTable = () => {
 
     const goDetail = (event: React.MouseEvent<HTMLElement>, row: Track) => {
         event.preventDefault();
-        history.push("/beta/track/" + row.code);
+        history.push("/app/track/" + row.code);
     }
 
     const useStyles = makeStyles((theme: Theme) =>

@@ -115,7 +115,7 @@ const AcademicPapersTable = () => {
 
     function handleClick(event: React.MouseEvent<HTMLElement>, key: number) {
         event.preventDefault();
-        history.push("/beta/track/" + track + "/" + key);
+        history.push("/app/track/" + track + "/" + key);
     }
 
     return (

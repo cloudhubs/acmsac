@@ -96,15 +96,15 @@ const App = () => {
             <div>
                 <Switch>
                     <Route exact path="/" component={PublicRouter} />
-                    <Route exact path="/beta" component={BetaRouter} />
+                    <Route exact path="/app" component={BetaRouter} />
                     <Route exact path="/search" component={PublicRouter} />
                     <Route exact path="/reminder" component={PublicRouter} />
                     <Route exact path="/api/check/:email" component={PublicRouter} />
                     <Route exact path="/api/check/:email/:paperId" component={PublicRouter} />
-                    <Route exact path="/beta/register" component={BetaRouter} />
-                    <Route exact path="/beta/track" component={BetaRouter} />
-                    <Route exact path="/beta/track/:track" component={BetaRouter} />
-                    <Route exact path="/beta/track/:track/:code" component={BetaRouter}/>
+                    <Route exact path="/app/register" component={BetaRouter} />
+                    <Route exact path="/app/track" component={BetaRouter} />
+                    <Route exact path="/app/track/:track" component={BetaRouter} />
+                    <Route exact path="/app/track/:track/:code" component={BetaRouter}/>
                     <Route path="*">
                         <Redirect path="/app/all"/>
                     </Route>

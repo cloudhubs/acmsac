@@ -69,16 +69,16 @@ const BetaRouter = () => {
             {!auth && <PublicHeader /> }
                 <div>
                     <Switch>
-                        <Route exact path="/beta" component={Login} />
-                        <Route exact path="/beta/register" component={Signup} />
-                        <PrivateRoute exact path="/beta/track">
+                        <Route exact path="/app" component={Login} />
+                        <Route exact path="/app/register" component={Signup} />
+                        <PrivateRoute exact path="/app/track">
                             <TrackList/>
                         </PrivateRoute>
-                        <PrivateRoute exact path="/beta/track/:code">
+                        <PrivateRoute exact path="/app/track/:code">
                             <TrackDetail/>
                         </PrivateRoute>
                         <PrivateRoute>
-                            <Route exact path="/beta/track/:track/:code" component={AcademicPaperDetail}/>
+                            <Route exact path="/app/track/:track/:code" component={AcademicPaperDetail}/>
                         </PrivateRoute>
                     </Switch>
                 </div>

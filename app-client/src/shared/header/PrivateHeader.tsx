@@ -38,7 +38,7 @@ const PrivateHeader = () => {
         event.preventDefault();
         localStorage.removeItem("MY_LOCAL_STORAGE_KEY");
         // logout();
-        history.push("/beta");
+        history.push("/app");
     }
 
     const classes = useStyles();
@@ -51,7 +51,7 @@ const PrivateHeader = () => {
                         ACM SAC 2020
                     </Typography>
                     <Button color="primary" variant="outlined" className={classes.link}>
-                        <Link to="/beta/track">Tracks</Link>
+                        <Link to="/app/track">Tracks</Link>
                     </Button>
                     <Button color="primary" variant="outlined" className={classes.link} onClick={(event: React.MouseEvent<HTMLElement>) => {
                         onLogout(event)

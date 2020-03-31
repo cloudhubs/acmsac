@@ -33,7 +33,7 @@ const PaperTable = () => {
 
     const goDetail = (event: React.MouseEvent<HTMLElement>, row: AcademicArticle) => {
         event.preventDefault();
-        history.push("/beta/track/" + code + "/" + row.id);
+        history.push("/app/track/" + code + "/" + row.id);
     }
 
     const useStyles = makeStyles((theme: Theme) =>
@@ -78,8 +78,8 @@ const PaperTable = () => {
 */    return (
         <div>
 
-            <div className="breadcrumbs"><a href={"/#/beta"}>ACM SAC 2020</a> >&nbsp;
-                <a href={"/#/beta/track"}>TRACKS</a> >&nbsp;
+            <div className="breadcrumbs"><a href={"/#/app"}>ACM SAC 2020</a> >&nbsp;
+                <a href={"/#/app/track"}>TRACKS</a> >&nbsp;
                 {code}</div>
 
             <Container maxWidth="lg" component="main" className="trackDetail">
