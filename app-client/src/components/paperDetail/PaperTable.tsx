@@ -1,5 +1,5 @@
 import React, {FunctionComponent} from "react";
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import {makeStyles, createStyles, Theme} from '@material-ui/core/styles';
 import {Track} from "../../model/Track";
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {useGlobalState} from "../../state";
@@ -16,10 +16,10 @@ import {
     TableHead,
     TableRow, Typography
 } from "@material-ui/core";
-import { BrowserRouter as Router, useHistory, useParams } from "react-router-dom";
+import {BrowserRouter as Router, useHistory, useParams} from "react-router-dom";
 import {AcademicArticle} from "../../model/AcademicArticle";
-import { Video } from "./Video";
-import { Person } from "../../model/Person";
+import {Video} from "./Video";
+import {Person} from "../../model/Person";
 
 
 const PaperTable = () => {
@@ -58,35 +58,36 @@ const PaperTable = () => {
     );
     const classes = useStyles();
 
- let affiliationSet = new Set<string>();
-    trackDetail.chairs.forEach((chair: Person) => {
-        affiliationSet.add(chair.affiliation);
-    });
-    let affiliations: Array<string> = Array.from(affiliationSet.keys());
-
-    let chairList: string[] = [];
-    let affiliationList: number[] = [];
-    trackDetail.chairs.forEach((chair) => {
-        chairList.push(chair.name);
-        affiliationList.push(affiliations.indexOf(chair.affiliation) + 1);
-    });
+    // let affiliationSet = new Set<string>();
+    //    trackDetail.chairs.forEach((chair: Person) => {
+    //        affiliationSet.add(chair.affiliation);
+    //    });
+    //    let affiliations: Array<string> = Array.from(affiliationSet.keys());
+    //
+    //    let chairList: string[] = [];
+    //    let affiliationList: number[] = [];
+    //    trackDetail.chairs.forEach((chair) => {
+    //        chairList.push(chair.name);
+    //        affiliationList.push(affiliations.indexOf(chair.affiliation) + 1);
+    //    });
 
 
     return (
         <div>
 
-                <div className="breadcrumbs"><a href={"/#/beta"}>ACM SAC 2020</a> >&nbsp; 
+            <div className="breadcrumbs"><a href={"/#/beta"}>ACM SAC 2020</a> >&nbsp;
                 <a href={"/#/beta/track"}>TRACKS</a> >&nbsp;
                 {code}</div>
 
             <Container maxWidth="lg" component="main" className="trackDetail">
-            >
-                    <h1>{trackDetail.name} </h1>
-                 {trackDetail.code} (<a href={trackDetail.trackUrl}>web</a>) has {academicPapers.length} papers available
+                >
+                <h1>{trackDetail.name} </h1>
+                {trackDetail.code} (<a href={trackDetail.trackUrl}>web</a>) has {academicPapers.length} papers available
 
-                <Paper className="xvideoBox" style={{ textAlign: "center", marginTop: "0px", minHeight: "100%"}}>
-                            <Video url={trackDetail.videoEmbed} />
+                <Paper className="xvideoBox" style={{textAlign: "center", marginTop: "0px", minHeight: "100%"}}>
+                    <Video url={trackDetail.videoEmbed}/>
                 </Paper>
+
 
                             <div>
                                             Chairs:{/*trackDetail.chairs*/}
@@ -104,7 +105,21 @@ const PaperTable = () => {
                             <div>               
                                             Affiliations:
                                 
-                                                {/*
+                                                
+                    </div>
+                <h4>{'Track chair message'}</h4>
+                {trackDetail.message}
+                <div>
+                    Chairs:
+                    {trackDetail && trackDetail.chairs && trackDetail.chairs.map((chair: Person) => (
+                        <p>{chair.name}</p>
+                    ))}
+                </div>
+                <div>
+                    Affiliations:
+
+                    {/*
+
                                                     affiliations.map((affiliation, ndx) => {
                                                         return (
                                                             <div><sup>
@@ -116,8 +131,8 @@ const PaperTable = () => {
                                                         );
                                                     })
                                                 */}
-                                            
-                            </div>
+
+                </div>
             </Container>
 
 
@@ -143,32 +158,37 @@ const PaperTable = () => {
                                 <TableCell>Title</TableCell>
                                 <TableCell align="right">Presenter</TableCell>
                                 {/**<TableCell align="right">Abstract</TableCell>*/}
-                                <TableCell >Detail</TableCell>
+                                <TableCell>Detail</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {academicPapers.filter(row => row.type != 'Poster').slice().sort((a: AcademicArticle, b: AcademicArticle) => {
                                 return a.sessionCode.localeCompare(b.sessionCode);
-                            }).map( (row: AcademicArticle ) => (
-                                <TableRow key={row.id} hover role="checkbox" className={classes.rowClick} onClick={(event) => {goDetail(event, row)}}>
+                            }).map((row: AcademicArticle) => (
+                                <TableRow key={row.id} hover role="checkbox" className={classes.rowClick}
+                                          onClick={(event) => {
+                                              goDetail(event, row)
+                                          }}>
                                     <TableCell align="left">{row.sessionCode}</TableCell>
                                     <TableCell>{row.title}</TableCell>
                                     <TableCell align="right">{row.presenter.name}</TableCell>
                                     {/**
-                                    <TableCell align="left">
-                                        <a className="hoverMe">Show abstract..</a>
-                                        <div className="hideAbstract">
-                                            {row.paperAbstract}
-                                        </div>
-                                    </TableCell>
-                                    */}
-                                        <TableCell>
-                                            <ButtonBase>
-                                            <IconButton onClick={(event) => {goDetail(event, row)}}>
-                                                <MoreVertIcon />
+                                     <TableCell align="left">
+                                     <a className="hoverMe">Show abstract..</a>
+                                     <div className="hideAbstract">
+                                     {row.paperAbstract}
+                                     </div>
+                                     </TableCell>
+                                     */}
+                                    <TableCell>
+                                        <ButtonBase>
+                                            <IconButton onClick={(event) => {
+                                                goDetail(event, row)
+                                            }}>
+                                                <MoreVertIcon/>
                                             </IconButton>
-                                            </ButtonBase>
-                                        </TableCell>
+                                        </ButtonBase>
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -182,38 +202,42 @@ const PaperTable = () => {
                                 <TableCell>Title</TableCell>
                                 <TableCell align="right">Presenter</TableCell>
                                 {/**<TableCell align="right">Abstract</TableCell>*/}
-                                <TableCell >Detail</TableCell>
+                                <TableCell>Detail</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {academicPapers.filter(row => row.type == 'Poster').slice().sort((a: AcademicArticle, b: AcademicArticle) => {
                                 return a.sessionCode.localeCompare(b.sessionCode);
-                            }).map( (row: AcademicArticle ) => (
-                                <TableRow key={row.id} hover role="checkbox" className={classes.rowClick} onClick={(event) => {goDetail(event, row)}}>
+                            }).map((row: AcademicArticle) => (
+                                <TableRow key={row.id} hover role="checkbox" className={classes.rowClick}
+                                          onClick={(event) => {
+                                              goDetail(event, row)
+                                          }}>
                                     <TableCell>{row.title}</TableCell>
                                     <TableCell align="right">{row.presenter.name}</TableCell>
                                     {/**
-                                    <TableCell align="left">
-                                        <a className="hoverMe">Show abstract..</a>
-                                        <div className="hideAbstract">
-                                            {row.paperAbstract}
-                                        </div>
-                                    </TableCell>
-                                    */}
-                                        <TableCell>
-                                            <ButtonBase>
-                                            <IconButton onClick={(event) => {goDetail(event, row)}}>
-                                                <MoreVertIcon />
+                                     <TableCell align="left">
+                                     <a className="hoverMe">Show abstract..</a>
+                                     <div className="hideAbstract">
+                                     {row.paperAbstract}
+                                     </div>
+                                     </TableCell>
+                                     */}
+                                    <TableCell>
+                                        <ButtonBase>
+                                            <IconButton onClick={(event) => {
+                                                goDetail(event, row)
+                                            }}>
+                                                <MoreVertIcon/>
                                             </IconButton>
-                                            </ButtonBase>
-                                        </TableCell>
+                                        </ButtonBase>
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
                     </Table>
                 </TableContainer>
             </Container>
-
 
 
         </div>
