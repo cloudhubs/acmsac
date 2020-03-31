@@ -106,7 +106,7 @@ const App = () => {
                     <Route exact path="/app/track/:track" component={BetaRouter} />
                     <Route exact path="/app/track/:track/:code" component={BetaRouter}/>
                     <Route path="*">
-                        <Redirect path="/app/all"/>
+                        <Redirect path="/"/>
                     </Route>
                 </Switch>
             </div>

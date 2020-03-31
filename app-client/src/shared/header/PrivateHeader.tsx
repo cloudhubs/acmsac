@@ -37,8 +37,10 @@ const PrivateHeader = () => {
     const onLogout = async (event: React.MouseEvent<HTMLElement>) => {
         event.preventDefault();
         localStorage.removeItem("MY_LOCAL_STORAGE_KEY");
-        // logout();
         history.push("/app");
+        logout();
+        window.location.reload(true);
+
     }
 
     const classes = useStyles();
