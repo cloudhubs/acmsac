@@ -107,7 +107,7 @@ const PaperDetail = () => {
                     {selectedPaper && selectedPaper.presentation &&
                         <Grid item md={6} alignContent="center">
                             <Typography variant="h6" align="center" color="textSecondary" component="p">
-                                Slides ({<Link target="_blank" className="exLink" href={selectedPaper && selectedPaper.presentation.download}>external link to PDF - if no preview</Link>})
+                                Slides ({<Link target="_blank" className="exLink" href={selectedPaper && selectedPaper.presentation.download}>author link to PDF - if no preview</Link>})
                     </Typography>
                             <Paper className="paperBox" style={{ textAlign: "center", padding: "15px", minHeight: "100%" }}>
                                 <Slides url={selectedPaper && selectedPaper.presentation.embed} />
