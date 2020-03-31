@@ -27,10 +27,10 @@ const FetchAcademicPapers = {
                 'Authorization': `Bearer ${token.accessToken}`
             }
         });
-        console.log(response);
+        // console.log(response);
         if (response != null){
             const body = await response.json();
-            console.log(body);
+            // console.log(body);
             if (!body.error) {
                 setAuthorsPapers(body)
             } else {

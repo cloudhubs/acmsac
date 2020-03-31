@@ -73,16 +73,16 @@ const ChatRow = (props) => {
 
         if (response != null){
             const body = await response.json();
-            console.log(trackDetail);
-            console.log(body);
+            // console.log(trackDetail);
+            // console.log(body);
 
             if (!body.error) {
                 for(let i = 0; i < trackDetail.comments.length; i++){
                     if(trackDetail.comments[i].id == props.data.id){
-                        console.log(body);
+                        // console.log(body);
                         trackDetail.comments[i].replies.push(body);
                         setTrackDetail(trackDetail);
-                        console.log(trackDetail);
+                        // console.log(trackDetail);
                         setReply("");
                     }
                 }

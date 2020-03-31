@@ -22,7 +22,7 @@ import TransitionsModal from "../../shared/TransitionModal";
 
 const TrackTable = () => {
     const [tracks] = useGlobalState('tracks');
-    console.log(tracks);
+    // console.log(tracks);
     let history = useHistory();
     const [open, setOpen] = React.useState(false);
 

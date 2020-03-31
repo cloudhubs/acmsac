@@ -24,7 +24,7 @@ const FetchTracks = {
             });
             if (response != null){
                 const body = await response.json();
-                console.log(body);
+                // console.log(body);
                 if (!body.error) {
                     setTracks(body)
                 } else {

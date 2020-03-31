@@ -26,7 +26,7 @@ import Avatar from "@material-ui/core/Avatar";
 
 const PaperTable = () => {
     const [academicPapers] = useGlobalState('academicPapers');
-    console.log(academicPapers);
+    // console.log(academicPapers);
     let history = useHistory();
     let {code} = useParams();
     const [trackDetail] = useGlobalState('trackDetail');
@@ -60,7 +60,7 @@ const PaperTable = () => {
     );
     const classes = useStyles();
 
-    console.log(trackDetail.chairs);
+    // console.log(trackDetail.chairs);
 
     let affiliationSet = new Set<string>();
     trackDetail.chairs.forEach((chair: Person) => {
