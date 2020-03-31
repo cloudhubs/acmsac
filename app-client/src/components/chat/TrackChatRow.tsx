@@ -19,6 +19,7 @@ import Link from "@material-ui/core/Link";
 import EmailIcon from '@material-ui/icons/Email';
 import SearchIcon from '@material-ui/icons/Search';
 import Avatar from "@material-ui/core/Avatar";
+import FetchTrackByCode from "../../http/FetchTrackByCode";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -79,10 +80,11 @@ const ChatRow = (props) => {
             if (!body.error) {
                 for(let i = 0; i < trackDetail.comments.length; i++){
                     if(trackDetail.comments[i].id == props.data.id){
-                        // console.log(body);
-                        trackDetail.comments[i].replies.push(body);
-                        setTrackDetail(trackDetail);
-                        // console.log(trackDetail);
+                        //console.log(body);
+                        //trackDetail.comments[i].replies.push(body);
+                        //setTrackDetail(trackDetail);
+                        //console.log(trackDetail);
+                        await FetchTrackByCode.getTrackByCode(token, trackDetail.code);
                         setReply("");
                     }
                 }

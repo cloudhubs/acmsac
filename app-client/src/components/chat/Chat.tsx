@@ -10,6 +10,7 @@ import {dispatch, useGlobalState} from "../../state";
 import {useState} from "react";
 import { Comment } from "../../model/Comment";
 import {AcademicArticle} from "../../model/AcademicArticle";
+import FetchPresentationById from "../../http/FetchPresentationById";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -69,8 +70,9 @@ const Chat = () => {
 
             if (!body.error) {
                 // TODO - We probably need to refresh the page, idk how to do that
-                selectedPaper.comments.push(body);
-                setSelectedPaper(selectedPaper);
+                //selectedPaper.comments.push(body);
+                //setSelectedPaper(selectedPaper);
+                await FetchPresentationById.getById(token, selectedPaper.id);
                 //console.log(body);
                 setComment("");
             } else {
