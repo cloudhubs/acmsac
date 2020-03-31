@@ -67,8 +67,8 @@ const EarlyRegister = () => {
         <>
             <Container className="topSpacer" component="main" maxWidth="xs">
                 <CssBaseline />
-                {!reminderMessage.success && reminderMessage.message != "" && <Alert severity="error">{reminderMessage.message}</Alert>}
-                {reminderMessage.success && reminderMessage.message != "" && <Alert severity="info">{reminderMessage.message}</Alert>}
+                {reminderMessage && !reminderMessage.success && reminderMessage.message != "" && <Alert severity="error">{reminderMessage.message}</Alert>}
+                {reminderMessage && reminderMessage.success && reminderMessage.message != "" && <Alert severity="info">{reminderMessage.message}</Alert>}
                 <div className={classes.paper}>
                     <Avatar className={classes.avatar}>
                         <LockOutlinedIcon />
@@ -107,7 +107,7 @@ const EarlyRegister = () => {
                                 onClick(event);
                             }}
                         >
-                            Sign Up
+                            Remind
                         </Button>
                     </form>
                 </div>
