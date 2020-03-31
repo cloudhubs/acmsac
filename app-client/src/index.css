@@ -228,10 +228,10 @@ main .MuiPaper-root .chatRow .chatReply {
     display: block;
     clear: both;
 }
-
+.highlightButton, 
 .chatRow .MuiButtonBase-root.MuiIconButton-root.MuiExpansionPanelSummary-expandIcon.MuiIconButton-edgeEnd {
-      background: #fbd294;
-    border: 1px solid orange;
+      background: #fbd294 !important;
+    border: 1px solid orange !important;
 }
 
 .chatActions button,
@@ -259,6 +259,12 @@ font-size:.8em;
 padding-right:1em;
 }
 
+
+
+.trackContainer {
+  margin-top: 3em;
+  margin-bottom: 50px;
+}
 
 .chatRow span.img {
   float: left;
@@ -297,11 +303,37 @@ main:nth-of-type(2) {
 div.hideAbstract {
   display: none;
 }
-
-a:hoverMe + div.hideAbstract {
-    display: block;
+a.link,
+a.hoverMe {
+  text-decoration: underline;;
+}
+.chairPic {
+  float:left;
+  clear:both;
+  margin-right: .5em;
+}
+.trackPanel {
+  margin-bottom: 4em !important;
 }
 
+
+.chairLine {
+  min-height: 35px;
+}
+
+.space {
+  margin: 0 .2em !important;;
+} 
+
+
+a.hoverMe:hover + div.hideAbstract {
+    display: block;
+    position: absolute;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: .5em;
+    background: #fff;
+}
 
 .breadcrumbs {
     margin-top: 75px;

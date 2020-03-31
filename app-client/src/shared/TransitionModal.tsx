@@ -41,7 +41,7 @@ export default function TransitionsModal<TransitionProps> ({givenOpen}) {
 
     return (
         <div>
-            <Button variant="outlined" onClick={handleOpen}>
+            <Button className="highlightButton" variant="outlined" onClick={handleOpen}>
                  <span className={classes.leftPadding}>{'Chair Conference Message'}</span><MessageIcon />
             </Button>
             <Modal
