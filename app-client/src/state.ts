@@ -9,8 +9,10 @@ import { SignUpUser } from "./model/SignUpUser";
 import { Action } from "./state/action";
 import { State } from "./state/typeState";
 import {Track} from "./model/Track";
+import {ServerMessage} from "./model/ServerMessage";
 
 const defaultState: State = {
+  reminderMessage: new ServerMessage(),
   trackDetail: new Track(),
   tracks: [],
   selectedPaper: {
@@ -113,6 +115,11 @@ export const reducer = (state = initialState, action: Action) => {
       return {
         ...state,
         trackDetail: action.trackDetail
+      }
+    case "setReminderMessage":
+      return {
+        ...state,
+        reminderMessage: action.reminderMessage
       }
     default:
       return state;
