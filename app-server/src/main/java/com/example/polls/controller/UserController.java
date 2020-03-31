@@ -2,7 +2,6 @@ package com.example.polls.controller;
 
 import com.example.polls.dto.PresentationDto;
 import com.example.polls.model.Presentation;
-import com.example.polls.model.Role;
 import com.example.polls.model.User;
 import com.example.polls.payload.UserIdentityAvailability;
 import com.example.polls.payload.UserSummary;
@@ -12,10 +11,7 @@ import com.example.polls.repository.UserRepository;
 import com.example.polls.security.CurrentUser;
 import com.example.polls.security.UserPrincipal;
 import com.example.polls.service.DtoConverterService;
-import com.example.polls.service.EmailService;
 import com.example.polls.service.ImportService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -47,26 +42,11 @@ public class UserController {
     private ImportService importService;
 
     @Autowired
-    private EmailService emailService;
-
-    @Autowired
     private DtoConverterService dtoConverterService;
-
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-
-    // TODO: remove this api
-    @GetMapping("/hello")
-    public List<Role> getRoles(@RequestParam String to) throws Exception {
-        if (to != null && !to.trim().isEmpty()) {
-            emailService.sendEmail("noreply@acmsac.ecs.baylor.edu", to, "ACM SAC Test", "ACM SAC 2020");
-        }
-        return roleRepository.findAll();
-    }
 
     @GetMapping("/user/me")
     public UserSummary getCurrentUser(@CurrentUser UserPrincipal currentUser) {
-        UserSummary userSummary = new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getName());
-        return userSummary;
+        return new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getName());
     }
 
     @GetMapping("/user/checkUsernameAvailability")
