@@ -195,8 +195,8 @@ Chairs:
                                           onClick={(event) => {
                                               goDetail(event, row)
                                           }}>
-                                    <TableCell align="left">{row.sessionCode}</TableCell>
-                                    <TableCell>{row.title}</TableCell>
+                                    <TableCell className={"paper-"+row.id} align="left">{row.sessionCode}</TableCell>
+                                    <TableCell className={"paper-"+row.id} >{row.title}</TableCell>
                                     <TableCell align="right">{row.presenter.name}</TableCell>
                                     {/**
                                      <TableCell align="left">
@@ -239,7 +239,7 @@ Chairs:
                                           onClick={(event) => {
                                               goDetail(event, row)
                                           }}>
-                                    <TableCell>{row.title}</TableCell>
+                                    <TableCell className={"paper-"+row.id} >{row.title}</TableCell>
                                     <TableCell align="right">{row.presenter.name}</TableCell>
                                     {/**
                                      <TableCell align="left">
