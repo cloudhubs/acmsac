@@ -2,7 +2,6 @@ package com.example.polls.service;
 
 import com.example.polls.model.*;
 import com.example.polls.repository.*;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -15,21 +14,21 @@ public class ChatService {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
     private final ReplyRepository replyRepository;
-    private final SimpMessagingTemplate template;
+    // private final SimpMessagingTemplate template;
 
     public ChatService(PresentationRepository presentationRepository,
                        TrackRepository trackRepository,
                        UserRepository userRepository,
                        CommentRepository commentRepository,
-                       ReplyRepository replyRepository,
-                       SimpMessagingTemplate template) {
+                       ReplyRepository replyRepository/*,
+                       SimpMessagingTemplate template*/) {
 
         this.presentationRepository = presentationRepository;
         this.trackRepository = trackRepository;
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
         this.replyRepository = replyRepository;
-        this.template = template;
+        // this.template = template;
     }
 
     public List<Comment> getPresentationComments(long presentationID) throws Exception {
@@ -58,7 +57,7 @@ public class ChatService {
         presentationRepository.save(presentation);
 
         // send refresh callback to all clients
-        template.convertAndSend("/presentation/" + presentationID, "1");
+        // template.convertAndSend("/presentation/" + presentationID, "1");
 
         return comment;
     }
@@ -81,7 +80,7 @@ public class ChatService {
         trackRepository.save(track);
 
         // send refresh callback to all clients
-        template.convertAndSend("/track/" + trackID, "1");
+        // template.convertAndSend("/track/" + trackID, "1");
 
         return comment;
     }

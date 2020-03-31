@@ -1,3 +1,4 @@
+/*
 package com.example.polls.config;
 
 import org.springframework.context.annotation.Configuration;
@@ -20,4 +21,4 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/api/ws").setAllowedOrigins("*");
         registry.addEndpoint("/api/ws").setAllowedOrigins("*").withSockJS();
     }
-}
+}*/
