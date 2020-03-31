@@ -58,7 +58,9 @@ const PaperTable = () => {
     );
     const classes = useStyles();
 
- let affiliationSet = new Set<string>();
+    console.log(trackDetail.chairs);
+
+    let affiliationSet = new Set<string>();
     trackDetail.chairs.forEach((chair: Person) => {
         affiliationSet.add(chair.affiliation);
     });
@@ -92,33 +94,31 @@ const PaperTable = () => {
                             {trackDetail.message}
 
                             <div>
-                                            Chairs:{/*trackDetail.chairs*/}
-                                
-                                            {/*
-                                                trackDetail.chairs.map((chair, ndx) => {
-                                                    return (
-                                                        <span>
-                                                            {chair}<sup>{affiliationList[ndx]}</sup>{ndx === chairList.length - 1 ? "" : ", "}
-                                                        </span>
-                                                    );
-                                                })
-                                            */}
+                                Chairs:{/*trackDetail.chairs*/}
+                                {
+                                    trackDetail.chairs.map((chair, ndx) => {
+                                        return (
+                                            <span>
+                                                {chair.name}<sup>{affiliationList[ndx]}</sup>{ndx === chairList.length - 1 ? "" : ", "}
+                                            </span>
+                                        );
+                                    })
+                                }
                             </div>
                             <div>               
-                                            Affiliations:
-                                
-                                                {/*
-                                                    affiliations.map((affiliation, ndx) => {
-                                                        return (
-                                                            <div><sup>
-                                                                {
-                                                                (ndx + 1) +"  "  
-                                                                }</sup>{affiliation}
-                                                                <br />
-                                                            </div>
-                                                        );
-                                                    })
-                                                */}
+                                Affiliations:
+                                {
+                                    affiliations.map((affiliation, ndx) => {
+                                        return (
+                                            <div><sup>
+                                                {
+                                                (ndx + 1) +"  "
+                                                }</sup>{affiliation}
+                                                <br />
+                                            </div>
+                                        );
+                                    })
+                                }
                                             
                             </div>
             </Container>
