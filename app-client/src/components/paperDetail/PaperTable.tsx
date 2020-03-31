@@ -18,6 +18,8 @@ import {
 } from "@material-ui/core";
 import { BrowserRouter as Router, useHistory, useParams } from "react-router-dom";
 import {AcademicArticle} from "../../model/AcademicArticle";
+import { Video } from "./Video";
+import { Person } from "../../model/Person";
 
 
 const PaperTable = () => {
@@ -56,6 +58,20 @@ const PaperTable = () => {
     );
     const classes = useStyles();
 
+ let affiliationSet = new Set<string>();
+    trackDetail.chairs.forEach((chair: Person) => {
+        affiliationSet.add(chair.affiliation);
+    });
+    let affiliations: Array<string> = Array.from(affiliationSet.keys());
+
+    let chairList: string[] = [];
+    let affiliationList: number[] = [];
+    trackDetail.chairs.forEach((chair) => {
+        chairList.push(chair.name);
+        affiliationList.push(affiliations.indexOf(chair.affiliation) + 1);
+    });
+
+
     return (
         <div>
 
@@ -63,20 +79,58 @@ const PaperTable = () => {
                 <a href={"/#/beta/track"}>TRACKS</a> >&nbsp;
                 {code}</div>
 
-            <Container maxWidth="lg" component="main" className={classes.heroContent}>
+            <Container maxWidth="lg" component="main" className="trackDetail">
+            >
+                    <h1>{trackDetail.name} </h1>
+                 {trackDetail.code} (<a href={trackDetail.trackUrl}>web</a>) has {academicPapers.length} papers available
 
+                <Paper className="xvideoBox" style={{ textAlign: "center", marginTop: "0px", minHeight: "100%"}}>
+                            <Video url={trackDetail.videoEmbed} />
+                </Paper>
+
+                <h4>{'Track chair message'}</h4>
+                            {trackDetail.message}
+
+                            <div>
+                                            Chairs:{/*trackDetail.chairs*/}
+                                
+                                            {/*
+                                                trackDetail.chairs.map((chair, ndx) => {
+                                                    return (
+                                                        <span>
+                                                            {chair}<sup>{affiliationList[ndx]}</sup>{ndx === chairList.length - 1 ? "" : ", "}
+                                                        </span>
+                                                    );
+                                                })
+                                            */}
+                            </div>
+                            <div>               
+                                            Affiliations:
+                                
+                                                {/*
+                                                    affiliations.map((affiliation, ndx) => {
+                                                        return (
+                                                            <div><sup>
+                                                                {
+                                                                (ndx + 1) +"  "  
+                                                                }</sup>{affiliation}
+                                                                <br />
+                                                            </div>
+                                                        );
+                                                    })
+                                                */}
+                                            
+                            </div>
             </Container>
 
             <Container maxWidth="lg" component="main" className={classes.heroContent}>
-                <Typography variant="h4" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
-                    {code} has {academicPapers.length} papers available
-                </Typography>
 
                 <Typography color="textSecondary" component="p" className={classes.subHeroContent}>
                     <Box boxShadow={3}>
                         <Paper className={classes.boxContent}>
                             <h4>{'Track chair message'}</h4>
-                            {trackDetail.message}Message message message
+                            {trackDetail.message}
+                            {/*trackDetail.ack*/}
                         </Paper>
                     </Box>
                 </Typography>

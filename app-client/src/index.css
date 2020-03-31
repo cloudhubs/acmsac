@@ -247,10 +247,14 @@ main .MuiPaper-root .chatRow .chatReply {
   width: 100%;
 }
 
-
+.trackDetail {
+  font-family: Oswald !important;
+  font-size:1.1em;
+  
+}
 .chatRow  .time {
-float:right;
-font-family: Oswald !important;
+  float:right;
+  font-family: Oswald !important;
 font-size:.8em;
 padding-right:1em;
 }
@@ -317,7 +321,7 @@ a:hoverMe + div.hideAbstract {
   padding-left: 10px;
 }
  
-.videoInner {
+.videoBox .videoInner {
   margin: 0;
   position: absolute;
   top: 50%;
