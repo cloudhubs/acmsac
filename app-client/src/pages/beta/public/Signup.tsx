@@ -51,7 +51,7 @@ const onSubmit = async (event: React.MouseEvent<HTMLElement>) => {
 }
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container className="topSpace" component="main" maxWidth="xs">
       <CssBaseline />
       {!serverResponse.success && <Alert severity="error">{serverResponse.message}</Alert>}
       <div className={classes.paper}>

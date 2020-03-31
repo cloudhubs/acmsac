@@ -35,6 +35,10 @@ padding: 12px 0px 12px 60px;
 background-position: left center;
 }
 
+.topSpacer {
+  margin-top: 75px;
+}
+
 /*div.MuiToolbar-root {*/
 /*    background-size: cover;*/
 /*    background-position: top center;*/

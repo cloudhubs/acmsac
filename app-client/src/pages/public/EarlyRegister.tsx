@@ -65,7 +65,7 @@ const EarlyRegister = () => {
 
     return (
         <>
-            <Container component="main" maxWidth="xs">
+            <Container className="topSpacer" component="main" maxWidth="xs">
                 <CssBaseline />
                 {!reminderMessage.success && reminderMessage.message != "" && <Alert severity="error">{reminderMessage.message}</Alert>}
                 {reminderMessage.success && reminderMessage.message != "" && <Alert severity="info">{reminderMessage.message}</Alert>}
