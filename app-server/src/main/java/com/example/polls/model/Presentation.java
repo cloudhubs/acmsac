@@ -29,6 +29,7 @@ public class Presentation {
 
   private String sessionCode;
 
+  @Lob
   private String sessionChair;
 
   private LocalDate date;
@@ -36,6 +37,7 @@ public class Presentation {
   @Lob
   private String paperAbstract;
 
+  @Lob
   private String pageNumbers;
 
   @Lob
@@ -47,6 +49,7 @@ public class Presentation {
   @Lob
   private String slidesUrl;
 
+  @Lob
   private String doiUrl;
 
   @ManyToOne

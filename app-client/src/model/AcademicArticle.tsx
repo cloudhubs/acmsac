@@ -7,6 +7,7 @@ export type AcademicArticle = {
     title: string;
     paperId: number;
     trackCode: string;
+    type: string;
     sessionCode: string;
     sessionChair: string;
     date: string;

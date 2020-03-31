@@ -20,6 +20,7 @@ const defaultState: State = {
     title: "",
     paperId: 0,
     trackCode: "",
+    type: "",
     sessionCode: "",
     sessionChair: "",
     date: "",
