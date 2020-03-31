@@ -1,0 +1,52 @@
+<html>
+<head>
+    <title>Chat WebSocket</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
+
+    <script type="text/javascript">
+
+        let stompClient = null;
+
+        function setConnected(connected) {
+            document.getElementById('connect').disabled = connected;
+            document.getElementById('disconnect').disabled = !connected;
+        }
+
+        function connect() {
+            const socket = new SockJS('/api/ws');
+            stompClient = Stomp.over(socket);
+
+            stompClient.connect({}, function (frame) {
+                setConnected(true);
+                console.log('Connected: ' + frame);
+
+                stompClient.subscribe('/track/1', function (messageOutput) {
+                    console.log("Received: " + messageOutput.body);
+                });
+            });
+        }
+
+        function disconnect() {
+            if (stompClient != null) {
+                stompClient.disconnect();
+            }
+
+            setConnected(false);
+            console.log("Disconnected");
+        }
+
+    </script>
+
+</head>
+
+<body onload="disconnect()">
+
+<div>
+    <button id="connect" onclick="connect();">Connect</button>
+    <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>
+</div>
+
+</body>
+</html>
