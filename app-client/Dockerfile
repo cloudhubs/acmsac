@@ -32,6 +32,9 @@ COPY --from=build /app/build /var/www
 # Copy our custom nginx config
 COPY nginx.conf /etc/nginx/nginx.conf
 
+# TODO: remove this sample file
+# COPY chat.html /var/www
+
 # Expose port 3000 to the Docker host, so we can access it 
 # from the outside.
 EXPOSE 80

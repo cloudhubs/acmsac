@@ -325,6 +325,11 @@ a.hoverMe {
   margin: 0 .2em !important;;
 } 
 
+a.exLink {
+  text-decoration: underline;
+  color: orange;
+}
+
 
 a.hoverMe:hover + div.hideAbstract {
     display: block;
@@ -333,6 +338,7 @@ a.hoverMe:hover + div.hideAbstract {
     border-radius: 5px;
     padding: .5em;
     background: #fff;
+    z-index: 1000;
 }
 
 .breadcrumbs {
