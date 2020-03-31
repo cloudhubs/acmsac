@@ -47,6 +47,12 @@ const PublicHeader = () => {
         history.push("/search");
     }
 
+    const onPasswordReminder = async (event: React.MouseEvent<HTMLElement>) => {
+        event.preventDefault();
+        localStorage.removeItem("MY_LOCAL_STORAGE_KEY");
+        history.push("/reminder");
+    }
+
 
     const classes = useStyles();
 
@@ -67,6 +73,12 @@ const PublicHeader = () => {
                         onSearch(event)
                     }}>
                         Search
+                    </Button>
+
+                    <Button color="primary" variant="outlined" className={classes.link} onClick={(event: React.MouseEvent<HTMLElement>) => {
+                        onPasswordReminder(event)
+                    }}>
+                        Password Reminder
                     </Button>
                 </Toolbar>
             </AppBar>
