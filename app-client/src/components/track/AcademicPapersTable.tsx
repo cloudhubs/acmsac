@@ -95,7 +95,7 @@ const useStyles2 = makeStyles({
 
 const AcademicPapersTable = () => {    
     const [rows] = useGlobalState('academicPapers');
-    console.log(rows);
+    // console.log(rows);
     const [track] = useGlobalState('track');
     const classes = useStyles2();
     const [page, setPage] = React.useState(0);

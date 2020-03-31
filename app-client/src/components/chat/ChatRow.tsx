@@ -72,7 +72,7 @@ const ChatRow = (props) => {
 
         if (response != null){
             const body = await response.json();
-            console.log(body);
+            // console.log(body);
 
             if (!body.error) {
                 // TODO - We probably need to refresh the page, idk how to do that

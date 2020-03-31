@@ -25,7 +25,6 @@ const CheckDetail = () => {
         if (response != null) {
             const body = await response.json();
             if (!body.error) {
-                console.log(body);
                 setSelectedPaper(body)
             } else {
                 console.log(body.message);

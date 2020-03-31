@@ -32,7 +32,7 @@ import { withRoot } from './withRoot';
 const App = () => {
 
     const trackingId: string = "UA-162125692-1"
-    console.log(trackingId);
+    // console.log(trackingId);
     ReactGA.initialize(trackingId);
 
     const history = createBrowserHistory();
