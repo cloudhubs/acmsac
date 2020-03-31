@@ -11,6 +11,7 @@ import { useParams } from "react-router-dom";
 import { AcademicArticle } from "../../model/AcademicArticle";
 import { dispatch, useGlobalState } from "../../state";
 import { useHistory } from 'react-router-dom';
+import Typography from "@material-ui/core/Typography";
 
 const setAuthorsPapers = (authorsPapers: AcademicArticle[]) => dispatch({
     academicPapers: authorsPapers,
@@ -26,7 +27,6 @@ const CheckList = () => {
 
     const getAcademicPapers = async () => {
 
-        let token: string = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTg1MzAxMDAyLCJleHAiOjE1ODU5MDU4MDJ9.mjgyoExoVU5UwKneeUctDGjwEviErcZxmPUeQQew1KIX0ZDHI7fv4a36xoxgZq-iMcuN8F-Gxfllmx__y8sxCg";
         try {
             const response = await fetch(process.env.REACT_APP_API_BASE_URL +  '/check/' + email, {
 
@@ -34,21 +34,24 @@ const CheckList = () => {
                 headers : {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
-                    //'Authorization': `Bearer ${token}`
                 }
             });
             if (response != null){
                 const body = await response.json();
                 if (!body.error) {
-                    setAuthorsPapers(body)
+                    setAuthorsPapers(body);
+                    console.log(body);
                 } else {
                     console.log(body.message);
+                    setAuthorsPapers([]);
                 }
             } else {
                 console.log("server error");
+                setAuthorsPapers([]);
             }
         } catch (e) {
             console.log(e);
+            setAuthorsPapers([]);
             
         }
         
@@ -102,6 +105,16 @@ const CheckList = () => {
                             ))
                         }
                     </List>
+
+                    {academicPapers && (academicPapers.length == 0) &&
+
+                        <Typography variant="h6" color="inherit" noWrap align="center">
+                            No papers available
+                        </Typography>
+
+                    }
+
+
                     <Divider />
                 </Box>
             </Container>
