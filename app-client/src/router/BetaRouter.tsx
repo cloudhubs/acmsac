@@ -13,6 +13,9 @@ import TrackDetail from "../pages/beta/private/TrackDetail";
 import AcademicPaperDetail from "../pages/beta/private/AcademicPaperDetail";
 import PublicHeader from "../shared/header/PublicHeader";
 import Index from "../components/Index";
+import Search from "../pages/public/Search";
+import EarlyRegister from "../pages/public/EarlyRegister";
+import PublicRouter from "./PublicRouter";
 
 const BetaRouter = () => {
 
@@ -73,6 +76,8 @@ const BetaRouter = () => {
                         <Route exact path="/" component={Index} />
                         <Route exact path="/app" component={Login} />
                         <Route exact path="/app/register" component={Signup} />
+                        <Route exact path="/search" component={PublicRouter} />
+                        <Route exact path="/reminder" component={PublicRouter} />
                         <PrivateRoute exact path="/app/track">
                             <TrackList/>
                         </PrivateRoute>
