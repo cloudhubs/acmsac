@@ -109,11 +109,6 @@ const EarlyRegister = () => {
                         >
                             Sign Up
                         </Button>
-                        <Grid container justify="flex-end">
-                            <Grid item>
-                                <CustomLink text="Already have an account? Sign in" linkTo="/login"/>
-                            </Grid>
-                        </Grid>
                     </form>
                 </div>
             </Container>
