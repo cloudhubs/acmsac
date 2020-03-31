@@ -24,7 +24,13 @@ public class Track {
   private String videoEmbed;
 
   @Lob
+  private String acknowledgement;
+
+  @Lob
   private String message;
+
+  @Lob
+  private String affiliations;
 
   @ManyToMany(fetch = FetchType.EAGER)
   private List<User> chairs = new ArrayList();
@@ -98,5 +104,21 @@ public class Track {
 
   public void setComments(List<Comment> comments) {
     this.comments = comments;
+  }
+
+  public String getAcknowledgement() {
+    return acknowledgement;
+  }
+
+  public void setAcknowledgement(String acknowledgement) {
+    this.acknowledgement = acknowledgement;
+  }
+
+  public String getAffiliations() {
+    return affiliations;
+  }
+
+  public void setAffiliations(String affiliations) {
+    this.affiliations = affiliations;
   }
 }
