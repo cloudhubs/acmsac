@@ -218,6 +218,8 @@ public class ImportService {
       track.setTrackUrl(row.getCell(5, Row.CREATE_NULL_AS_BLANK).toString());
       track.setVideoEmbed(row.getCell(10, Row.CREATE_NULL_AS_BLANK).toString());
       track.setMessage(row.getCell(11, Row.CREATE_NULL_AS_BLANK).toString());
+      track.setAcknowledgement(row.getCell(9, Row.CREATE_NULL_AS_BLANK).toString());
+      track.setAffiliations(row.getCell(8, Row.CREATE_NULL_AS_BLANK).toString());
 
       if (!track.getChairs().contains(chair)) {
         track.getChairs().add(chair);
