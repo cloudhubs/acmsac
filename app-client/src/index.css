@@ -303,11 +303,37 @@ main:nth-of-type(2) {
 div.hideAbstract {
   display: none;
 }
-
-a:hoverMe + div.hideAbstract {
-    display: block;
+a.link,
+a.hoverMe {
+  text-decoration: underline;;
+}
+.chairPic {
+  float:left;
+  clear:both;
+  margin-right: .5em;
+}
+.trackPanel {
+  margin-bottom: 4em !important;
 }
 
+
+.chairLine {
+  min-height: 35px;
+}
+
+.space {
+  margin: 0 .2em !important;;
+} 
+
+
+a.hoverMe:hover + div.hideAbstract {
+    display: block;
+    position: absolute;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: .5em;
+    background: #fff;
+}
 
 .breadcrumbs {
     margin-top: 75px;

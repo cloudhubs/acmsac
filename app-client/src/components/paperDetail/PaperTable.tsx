@@ -19,7 +19,9 @@ import {
 import {BrowserRouter as Router, useHistory, useParams} from "react-router-dom";
 import {AcademicArticle} from "../../model/AcademicArticle";
 import {Video} from "./Video";
+import EmailIcon from '@material-ui/icons/Email';
 import {Person} from "../../model/Person";
+import Avatar from "@material-ui/core/Avatar";
 
 
 const PaperTable = () => {
@@ -81,47 +83,51 @@ const PaperTable = () => {
                 {code}</div>
 
             <Container maxWidth="lg" component="main" className="trackDetail">
-                >
+                <br/><br/>
                 <h1>{trackDetail.name} </h1>
                 {trackDetail.code} (<a href={trackDetail.trackUrl}>web</a>) has {academicPapers.length} papers available
-
+<br/><br/>
                 <Paper className="xvideoBox" style={{textAlign: "center", marginTop: "0px", minHeight: "100%"}}>
                     <Video url={trackDetail.videoEmbed}/>
                 </Paper>
 
 
-                            <div>
-                                            Chairs:{/*trackDetail.chairs*/}
-                                
-                                            {/*
-                                                trackDetail.chairs.map((chair, ndx) => {
-                                                    return (
-                                                        <span>
-                                                            {chair}<sup>{affiliationList[ndx]}</sup>{ndx === chairList.length - 1 ? "" : ", "}
-                                                        </span>
-                                                    );
-                                                })
-                                            */}
-                            </div>
-                            <div>               
-                                            Affiliations:
-                                
-                                                
-                    </div>
-                <h4>{'Track chair message'}</h4>
-                {trackDetail.message}
 
 Chairs:
                     {trackDetail && trackDetail.chairs && trackDetail.chairs.map((chair: Person) => (
-                        <div>
-                                <p>{chair.name}</p>
-                                <p>{chair.email}</p>
+                        <div className="chairLine">
+                                <p>
+                                <Avatar style={{height: "45px", maxWidth: "45px", width: "100px"}} className="chairPic" src={chair.picUrl} />
+                                
+                                {chair.name}
+                                <Link className={"user-"} href={"mailto:" + chair.email}><EmailIcon style={{paddingTop: '5px'}} /></Link>
+                                <span className="space">{chair.affiliation}</span>
+                                <span className="space">{chair.country}</span>
+     {!!(chair.orcid) && (
+                                <Link className="link space"  href={chair.orcid}>ORCID</Link>
+                    )}
+                                    {!!(chair.linkedInUrl) && (
+                                
+                                <Link className="link space"  href={chair.linkedInUrl}>LinkedIn</Link>
+                                    )}
+                                {!!(chair.googleScholarUrl) && (
+                                <Link className="link space" href={chair.googleScholarUrl}>Google Scholar</Link>
+                                )}
+                                {!!(chair.bio) && (
+                                    <span className="space">
+
+                                <a className="hoverMe">Bio</a>
+                                <div className="hideAbstract">{chair.bio}</div>
+                                    </span>
+                                )}
+                                
+                                </p>
                         </div>
                     ))}
 
-                <div>
-                    Chairs:{/*trackDetail.chairs*/}
-                    {
+       
+
+                    {/*
                         trackDetail.chairs.map((chair, ndx) => {
                             return (
                                 <span>
@@ -129,12 +135,9 @@ Chairs:
                                             </span>
                             );
                         })
-                    }
-                </div>
-                <div>
-                    Affiliations:
+                    */}
 
-                    {
+                    {/*
                         affiliations.map((affiliation, ndx) => {
                             return (
                                 <div><sup>
@@ -145,10 +148,9 @@ Chairs:
                                 </div>
                             );
                         })
-                    }
+                    */}
 
 
-                </div>
             </Container>
 
 
@@ -159,9 +161,16 @@ Chairs:
                 <Typography color="textSecondary" component="p" className="trackPanel">
                     <Box boxShadow={3}>
                         <Paper className={classes.boxContent}>
-                            <h4>{'Track chair message'}</h4>
-                            {trackDetail.message}
-                            {/*trackDetail.ack*/}
+                           {!!(trackDetail.message) && (
+                            <div><b>{'Track chair message'}</b><br/>
+                            {trackDetail.message}</div>
+                               )}
+                           {!!(trackDetail.acknowledgement) && (
+                            <div>
+                            <b>{'Acknowledgements'}</b><br/>
+                            {trackDetail.acknowledgement}
+                            </div>
+                           )}
                         </Paper>
                     </Box>
                 </Typography>
