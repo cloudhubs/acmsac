@@ -55,7 +55,18 @@ services:
     volumes:
       - db-data:/var/lib/mysql
     networks:
-      - app-internal  
+      - app-internal
+  
+  # phpMyAdmin
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - "8080:80"
+    networks:
+      - app-internal
   
 volumes:
   db-data:
