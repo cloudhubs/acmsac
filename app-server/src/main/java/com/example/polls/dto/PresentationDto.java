@@ -32,6 +32,7 @@ public class PresentationDto {
   private String acmUrl;
   private UserDto presenter;
   private String type;
+  private boolean hideFromPublic;
   private List<UserDto> authors = new ArrayList<>();
   private List<Comment> comments = new ArrayList<>();
 
@@ -52,6 +53,7 @@ public class PresentationDto {
     this.authors = presentation.getAuthors().stream().map(u -> new UserDto(u)).collect(Collectors.toList());
     this.comments = presentation.getComments();
     this.type = presentation.getType();
+    this.hideFromPublic = presentation.isHideFromPublic();
   }
 
   public Long getId() {
@@ -196,5 +198,13 @@ public class PresentationDto {
 
   public void setType(String type) {
     this.type = type;
+  }
+
+  public boolean isHideFromPublic() {
+    return hideFromPublic;
+  }
+
+  public void setHideFromPublic(boolean hideFromPublic) {
+    this.hideFromPublic = hideFromPublic;
   }
 }

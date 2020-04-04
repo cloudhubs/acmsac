@@ -52,6 +52,8 @@ public class Presentation {
   @Lob
   private String doiUrl;
 
+  private boolean hideFromPublic;
+
   @ManyToOne
   @JoinColumn(name = "user_id")
   private User presenter;
@@ -229,5 +231,13 @@ public class Presentation {
 
   public void setType(String type) {
     this.type = type;
+  }
+
+  public boolean isHideFromPublic() {
+    return hideFromPublic;
+  }
+
+  public void setHideFromPublic(boolean hideFromPublic) {
+    this.hideFromPublic = hideFromPublic;
   }
 }
