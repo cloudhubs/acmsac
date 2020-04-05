@@ -1,6 +1,7 @@
 package com.example.polls.controller;
 
 import com.example.polls.dto.PresentationDto;
+import com.example.polls.dto.UserDto;
 import com.example.polls.model.Presentation;
 import com.example.polls.model.User;
 import com.example.polls.payload.UserIdentityAvailability;
@@ -45,8 +46,9 @@ public class UserController {
     private DtoConverterService dtoConverterService;
 
     @GetMapping("/user/me")
-    public UserSummary getCurrentUser(@CurrentUser UserPrincipal currentUser) {
-        return new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getName());
+    public UserDto getCurrentUser(@CurrentUser UserPrincipal currentUser) {
+        User user = userRepository.findById(currentUser.getId()).get();
+        return new UserDto(user);
     }
 
     @GetMapping("/user/checkUsernameAvailability")
