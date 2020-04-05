@@ -2,7 +2,7 @@ import { Person } from "./Person";
 import { Comment } from "./Comment";
 import { Presentation } from "./Presentation";
 
-export type AcademicArticle = {
+export class AcademicArticle {
     id: number;
     title: string;
     paperId: number;
@@ -19,7 +19,7 @@ export type AcademicArticle = {
     acmUrl: string;
     presentation: Presentation;
     presenter: Person;
-    authors: Person[];
-    comments: Comment[];
+    authors: Person[] = [];
+    comments: Comment[] = [];
 }
 

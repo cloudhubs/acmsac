@@ -2,6 +2,7 @@ import { AcademicArticle } from './../model/AcademicArticle';
 import { ServerToken } from './../model/ServerToken';
 import { Track } from '../model/Track';
 import {ServerMessage} from "../model/ServerMessage";
+import {ServerError} from "../model/ServerError";
 
 export type Action =
 | { type: "setReminderMessage", reminderMessage: ServerMessage }
@@ -11,5 +12,6 @@ export type Action =
 | { type: "setAcademicPapers", academicPapers: AcademicArticle[] }  
 | { type: "setAuthenticated" }
 | { type: "logout" }
-  | { type: "setTrack"; track: string } 
-  | { type: "setServerToken"; serverToken: ServerToken };
+| { type: "setTrack"; track: string }
+| { type: "setServerError"; serverError: ServerError }
+| { type: "setServerToken"; serverToken: ServerToken };

@@ -39,6 +39,7 @@ const FetchPresentationById = {
         // } else {
         //     console.log("server error");
         // }
+        console.log("fetch presentation");
         const response = await fetch(process.env.REACT_APP_API_BASE_URL + '/presentations/' + id, {
             method: 'GET',
             headers: {
@@ -50,7 +51,7 @@ const FetchPresentationById = {
         if (response != null) {
             const body = await response.json();
             if (!body.error) {
-                // console.log(body);
+                console.log(body);
                 setSelectedPaper(body)
             } else {
                 console.log(body.message);

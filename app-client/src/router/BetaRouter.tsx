@@ -20,7 +20,7 @@ import PublicRouter from "./PublicRouter";
 const BetaRouter = () => {
 
     const [auth] = useGlobalState('authenticated');
-
+    console.log(auth);
     const [token] = useGlobalState('serverToken');
     const history = useHistory();
 

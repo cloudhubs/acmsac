@@ -39,8 +39,6 @@ const PrivateHeader = () => {
         localStorage.removeItem("MY_LOCAL_STORAGE_KEY");
         history.push("/app");
         logout();
-        window.location.reload(true);
-
     }
 
     const classes = useStyles();

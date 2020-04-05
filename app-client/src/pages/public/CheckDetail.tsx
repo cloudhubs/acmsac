@@ -1,48 +1,48 @@
 import React, {useEffect} from "react";
-import {AcademicArticle} from "../../model/AcademicArticle";
-import {dispatch} from "../../state";
 import { useParams } from "react-router-dom";
 import PaperDetail from "../../components/paperDetail/PaperDetail";
-
-const setSelectedPaper = (selectedPaper: AcademicArticle) => dispatch({
-    selectedPaper: selectedPaper,
-    type: 'setSelectedPaper',
-});
-
+import FetchCheckDetail from "../../http/FetchCheckDetail";
+import {useGlobalState} from "../../state";
+import {Container, Typography} from "@material-ui/core";
 
 const CheckDetail = () => {
 
     let { email, paperId } = useParams();
+    const [serverError] = useGlobalState('serverError');
 
-    const getAcademicPaper = async () => {
-        const response = await fetch(process.env.REACT_APP_API_BASE_URL + '/check/' + email + '/' + paperId, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            }
-        });
-        if (response != null) {
-            const body = await response.json();
-            if (!body.error) {
-                setSelectedPaper(body)
-            } else {
-                console.log(body.message);
-            }
-        } else {
-            console.log("server error");
-        }
-    };
+    const getCheckDetail = async () => {
+        await FetchCheckDetail.getAcademicPaper(email, paperId);
+    }
 
     useEffect(() => {
         localStorage.removeItem("MY_LOCAL_STORAGE_KEY");
-        getAcademicPaper();
-
+        getCheckDetail();
     }, []);
 
     return (
         <div>
-            <PaperDetail />
+
+            {!serverError.success &&
+            <>
+
+                <Container maxWidth="xl" component="main" className='paperDetail {classes.heroContent}'>
+
+
+                    <Typography variant="h4" align="center" color="textPrimary" component="h1">
+                        {serverError.message}
+                    </Typography>
+
+                </Container>
+
+            </>
+            }
+
+            {serverError.success &&
+            <>
+                <PaperDetail />
+            </>
+            }
+
         </div>
     );
 }

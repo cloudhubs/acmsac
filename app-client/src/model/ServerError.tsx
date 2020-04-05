@@ -1,5 +1,5 @@
 
 export class ServerError {
-    success: boolean;
+    success: boolean = true;
     message: string;
 }

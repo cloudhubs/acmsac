@@ -9,6 +9,8 @@ import Button from '@material-ui/core/Button';
 import { useHistory } from 'react-router-dom';
 
 import { Link } from 'react-router-dom'
+import DoPasswordReminder from "../../http/DoPasswordReminder";
+import DoVisitorLogin from "../../http/DoVisitorLogin";
 
 //                borderBottom: `1px solid ${theme.palette.divider}`,
 const PublicHeader = () => {
@@ -59,6 +61,11 @@ const PublicHeader = () => {
         history.push("/app");
     }
 
+    const onVisitorLogin = async (event: React.MouseEvent<HTMLElement>) => {
+        event.preventDefault();
+        await DoVisitorLogin.doSend(history);
+    }
+
 
 
     const classes = useStyles();
@@ -86,6 +93,12 @@ const PublicHeader = () => {
                         onPasswordReminder(event)
                     }}>
                         Password Reminder
+                    </Button>
+
+                    <Button color="primary" variant="outlined" className={classes.link} onClick={(event: React.MouseEvent<HTMLElement>) => {
+                        onVisitorLogin(event)
+                    }}>
+                        Tour
                     </Button>
 
                     <Button color="primary" variant="outlined" className={classes.link} onClick={(event: React.MouseEvent<HTMLElement>) => {

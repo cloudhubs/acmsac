@@ -10,45 +10,53 @@ import { Action } from "./state/action";
 import { State } from "./state/typeState";
 import {Track} from "./model/Track";
 import {ServerMessage} from "./model/ServerMessage";
+import {AcademicArticle} from "./model/AcademicArticle";
+
+
+
+// {
+//   id: 0,
+//       title: "",
+//     paperId: 0,
+//     trackCode: "",
+//     type: "",
+//     sessionCode: "",
+//     sessionChair: "",
+//     date: "",
+//     paperAbstract: "",
+//     pageNumbers: "",
+//     acknowledgements: "",
+//     videoEmbed: "",
+//     acmUrl: "",
+//     doiUrl: "",
+//     presentation: {
+//   original: "",
+//       download: "",
+//       embed: "",
+// },
+//   presenter: {
+//     name: "",
+//         email: "",
+//         affiliation: "",
+//         country: "",
+//         orcid: "",
+//         linkedInUrl: "",
+//         googleScholarUrl: "",
+//         bio: "",
+//         picUrl: ""
+//   },
+//   authors: [],
+//       comments: []
+// },
 
 const defaultState: State = {
-  reminderMessage: new ServerMessage(),
+  reminderMessage: {
+    success: false,
+    message: "",
+  },
   trackDetail: new Track(),
   tracks: [],
-  selectedPaper: {
-    id: 0,
-    title: "",
-    paperId: 0,
-    trackCode: "",
-    type: "",
-    sessionCode: "",
-    sessionChair: "",
-    date: "",
-    paperAbstract: "",
-    pageNumbers: "",
-    acknowledgements: "",
-    videoEmbed: "",
-    acmUrl: "",
-    doiUrl: "",
-    presentation: {
-      original: "",
-      download: "",
-      embed: "",
-    },
-    presenter: {
-      name: "",
-      email: "",
-      affiliation: "",
-      country: "",
-      orcid: "",
-      linkedInUrl: "",
-      googleScholarUrl: "",
-      bio: "",
-      picUrl: ""
-    },
-    authors: [],
-    comments: []
-  },
+  selectedPaper: new AcademicArticle(),
   academicPapers: [],
   serverError: new ServerError(),
   serverToken: new ServerToken(),
@@ -100,12 +108,15 @@ export const reducer = (state = initialState, action: Action) => {
     case "logout":
       return {
         ...state,
-        authenticated: false
+        authenticated: false,
+        selectedPaper: new AcademicArticle(),
+        academicPapers: [],
       }
     case "setSelectedPaper":
       return {
         ...state,
-        selectedPaper: action.selectedPaper
+        selectedPaper: action.selectedPaper,
+        serverError: new ServerError()
       }
     case "setTracks":
       return {
@@ -121,6 +132,14 @@ export const reducer = (state = initialState, action: Action) => {
       return {
         ...state,
         reminderMessage: action.reminderMessage
+      }
+    case "setServerError":
+      return {
+        ...state,
+        // selectedPaper: new AcademicArticle(),
+        // academicPapers: [],
+        serverError: action.serverError
+
       }
     default:
       return state;

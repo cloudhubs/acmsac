@@ -1,6 +1,5 @@
-import { useHistory, useParams } from "react-router-dom";
 import { AcademicArticle } from "../model/AcademicArticle";
-import { dispatch, useGlobalState } from "../state";
+import { dispatch } from "../state";
 import { ServerToken } from "../model/ServerToken";
 
 const setAuthorsPapers = (authorsPapers: AcademicArticle[]) => dispatch({
@@ -19,7 +18,6 @@ const FetchAcademicPapers = {
             url = process.env.REACT_APP_API_BASE_URL +  '/presentations/bytrack/' + track
         }
         const response = await fetch(url , {
-
             method: 'GET',
             headers : {
                 'Content-Type': 'application/json',
@@ -27,10 +25,8 @@ const FetchAcademicPapers = {
                 'Authorization': `Bearer ${token.accessToken}`
             }
         });
-        // console.log(response);
         if (response != null){
             const body = await response.json();
-            // console.log(body);
             if (!body.error) {
                 setAuthorsPapers(body)
             } else {

@@ -27,6 +27,8 @@ export function withRoot(Component: any) {
         // MuiThemeProvider makes the theme available down the React tree
         // thanks to React context.
         return (
+
+
             <ThemeProvider theme={theme}>
                 {/* Reboot kickstart an elegant, consistent, and simple baseline to build upon. */}
                 <CssBaseline />

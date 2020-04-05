@@ -18,7 +18,7 @@ import Container from "@material-ui/core/Container";
 
 const setReminderMessage = (serverMessage: ServerMessage) => dispatch({
     reminderMessage: serverMessage,
-    type: 'setReminderMessage',
+    type: 'setReminderMessage'
 });
 
 const EarlyRegister = () => {
