@@ -13,6 +13,7 @@ public class UserDto {
   private String googleScholarUrl;
   private String bio;
   private String picUrl;
+  private boolean blocked;
 
   public UserDto() {}
 
@@ -26,6 +27,7 @@ public class UserDto {
     this.googleScholarUrl = user.getGoogleScholarUrl();
     this.bio = user.getBio();
     this.picUrl = user.getPicUrl() != null && !user.getPicUrl().isEmpty() ? PostprocessingHelpers.processPresentationLink(user.getPicUrl()).getEmbed() : "";
+    this.blocked = user.isBlocked();
   }
 
   public String getName() {
@@ -98,5 +100,13 @@ public class UserDto {
 
   public void setPicUrl(String picUrl) {
     this.picUrl = picUrl;
+  }
+
+  public boolean isBlocked() {
+    return blocked;
+  }
+
+  public void setBlocked(boolean blocked) {
+    this.blocked = blocked;
   }
 }
