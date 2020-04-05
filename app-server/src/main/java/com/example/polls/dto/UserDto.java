@@ -4,6 +4,7 @@ import com.example.polls.model.User;
 import com.example.polls.service.PostprocessingHelpers;
 
 public class UserDto {
+  private Long id;
   private String name;
   private String email;
   private String affiliation;
@@ -18,6 +19,7 @@ public class UserDto {
   public UserDto() {}
 
   public UserDto(User user) {
+    this.id = user.getId();
     this.name = user.getName();
     this.email = user.getEmail();
     this.affiliation = user.getAffiliation();
@@ -28,6 +30,14 @@ public class UserDto {
     this.bio = user.getBio();
     this.picUrl = user.getPicUrl() != null && !user.getPicUrl().isEmpty() ? PostprocessingHelpers.processPresentationLink(user.getPicUrl()).getEmbed() : "";
     this.blocked = user.isBlocked();
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
   }
 
   public String getName() {
