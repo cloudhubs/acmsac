@@ -49,6 +49,7 @@ const TrackChat = () => {
     const [trackDetail] = useGlobalState('trackDetail');
     const [token] = useGlobalState('serverToken');
     const classes = useStyles();
+    const [currentUser] = useGlobalState('currentUser');
 
     const onSubmit = async () =>{
         const response = await fetch(process.env.REACT_APP_API_BASE_URL +  '/chat/track/' + trackDetail.id, {
@@ -100,6 +101,7 @@ const TrackChat = () => {
                 }
 
                 <br/>
+                {!currentUser.blocked &&
                 <Grid className="chatPostNew">
                     <form>
                         <TextField
@@ -114,6 +116,7 @@ const TrackChat = () => {
                         </Button>
                     </form>
                 </Grid>
+                }
 
             </Paper>
         </>

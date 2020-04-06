@@ -110,9 +110,11 @@ export const reducer = (state = initialState, action: Action) => {
     case "logout":
       return {
         ...state,
+        serverToken: new ServerToken(),
         authenticated: false,
         selectedPaper: new AcademicArticle(),
         academicPapers: [],
+        currentUser: new CurrentUser()
       }
     case "setSelectedPaper":
       return {

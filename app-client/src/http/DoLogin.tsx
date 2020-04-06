@@ -33,10 +33,9 @@ const DoLogin = {
                 setServerToken(body);
                 setAuthenticated();
                 setTimeout(function(){ }, 1000);
-
-
+                console.log(body.accessToken);
+                await FetchCurrentUser.doFetch(body);
                 history.push("/app/track");
-                console.log(body);
             } else {
                 console.log(body.message);
             }

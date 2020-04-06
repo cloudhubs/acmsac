@@ -5,7 +5,6 @@ import PublicFooter from "../shared/footer/PublicFooter";
 import PublicHeader from "../shared/header/PublicHeader";
 import Index from "../components/Index";
 import EarlyRegister from "../pages/public/EarlyRegister";
-import PaperDetail from "../components/paperDetail/PaperDetail";
 import CheckList from "../pages/public/CheckList";
 import Search from "../pages/public/Search";
 import CheckDetail from "../pages/public/CheckDetail";

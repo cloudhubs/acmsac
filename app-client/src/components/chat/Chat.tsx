@@ -47,6 +47,7 @@ const Chat = () => {
     const [selectedPaper] = useGlobalState('selectedPaper');
     const [token] = useGlobalState('serverToken');
     const classes = useStyles();
+    const [currentUser] = useGlobalState('currentUser');
 
     const onSubmit = async () =>{
         const response = await fetch(process.env.REACT_APP_API_BASE_URL +  '/chat/presentation/' + selectedPaper.id, {
@@ -100,20 +101,25 @@ const Chat = () => {
                 }
 
                 <br/>
-              <Grid className="chatPostNew">
-                <form>
-                    <TextField
-                        placeholder={"Comment"}
-                        value={commentText}
-                        onChange={(event) => setComment(event.target.value)}
-                        style={{minWidth: '85%'}}
+
+                {!currentUser.blocked &&
+                <Grid className="chatPostNew">
+                    <form>
+                        <TextField
+                            placeholder={"Comment"}
+                            value={commentText}
+                            onChange={(event) => setComment(event.target.value)}
+                            style={{minWidth: '85%'}}
                         />
 
-                    <Button size="small" color="primary" style={{marginLeft: '15px'}} onClick={onSubmit}>
-                        Submit
-                    </Button>
-                </form>
-              </Grid>        
+                        <Button size="small" color="primary" style={{marginLeft: '15px'}} onClick={onSubmit}>
+                            Submit
+                        </Button>
+                    </form>
+                </Grid>
+
+                }
+
 
             </Paper>
         </>

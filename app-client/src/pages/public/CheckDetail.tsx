@@ -9,6 +9,7 @@ const CheckDetail = () => {
 
     let { email, paperId } = useParams();
     const [serverError] = useGlobalState('serverError');
+    const [selectedPaper] = useGlobalState('selectedPaper');
 
     const getCheckDetail = async () => {
         await FetchCheckDetail.getAcademicPaper(email, paperId);
@@ -37,7 +38,8 @@ const CheckDetail = () => {
             </>
             }
 
-            {serverError.success &&
+            {serverError.success && selectedPaper && selectedPaper.id != undefined &&
+
             <>
                 <PaperDetail />
             </>

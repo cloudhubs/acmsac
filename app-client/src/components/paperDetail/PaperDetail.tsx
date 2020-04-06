@@ -14,6 +14,9 @@ import Chat from "../chat/Chat";
 const PaperDetail = () => {
 
     const [selectedPaper] = useGlobalState('selectedPaper');
+    const [currentUser] = useGlobalState('currentUser');
+
+    // console.log(selectedPaper);
 
     let affiliationSet = new Set<string>();
     if (selectedPaper != undefined && selectedPaper != null && selectedPaper.authors != undefined){
@@ -44,7 +47,7 @@ const PaperDetail = () => {
                     {selectedPaper.title}
                 </Typography>
                 <br />
-                {!selectedPaper.hideFromPublic &&
+                { !(selectedPaper.hideFromPublic && currentUser.blocked) &&
                     <>
                         <Grid container spacing={2} className='slidesVideo'>
                             <Grid item md={6}>
@@ -199,7 +202,7 @@ const PaperDetail = () => {
                         <Typography variant="h6" align="center" color="textSecondary" component="p">
                             Presenter Details
                         </Typography>
-                        <Author author={selectedPaper.presenter} />
+                        <Author author={selectedPaper.presenter} currentUser={currentUser} />
                     </Grid>
                 </Grid>
             </Container>

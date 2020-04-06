@@ -10,7 +10,8 @@ const setCurrentUser = (currentUser: CurrentUser) => dispatch({
 const FetchCurrentUser = {
 
     async doFetch(token: ServerToken) {
-        const response = await fetch(process.env.REACT_APP_API_BASE_URL +  '/api/user/me', {
+        console.log(token.accessToken);
+        const response = await fetch(process.env.REACT_APP_API_BASE_URL +  '/user/me', {
             method: 'GET',
             headers : {
                 'Content-Type': 'application/json',

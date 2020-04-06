@@ -71,7 +71,8 @@ const PublicHeader = () => {
         signInUser.usernameOrEmail = "visitor@acmsac.org";
         signInUser.password = "caey88";
         await DoLogin.doSend(history, signInUser);
-        await FetchCurrentUser.doFetch(token);
+        setTimeout(function(){ }, 1000);
+        // await FetchCurrentUser.doFetch(token);
     }
 
 

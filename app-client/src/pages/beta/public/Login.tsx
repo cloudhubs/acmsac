@@ -11,6 +11,7 @@ import {useGlobalState, dispatch} from "../../../state";
 import { useHistory } from 'react-router-dom';
 import { ServerToken } from "../../../model/ServerToken";
 import DoLogin from "../../../http/DoLogin";
+import FetchCurrentUser from "../../../http/FetchCurrentUser";
 
 // const setServerToken = (serverToken: ServerToken) => dispatch({
 //   serverToken: serverToken,
@@ -21,36 +22,20 @@ import DoLogin from "../../../http/DoLogin";
 //   type: 'setAuthenticated',
 // });
 
-const onSubmit = async (event: React.MouseEvent<HTMLElement>, signInUser, history) => {
-  event.preventDefault();
-    await DoLogin.doSend(history, signInUser);
-  // const response = await fetch(process.env.REACT_APP_API_BASE_URL +  '/auth/signin', {
-  //   method: 'POST',
-  //   body: JSON.stringify(signInUser),
-  //   headers : {
-  //       'Content-Type': 'application/json',
-  //       'Accept': 'application/json'
-  //   }
-  //   });
-  //   if (response != null){
-  //       const body = await response.json();
-  //       if (!body.error){
-  //         setServerToken(body);
-  //         setAuthenticated();
-  //         setTimeout(function(){ }, 1000);
-  //         history.push("/app/track");
-  //       } else {
-  //         console.log(body.message);
-  //       }
-  //   } else {
-  //     console.log("server error");
-  //   }
-}
+
 
 
 
 
 const Login = () => {
+    const onSubmit = async (event: React.MouseEvent<HTMLElement>, signInUser, history, token) => {
+        event.preventDefault();
+        console.log(signInUser);
+        await DoLogin.doSend(history, signInUser);
+        setTimeout(function(){ }, 1000);
+        // await FetchCurrentUser.doFetch(token);
+    }
+
     const history = useHistory();
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({
@@ -74,11 +59,8 @@ const Login = () => {
         }),
     );
     const classes = useStyles();
-    const [serverError, uServerError] = useGlobalState('serverError');
     const [signInUser, uSignInUser] = useGlobalState('signInUser');
-    const [serverToken, uServerToken] = useGlobalState('serverToken');
-    const [auth, uAuth] = useGlobalState('authenticated');
-    
+    const [token] = useGlobalState('serverToken');
     return (
         <div>
           {/*<ApplicationBar />*/}
@@ -131,7 +113,7 @@ const Login = () => {
             color="primary"
             className={classes.submit}
             onClick={(event: React.MouseEvent<HTMLElement>) => {
-              onSubmit(event, signInUser, history)
+              onSubmit(event, signInUser, history, token)
              }}>
             Sign In
           </Button>

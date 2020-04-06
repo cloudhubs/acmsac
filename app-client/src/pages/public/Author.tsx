@@ -8,13 +8,15 @@ import TableRow from '@material-ui/core/TableRow';
 import { Container, Paper, Typography, TableCell, Grid, Box } from "@material-ui/core";
 import { Slides } from '../../components/paperDetail/Slides';
 import Avatar from "@material-ui/core/Avatar";
+import {CurrentUser} from "../../model/CurrentUser";
 
 type AuthorProps = {
   author: Person,
+    currentUser: CurrentUser
 }
 
 
-export const Author: FunctionComponent<AuthorProps> = ({ author }) => <div>
+export const Author: FunctionComponent<AuthorProps> = ({ author, currentUser }) => <div>
     
     <TableContainer component={Paper} >
                     <Table aria-label="simple table">
@@ -41,7 +43,7 @@ export const Author: FunctionComponent<AuthorProps> = ({ author }) => <div>
 
 
 
-
+                            { !currentUser.blocked &&
                             <TableRow>
                                 <TableCell component="th">
                                     Email
@@ -50,6 +52,7 @@ export const Author: FunctionComponent<AuthorProps> = ({ author }) => <div>
                                     <a href={"mailto:"+author.email}>{author.email}</a>
                                 </TableCell>
                             </TableRow>
+                            }
 
 
                             <TableRow>
