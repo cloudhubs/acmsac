@@ -10,13 +10,17 @@ import { useHistory } from 'react-router-dom';
 
 import { Link } from 'react-router-dom'
 import DoPasswordReminder from "../../http/DoPasswordReminder";
-import DoVisitorLogin from "../../http/DoVisitorLogin";
+import DoLogin from "../../http/DoLogin";
+import {SignInUser} from "../../model/SignInUser";
+import {useGlobalState} from "../../state";
+import FetchCurrentUser from "../../http/FetchCurrentUser";
 
 //                borderBottom: `1px solid ${theme.palette.divider}`,
 const PublicHeader = () => {
 
     const history = useHistory();
 
+    const [token] = useGlobalState('serverToken');
 
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({
@@ -63,7 +67,11 @@ const PublicHeader = () => {
 
     const onVisitorLogin = async (event: React.MouseEvent<HTMLElement>) => {
         event.preventDefault();
-        await DoVisitorLogin.doSend(history);
+        let signInUser = new SignInUser();
+        signInUser.usernameOrEmail = "visitor@acmsac.org";
+        signInUser.password = "caey88";
+        await DoLogin.doSend(history, signInUser);
+        await FetchCurrentUser.doFetch(token);
     }
 
 

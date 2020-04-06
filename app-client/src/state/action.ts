@@ -3,8 +3,10 @@ import { ServerToken } from './../model/ServerToken';
 import { Track } from '../model/Track';
 import {ServerMessage} from "../model/ServerMessage";
 import {ServerError} from "../model/ServerError";
+import {CurrentUser} from "../model/CurrentUser";
 
 export type Action =
+| { type: "setCurrentUser", currentUser: CurrentUser }
 | { type: "setReminderMessage", reminderMessage: ServerMessage }
 | { type: "setTrackDetail", trackDetail: Track }
 | { type: "setTracks", tracks: Track[] }

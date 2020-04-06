@@ -5,6 +5,7 @@ import { SignInUser } from '../model/SignInUser';
 import { SignUpUser } from '../model/SignUpUser';
 import { Track } from '../model/Track';
 import {ServerMessage} from "../model/ServerMessage";
+import {CurrentUser} from "../model/CurrentUser";
 
 export type State = {
     reminderMessage: ServerMessage;
@@ -18,4 +19,5 @@ export type State = {
     signUpUser: SignUpUser;
     authenticated: boolean;
     track: string;
+    currentUser: CurrentUser;
 };

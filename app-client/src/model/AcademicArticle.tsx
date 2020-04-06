@@ -17,6 +17,7 @@ export class AcademicArticle {
     videoEmbed: string;
     doiUrl: string;
     acmUrl: string;
+    hideFromPublic: boolean;
     presentation: Presentation;
     presenter: Person;
     authors: Person[] = [];

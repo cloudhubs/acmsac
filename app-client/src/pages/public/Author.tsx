@@ -38,6 +38,10 @@ export const Author: FunctionComponent<AuthorProps> = ({ author }) => <div>
                                 </TableCell>
                             </TableRow>
 
+
+
+
+
                             <TableRow>
                                 <TableCell component="th">
                                     Email

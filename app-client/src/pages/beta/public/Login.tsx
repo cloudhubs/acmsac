@@ -10,40 +10,41 @@ import Container from '@material-ui/core/Container';
 import {useGlobalState, dispatch} from "../../../state";
 import { useHistory } from 'react-router-dom';
 import { ServerToken } from "../../../model/ServerToken";
+import DoLogin from "../../../http/DoLogin";
 
-const setServerToken = (serverToken: ServerToken) => dispatch({
-  serverToken: serverToken,
-  type: 'setServerToken',
-});
-
-const setAuthenticated = () => dispatch({
-  type: 'setAuthenticated',
-});
+// const setServerToken = (serverToken: ServerToken) => dispatch({
+//   serverToken: serverToken,
+//   type: 'setServerToken',
+// });
+//
+// const setAuthenticated = () => dispatch({
+//   type: 'setAuthenticated',
+// });
 
 const onSubmit = async (event: React.MouseEvent<HTMLElement>, signInUser, history) => {
   event.preventDefault();
-  
-  const response = await fetch(process.env.REACT_APP_API_BASE_URL +  '/auth/signin', {
-    method: 'POST',
-    body: JSON.stringify(signInUser),
-    headers : {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-    }
-    });
-    if (response != null){
-        const body = await response.json();
-        if (!body.error){
-          setServerToken(body);
-          setAuthenticated();
-          setTimeout(function(){ }, 1000);
-          history.push("/app/track");
-        } else {
-          console.log(body.message);
-        }
-    } else {
-      console.log("server error");
-    }
+    await DoLogin.doSend(history, signInUser);
+  // const response = await fetch(process.env.REACT_APP_API_BASE_URL +  '/auth/signin', {
+  //   method: 'POST',
+  //   body: JSON.stringify(signInUser),
+  //   headers : {
+  //       'Content-Type': 'application/json',
+  //       'Accept': 'application/json'
+  //   }
+  //   });
+  //   if (response != null){
+  //       const body = await response.json();
+  //       if (!body.error){
+  //         setServerToken(body);
+  //         setAuthenticated();
+  //         setTimeout(function(){ }, 1000);
+  //         history.push("/app/track");
+  //       } else {
+  //         console.log(body.message);
+  //       }
+  //   } else {
+  //     console.log("server error");
+  //   }
 }
 
 

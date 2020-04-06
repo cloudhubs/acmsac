@@ -11,6 +11,7 @@ import { State } from "./state/typeState";
 import {Track} from "./model/Track";
 import {ServerMessage} from "./model/ServerMessage";
 import {AcademicArticle} from "./model/AcademicArticle";
+import {CurrentUser} from "./model/CurrentUser";
 
 
 
@@ -64,6 +65,7 @@ const defaultState: State = {
   signUpUser: new SignUpUser(),
   authenticated: false,
   track: "",
+  currentUser: new CurrentUser()
 };
 
 
@@ -140,6 +142,11 @@ export const reducer = (state = initialState, action: Action) => {
         // academicPapers: [],
         serverError: action.serverError
 
+      }
+    case "setCurrentUser":
+      return {
+        ...state,
+        currentUser: action.currentUser
       }
     default:
       return state;

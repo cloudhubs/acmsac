@@ -1,6 +1,7 @@
-import { dispatch } from "../state";
+import {dispatch, useGlobalState} from "../state";
 import {ServerToken} from "../model/ServerToken";
 import {SignInUser} from "../model/SignInUser";
+import FetchCurrentUser from "./FetchCurrentUser";
 
 const setServerToken = (serverToken: ServerToken) => dispatch({
     serverToken: serverToken,
@@ -11,18 +12,18 @@ const setAuthenticated = () => dispatch({
     type: 'setAuthenticated',
 });
 
-const DoVisitorLogin = {
+const DoLogin = {
 
-    async doSend(history) {
-        let signInUser = new SignInUser();
-        signInUser.usernameOrEmail = "visitor@acmsac.org";
-        signInUser.password = "caey88";
+    async doSend(history, signInUser) {
+
+
+
         const response = await fetch(process.env.REACT_APP_API_BASE_URL +  '/auth/signin', {
             method: 'POST',
             body: JSON.stringify(signInUser),
             headers : {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
             }
         });
         if (response != null){
@@ -32,6 +33,8 @@ const DoVisitorLogin = {
                 setServerToken(body);
                 setAuthenticated();
                 setTimeout(function(){ }, 1000);
+
+
                 history.push("/app/track");
                 console.log(body);
             } else {
@@ -43,4 +46,4 @@ const DoVisitorLogin = {
         return response;
     }
 }
-export default DoVisitorLogin;
+export default DoLogin;
