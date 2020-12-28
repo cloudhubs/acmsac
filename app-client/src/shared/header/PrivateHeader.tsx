@@ -53,6 +53,9 @@ const PrivateHeader = () => {
                     <Button color="primary" variant="outlined" className={classes.link}>
                         <Link to="/app/track">Tracks</Link>
                     </Button>
+                    <Button color="primary" variant="outlined" className={classes.link}>
+                        <Link to="/app/currentuser">Me</Link>
+                    </Button>
                     <Button color="primary" variant="outlined" className={classes.link} onClick={(event: React.MouseEvent<HTMLElement>) => {
                         onLogout(event)
                     }}>
