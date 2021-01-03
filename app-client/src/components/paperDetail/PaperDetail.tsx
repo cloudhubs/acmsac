@@ -10,13 +10,15 @@ import { Author } from "../../pages/public/Author";
 import { Slides } from "./Slides";
 import { Video } from "./Video";
 import Chat from "../chat/Chat";
+import TextField from "@material-ui/core/TextField";
 
 const PaperDetail = () => {
 
-    const [selectedPaper] = useGlobalState('selectedPaper');
+    const [selectedPaper, setSelectedPaper] = useGlobalState('selectedPaper');
     const [currentUser] = useGlobalState('currentUser');
 
     // console.log(selectedPaper);
+    const isEditMode = selectedPaper.authors?selectedPaper.authors.filter(author => author.email == currentUser.email).length > 0: false
 
     let affiliationSet = new Set<string>();
     if (selectedPaper != undefined && selectedPaper != null && selectedPaper.authors != undefined){
@@ -57,6 +59,15 @@ const PaperDetail = () => {
                                 <Paper className="videoBox" style={{ textAlign: "center", padding: "15px", minHeight: "100%"}}>
                                     <Video url={selectedPaper.videoEmbed} />
                                 </Paper>
+                                {isEditMode && <TextField
+                                                                   fullWidth
+                                                                   label="Video url"
+                                                                    value = {selectedPaper.videoEmbed}
+                                                                   onChange={(event) => {
+                                                                     const videoEmbed = event.target.value;
+                                                                     setSelectedPaper((p) => ({...p,videoEmbed}));
+                                                                   }}
+                                                                 />}
                             </Grid>
                             {selectedPaper && selectedPaper.presentation &&
                             <Grid item md={6} alignContent="center">
@@ -67,6 +78,17 @@ const PaperDetail = () => {
                                     <Slides url={selectedPaper && selectedPaper.presentation.embed} />
 
                                 </Paper>
+                                {isEditMode && <TextField
+
+                                                                   fullWidth
+                                                                   label="Slides url"
+                                                                   value = {selectedPaper.presentation.embed}
+                                                                   onChange={(event) => {
+                                                                   const embed = event.target.value;
+                                                                   const presentation = {...selectedPaper.presentation, embed};
+                                                                   setSelectedPaper((p) => ({...p,presentation}));
+                                                                   }}
+                                                              />}
                             </Grid>
                             }
                         </Grid>
