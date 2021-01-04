@@ -2,6 +2,7 @@ package com.example.polls.controller;
 
 import com.example.polls.dto.PresentationDto;
 import com.example.polls.dto.UserDto;
+import com.example.polls.dto.UserUpdateDto;
 import com.example.polls.model.Presentation;
 import com.example.polls.model.User;
 import com.example.polls.payload.UserIdentityAvailability;
@@ -51,6 +52,21 @@ public class UserController {
         return new UserDto(user);
     }
 
+    @PutMapping("/user/me")
+    public UserDto updateCurrentUser(@CurrentUser UserPrincipal currentUser, @RequestBody UserUpdateDto updatedUser) {
+        User user = userRepository.findById(currentUser.getId()).get();
+        user.setName(updatedUser.getName());
+        user.setAffiliation(updatedUser.getAffiliation());
+        user.setBio(updatedUser.getBio());
+        user.setCountry(updatedUser.getCountry());
+        user.setGoogleScholarUrl(updatedUser.getGoogleScholarUrl());
+        user.setLinkedInUrl(updatedUser.getLinkedInUrl());
+        user.setOrcid(updatedUser.getOrcid());
+        user.setPicUrl(updatedUser.getPicUrl());
+        user = userRepository.save(user);
+        return new UserDto(user);
+    }
+
     @GetMapping("/user/checkUsernameAvailability")
     public UserIdentityAvailability checkUsernameAvailability(@RequestParam(value = "username") String username) {
         Boolean isAvailable = !userRepository.existsByUsername(username);
@@ -94,4 +110,5 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
+
 }
