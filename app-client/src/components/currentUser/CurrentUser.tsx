@@ -6,7 +6,10 @@ import { Container } from '@material-ui/core';
 import { useEffect } from 'react';
 import FetchAcademicPapersByUser from '../../http/FetchAcademicPapersByUser';
 import { AcademicArticle } from '../../model/AcademicArticle';
+import { CurrentUser as CurrentUserType} from '../../model/CurrentUser';
 import PaperList from './PaperList';
+import Button from '@material-ui/core/Button';
+import UserDetailPut from '../../http/UserDetailPut';
 
 const CurrentUser = () => {
     const useStyles = makeStyles((theme: Theme) =>
@@ -24,9 +27,18 @@ const CurrentUser = () => {
     );
 
     const classes = useStyles();
-    const [currentUser] = useGlobalState('currentUser');
+    const [currentUser, setCurrentUser] = useGlobalState('currentUser');
+
+    const [isEditable, setEditable] = React.useState<boolean>(false);
+    const [author, setAuthor] = React.useState<CurrentUserType>(currentUser);
+
     const [token] = useGlobalState('serverToken');
     const [userPapers, setUserPapers] = React.useState<AcademicArticle[]>([]);
+
+    const onSave = async () => {
+        UserDetailPut.doSend(token,author);
+        setEditable(false);
+    }
 
     const getUserPapers = async () => {
         setUserPapers(await FetchAcademicPapersByUser.getAcademicPapersByUser(token, currentUser.id));
@@ -73,7 +85,14 @@ const CurrentUser = () => {
     return (
         <Container maxWidth="lg" component="main" className={classes.heroContent}>
             <h1>Your user information</h1>
-            <Author author={currentUser} currentUser={currentUser}></Author>
+            <Author author={author} currentUser={currentUser} isEditable={isEditable} setAuthor={setAuthor}></Author>
+            {isEditable?<Button color="primary" variant="outlined" onClick={onSave} >
+                                                            Save
+            </Button>: <Button color="primary" variant="outlined" onClick={()=>setEditable(true)} >
+                                                           Edit
+           </Button>
+            }
+
 
             <h1>User presentations</h1>
             {renderUserFullPapers()}

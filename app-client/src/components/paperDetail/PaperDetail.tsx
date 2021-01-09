@@ -11,8 +11,15 @@ import { Slides } from "./Slides";
 import { Video } from "./Video";
 import Chat from "../chat/Chat";
 import TextField from "@material-ui/core/TextField";
+import { withStyles } from "@material-ui/core/styles";
 
-const PaperDetail = () => {
+const styles = {
+  input: {
+    color: "white"
+  }
+};
+
+const PaperDetail = ({classes}) => {
 
     const [selectedPaper, setSelectedPaper] = useGlobalState('selectedPaper');
     const [currentUser] = useGlobalState('currentUser');
@@ -41,9 +48,9 @@ const PaperDetail = () => {
     return (
         <>
             <Container maxWidth="xl" component="main" className='paperDetail {classes.heroContent}'>
-                <div className="breadcrumbs"><a href={"/#/app"}>ACM SAC 2020</a> &nbsp;
-                <a href={"/#/app/track"}>TRACKS</a> &nbsp;
-                <a href={"/#/app/track/" + selectedPaper.trackCode}>{selectedPaper.trackCode}</a> &nbsp;
+                <div className="breadcrumbs"><a href={"/#/app"}>ACM SAC 2020</a> >&nbsp;
+                <a href={"/#/app/track"}>TRACKS</a> >&nbsp;
+                <a href={"/#/app/track/" + selectedPaper.trackCode}>{selectedPaper.trackCode}</a> >&nbsp;
                 {selectedPaper.sessionCode}</div>
                 <Typography variant="h4" align="center" color="textPrimary" component="h1">
                     {selectedPaper.title}
@@ -58,16 +65,17 @@ const PaperDetail = () => {
                                 </Typography>
                                 <Paper className="videoBox" style={{ textAlign: "center", padding: "15px", minHeight: "100%"}}>
                                     <Video url={selectedPaper.videoEmbed} />
+                                    {isEditMode && <TextField
+                                   fullWidth
+                                   label="Video url"
+                                    value = {selectedPaper.videoEmbed}
+                                   onChange={(event) => {
+                                     const videoEmbed = event.target.value;
+                                     setSelectedPaper((p) => ({...p,videoEmbed}));
+                                   }}
+                                 />}
                                 </Paper>
-                                {isEditMode && <TextField
-                                                                   fullWidth
-                                                                   label="Video url"
-                                                                    value = {selectedPaper.videoEmbed}
-                                                                   onChange={(event) => {
-                                                                     const videoEmbed = event.target.value;
-                                                                     setSelectedPaper((p) => ({...p,videoEmbed}));
-                                                                   }}
-                                                                 />}
+
                             </Grid>
                             {selectedPaper && selectedPaper.presentation &&
                             <Grid item md={6} alignContent="center">
@@ -75,20 +83,20 @@ const PaperDetail = () => {
                                     Slides ({<Link target="_blank" className="exLink" href={selectedPaper && selectedPaper.presentation.download}>author link to PDF - if no preview</Link>})
                                 </Typography>
                                 <Paper className="paperBox" style={{ textAlign: "center", padding: "15px", minHeight: "100%" }}>
+                                    {isEditMode && <TextField
+
+                                           fullWidth
+                                           label="Slides url"
+                                           value = {selectedPaper.presentation.embed}
+                                           onChange={(event) => {
+                                           const embed = event.target.value;
+                                           const presentation = {...selectedPaper.presentation, embed};
+                                           setSelectedPaper((p) => ({...p,presentation}));
+                                           }}
+                                      />}
                                     <Slides url={selectedPaper && selectedPaper.presentation.embed} />
-
                                 </Paper>
-                                {isEditMode && <TextField
 
-                                                                   fullWidth
-                                                                   label="Slides url"
-                                                                   value = {selectedPaper.presentation.embed}
-                                                                   onChange={(event) => {
-                                                                   const embed = event.target.value;
-                                                                   const presentation = {...selectedPaper.presentation, embed};
-                                                                   setSelectedPaper((p) => ({...p,presentation}));
-                                                                   }}
-                                                              />}
                             </Grid>
                             }
                         </Grid>
@@ -116,15 +124,15 @@ const PaperDetail = () => {
                         <Typography variant="h6" align="center" color="textSecondary" component="p">
                             Paper Details
                         </Typography>
-                        <TableContainer component={Paper}>
-                            <Table aria-label="simple table">
+                        <TableContainer  component={Paper}>
+                            <Table style = {{overflow:"hidden"}} aria-label="simple table">
                                 <TableBody>
                                     <TableRow>
                                         <TableCell component="th">
                                             Title
                                         </TableCell>
                                         <TableCell align="left" scope="row">
-                                            {selectedPaper.title}
+                                             {selectedPaper.title}
                                         </TableCell>
                                     </TableRow>
 
@@ -146,7 +154,6 @@ const PaperDetail = () => {
                                             </Typography>
                                         </TableCell>
                                     </TableRow>
-
                                     <TableRow>
                                         <TableCell component="th">
                                             Affiliations
@@ -182,7 +189,7 @@ const PaperDetail = () => {
                                         <TableCell component="th">
                                             ACM URL
                                         </TableCell>
-                                        <TableCell align="left" scope="row">
+                                        <TableCell  align="left" scope="row">
                                             <a href={selectedPaper.acmUrl} target="_blank">{selectedPaper.acmUrl}</a>
                                         </TableCell>
                                     </TableRow>
@@ -191,7 +198,7 @@ const PaperDetail = () => {
                                         <TableCell component="th">
                                             DOI
                                         </TableCell>
-                                        <TableCell align="left" scope="row">
+                                        <TableCell  align="left" scope="row">
                                             <a href={selectedPaper.doiUrl} target="_blank">{!!(selectedPaper.doiUrl)?selectedPaper.doiUrl.substring(16):""}</a>
                                         </TableCell>
                                     </TableRow>
@@ -200,8 +207,8 @@ const PaperDetail = () => {
                                             <TableCell component="th">
                                                 Page Numbers
                                             </TableCell>
-                                            <TableCell align="left" scope="row">
-                                                {selectedPaper.pageNumbers}
+                                            <TableCell  align="left" scope="row">
+                                               {selectedPaper.pageNumbers}
                                             </TableCell>
                                         </TableRow>
                                     )}
@@ -211,7 +218,7 @@ const PaperDetail = () => {
                                                 Acknowledgements
                                             </TableCell>
                                             <TableCell align="left" scope="row">
-                                                {selectedPaper.acknowledgements}
+                                                selectedPaper.acknowledgements
                                             </TableCell>
                                         </TableRow>
                                     )}
@@ -224,7 +231,7 @@ const PaperDetail = () => {
                         <Typography variant="h6" align="center" color="textSecondary" component="p">
                             Presenter Details
                         </Typography>
-                        <Author author={selectedPaper.presenter} currentUser={currentUser} />
+                        <Author author={selectedPaper.presenter} currentUser={currentUser} isEditable={false} setAuthor={(p)=>{}} />
                     </Grid>
                 </Grid>
             </Container>
@@ -232,4 +239,4 @@ const PaperDetail = () => {
         </>
     );
 }
-export default PaperDetail;
+export default withStyles(styles)(PaperDetail);
