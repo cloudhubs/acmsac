@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PostprocessingHelpers {
   private static final String DRIVE_EMBED_BASE = "https://drive.google.com/file/d/";
@@ -75,6 +77,19 @@ public class PostprocessingHelpers {
       e.printStackTrace();
       // just skip it
       return new PresentationLinks(original, original, original);
+    }
+  }
+
+  public static String getYoutubeEmbed(String url) {
+    Pattern pattern = Pattern.compile(".*(?:youtu.be\\/|v\\/|u\\/\\w\\/|embed\\/|watch\\?v=)([^#\\&\\?]*).*", Pattern.CASE_INSENSITIVE);
+    Matcher matcher = pattern.matcher(url);
+    if (matcher.matches()) {
+      String id = matcher.group(1);
+      String iframeMarkup = "<iframe width='560' height='315' src='//www.youtube.com/embed/"
+              + id + "' frameborder='0' allowfullscreen></iframe>";
+      return iframeMarkup;
+    } else {
+      return "";
     }
   }
 
