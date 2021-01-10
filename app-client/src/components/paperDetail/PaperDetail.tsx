@@ -132,7 +132,14 @@ const PaperDetail = ({classes}) => {
                                             Title
                                         </TableCell>
                                         <TableCell align="left" scope="row">
-                                             {selectedPaper.title}
+                                            {isEditMode?
+                                                    <TextField InputProps={{className:classes.input}} fullWidth
+                                                   value = {selectedPaper.title}
+                                                   onChange={(event) => {
+                                                   const title = event.target.value;
+                                                   setSelectedPaper((p) => ({...p,title}));
+                                           }}
+                                          />: selectedPaper.title}
                                         </TableCell>
                                     </TableRow>
 
@@ -181,7 +188,14 @@ const PaperDetail = ({classes}) => {
                                             Paper Abstract
                                         </TableCell>
                                         <TableCell align="left" scope="row">
-                                            {selectedPaper.paperAbstract}
+                                            {isEditMode?
+                                            <TextField InputProps={{className:classes.input}} fullWidth multiline
+                                             value = {selectedPaper.paperAbstract}
+                                             onChange={(event) => {
+                                             const paperAbstract = event.target.value;
+                                             setSelectedPaper((p) => ({...p,paperAbstract}));
+                                             }}
+                                          />: selectedPaper.paperAbstract}
                                         </TableCell>
                                     </TableRow>
 
@@ -190,7 +204,14 @@ const PaperDetail = ({classes}) => {
                                             ACM URL
                                         </TableCell>
                                         <TableCell  align="left" scope="row">
-                                            <a href={selectedPaper.acmUrl} target="_blank">{selectedPaper.acmUrl}</a>
+                                            {isEditMode?
+                                            <TextField InputProps={{className:classes.input}} fullWidth
+                                             value = {selectedPaper.acmUrl}
+                                             onChange={(event) => {
+                                             const acmUrl = event.target.value;
+                                             setSelectedPaper((p) => ({...p,acmUrl}));
+                                           }}
+                                          />: <a href={selectedPaper.acmUrl} target="_blank">{selectedPaper.acmUrl}</a>}
                                         </TableCell>
                                     </TableRow>
 
@@ -199,7 +220,14 @@ const PaperDetail = ({classes}) => {
                                             DOI
                                         </TableCell>
                                         <TableCell  align="left" scope="row">
-                                            <a href={selectedPaper.doiUrl} target="_blank">{!!(selectedPaper.doiUrl)?selectedPaper.doiUrl.substring(16):""}</a>
+                                            {isEditMode?
+                                            <TextField InputProps={{className:classes.input}} fullWidth
+                                             value = {selectedPaper.doiUrl}
+                                             onChange={(event) => {
+                                             const doiUrl = event.target.value;
+                                             setSelectedPaper((p) => ({...p,doiUrl}));
+                                           }}
+                                          />: <a href={selectedPaper.doiUrl} target="_blank">{!!(selectedPaper.doiUrl)?selectedPaper.doiUrl.substring(16):""}</a>}
                                         </TableCell>
                                     </TableRow>
                                     {!!(selectedPaper.pageNumbers) && (
@@ -208,7 +236,14 @@ const PaperDetail = ({classes}) => {
                                                 Page Numbers
                                             </TableCell>
                                             <TableCell  align="left" scope="row">
-                                               {selectedPaper.pageNumbers}
+                                                {isEditMode?
+                                                <TextField InputProps={{className:classes.input}} fullWidth
+                                                value = {selectedPaper.pageNumbers}
+                                                onChange={(event) => {
+                                                const pageNumbers = event.target.value;
+                                                setSelectedPaper((p) => ({...p,pageNumbers}));
+                                               }}
+                                          />: selectedPaper.pageNumbers}
                                             </TableCell>
                                         </TableRow>
                                     )}
@@ -218,7 +253,14 @@ const PaperDetail = ({classes}) => {
                                                 Acknowledgements
                                             </TableCell>
                                             <TableCell align="left" scope="row">
-                                                selectedPaper.acknowledgements
+                                                {isEditMode?
+                                                <TextField InputProps={{className:classes.input}} fullWidth
+                                                value = {selectedPaper.acknowledgements}
+                                                onChange={(event) => {
+                                                const acknowledgements = event.target.value;
+                                                setSelectedPaper((p) => ({...p,acknowledgements}));
+                                               }}
+                                          />:selectedPaper.acknowledgements}
                                             </TableCell>
                                         </TableRow>
                                     )}
