@@ -16,6 +16,7 @@ import Index from "../components/Index";
 import Search from "../pages/public/Search";
 import EarlyRegister from "../pages/public/EarlyRegister";
 import PublicRouter from "./PublicRouter";
+import CurrentUser from '../components/currentUser/CurrentUser';
 
 const BetaRouter = () => {
 
@@ -78,6 +79,9 @@ const BetaRouter = () => {
                         <Route exact path="/app/register" component={Signup} />
                         <Route exact path="/search" component={PublicRouter} />
                         <Route exact path="/reminder" component={PublicRouter} />
+                        <PrivateRoute exact path="/app/currentuser">
+                            <CurrentUser/>
+                        </PrivateRoute>
                         <PrivateRoute exact path="/app/track">
                             <TrackList/>
                         </PrivateRoute>

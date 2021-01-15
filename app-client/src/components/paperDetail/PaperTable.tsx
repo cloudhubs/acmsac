@@ -22,6 +22,7 @@ import {Video} from "./Video";
 import EmailIcon from '@material-ui/icons/Email';
 import {Person} from "../../model/Person";
 import Avatar from "@material-ui/core/Avatar";
+import PaperList from "../currentUser/PaperList";
 
 
 const PaperTable = () => {
@@ -78,8 +79,8 @@ const PaperTable = () => {
 */    return (
         <div>
 
-            <div className="breadcrumbs"><a href={"/#/app"}>ACM SAC 2020</a> >&nbsp;
-                <a href={"/#/app/track"}>TRACKS</a> >&nbsp;
+            <div className="breadcrumbs"><a href={"/#/app"}>ACM SAC 2020</a> &nbsp;
+                <a href={"/#/app/track"}>TRACKS</a> &nbsp;
                 {code}</div>
 
             <Container maxWidth="lg" component="main" className="trackDetail">
@@ -176,93 +177,13 @@ Chairs:
                 </Typography>
  )}
                 <h2>Full-papers</h2>
-                <TableContainer component={Paper}>
-                    <Table aria-label="simple table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell align="left">Session</TableCell>
-                                <TableCell>Title</TableCell>
-                                <TableCell align="right">Presenter</TableCell>
-                                {/**<TableCell align="right">Abstract</TableCell>*/}
-                                <TableCell>Detail</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {academicPapers.filter(row => row.type != 'Poster').slice().sort((a: AcademicArticle, b: AcademicArticle) => {
+                <PaperList papers={academicPapers.filter(row => row.type != 'Poster').slice().sort((a: AcademicArticle, b: AcademicArticle) => {
                                 return a.sessionCode.localeCompare(b.sessionCode);
-                            }).map((row: AcademicArticle) => (
-                                <TableRow key={row.id} hover role="checkbox" className={classes.rowClick}
-                                          onClick={(event) => {
-                                              goDetail(event, row)
-                                          }}>
-                                    <TableCell className={"paper-"+row.id} align="left">{row.sessionCode}</TableCell>
-                                    <TableCell className={"paper-"+row.paperId} >{row.title}</TableCell>
-                                    <TableCell align="right">{row.presenter.name}</TableCell>
-                                    {/**
-                                     <TableCell align="left">
-                                     <a className="hoverMe">Show abstract..</a>
-                                     <div className="hideAbstract">
-                                     {row.paperAbstract}
-                                     </div>
-                                     </TableCell>
-                                     */}
-                                    <TableCell>
-                                        <ButtonBase>
-                                            <IconButton onClick={(event) => {
-                                                goDetail(event, row)
-                                            }}>
-                                                <MoreVertIcon/>
-                                            </IconButton>
-                                        </ButtonBase>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                            })}></PaperList>
                 <h2>Posters</h2>
-                <TableContainer component={Paper}>
-                    <Table aria-label="simple table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Title</TableCell>
-                                <TableCell align="right">Presenter</TableCell>
-                                {/**<TableCell align="right">Abstract</TableCell>*/}
-                                <TableCell>Detail</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {academicPapers.filter(row => row.type == 'Poster').slice().sort((a: AcademicArticle, b: AcademicArticle) => {
+                <PaperList papers={academicPapers.filter(row => row.type == 'Poster').slice().sort((a: AcademicArticle, b: AcademicArticle) => {
                                 return a.sessionCode.localeCompare(b.sessionCode);
-                            }).map((row: AcademicArticle) => (
-                                <TableRow key={row.id} hover role="checkbox" className={classes.rowClick}
-                                          onClick={(event) => {
-                                              goDetail(event, row)
-                                          }}>
-                                    <TableCell className={"paper-"+row.paperId} >{row.title}</TableCell>
-                                    <TableCell align="right">{row.presenter.name}</TableCell>
-                                    {/**
-                                     <TableCell align="left">
-                                     <a className="hoverMe">Show abstract..</a>
-                                     <div className="hideAbstract">
-                                     {row.paperAbstract}
-                                     </div>
-                                     </TableCell>
-                                     */}
-                                    <TableCell>
-                                        <ButtonBase>
-                                            <IconButton onClick={(event) => {
-                                                goDetail(event, row)
-                                            }}>
-                                                <MoreVertIcon/>
-                                            </IconButton>
-                                        </ButtonBase>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                            })}></PaperList>
             </Container>
 
 

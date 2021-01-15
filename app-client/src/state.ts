@@ -70,7 +70,7 @@ const defaultState: State = {
 
 
 
-const LOCAL_STORAGE_KEY = "my_local_storage_key";
+const LOCAL_STORAGE_KEY = "reallyawesomestoragekey.yeah";
 const parseState = (str: string | null): State | null => {
   try {
     const state = JSON.parse(str || "");

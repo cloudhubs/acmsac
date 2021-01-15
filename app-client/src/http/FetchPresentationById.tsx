@@ -12,34 +12,6 @@ const FetchPresentationById = {
 
     async getById(token: ServerToken, id) {
 
-        // let url = "";
-        // if (track === "all"){
-        //     url = process.env.REACT_APP_API_BASE_URL +  '/presentations'
-        // } else {
-        //     url = process.env.REACT_APP_API_BASE_URL +  '/presentations/bytrack/' + track
-        // }
-        // const response = await fetch(url , {
-        //
-        //     method: 'GET',
-        //     headers : {
-        //         'Content-Type': 'application/json',
-        //         'Accept': 'application/json',
-        //         'Authorization': `Bearer ${token.accessToken}`
-        //     }
-        // });
-        // console.log(response);
-        // if (response != null){
-        //     const body = await response.json();
-        //     console.log(body);
-        //     if (!body.error) {
-        //         setAuthorsPapers(body)
-        //     } else {
-        //         console.log(body.message);
-        //     }
-        // } else {
-        //     console.log("server error");
-        // }
-        console.log("fetch presentation");
         const response = await fetch(process.env.REACT_APP_API_BASE_URL + '/presentations/' + id, {
             method: 'GET',
             headers: {
