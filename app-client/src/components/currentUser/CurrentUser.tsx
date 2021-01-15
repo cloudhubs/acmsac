@@ -6,10 +6,11 @@ import { Container } from '@material-ui/core';
 import { useEffect } from 'react';
 import FetchAcademicPapersByUser from '../../http/FetchAcademicPapersByUser';
 import { AcademicArticle } from '../../model/AcademicArticle';
-import { CurrentUser as CurrentUserType} from '../../model/CurrentUser';
+import { CurrentUser as CurrentUserType } from '../../model/CurrentUser';
 import PaperList from './PaperList';
 import Button from '@material-ui/core/Button';
 import UserDetailPut from '../../http/UserDetailPut';
+import FetchCurrentUser from '../../http/FetchCurrentUser';
 
 const CurrentUser = () => {
     const useStyles = makeStyles((theme: Theme) =>
@@ -36,11 +37,15 @@ const CurrentUser = () => {
     const [userPapers, setUserPapers] = React.useState<AcademicArticle[]>([]);
 
     const onSave = async () => {
-        UserDetailPut.doSend(token,author);
+        const updatedUser = await UserDetailPut.doSend(token,author);
+        if (updatedUser !== null) {
+            FetchCurrentUser.doFetch(token);
+        }
         setEditable(false);
     }
 
     const getUserPapers = async () => {
+        console.log(currentUser);
         setUserPapers(await FetchAcademicPapersByUser.getAcademicPapersByUser(token, currentUser.id));
     }
 

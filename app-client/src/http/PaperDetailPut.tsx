@@ -3,13 +3,15 @@ import {ServerToken} from "../model/ServerToken";
 import FetchCurrentUser from "./FetchCurrentUser";
 import { Person } from '../model/Person';
 import { CurrentUser } from "../model/CurrentUser";
+import { AcademicArticleUpdate } from "../model/AcademicArticleUpdate";
+import { AcademicArticle } from "../model/AcademicArticle";
 
-const UserDetailPUT = {
-    async doSend(token: ServerToken, person: Person){
+const PaperDetailPut = {
+    async doSend(token: ServerToken, id: number, paperUpdate: AcademicArticleUpdate){
 
-        const response: Response = await fetch(process.env.REACT_APP_API_BASE_URL +  '/user/me', {
+        const response: Response = await fetch(process.env.REACT_APP_API_BASE_URL +  '/presentations/' + id, {
             method: 'PUT',
-            body: JSON.stringify(person),
+            body: JSON.stringify(paperUpdate),
             headers : {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
@@ -17,7 +19,7 @@ const UserDetailPUT = {
             }
         });
         if (response.ok) {
-            const user = await response.json().then(data => data as CurrentUser);
+            const user = await response.json().then(data => data as AcademicArticle);
             return user;
         }
         return null;
@@ -35,4 +37,4 @@ const UserDetailPUT = {
 //         return response;
     }
 }
-export default UserDetailPUT;
+export default PaperDetailPut;
