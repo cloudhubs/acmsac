@@ -65,6 +65,7 @@ public class PresentationController {
 
   @PutMapping("/{id}")
   public ResponseEntity<PresentationDto> update(@PathVariable("id") long id, @RequestBody PresentationUpdateDto newPres) {
+    // TODO: security lol
     Optional<Presentation> pres = presentationRepository.findById(id);
     if (pres.isPresent()) {
       Presentation realPres = pres.get();
@@ -75,10 +76,14 @@ public class PresentationController {
       realPres.setPaperAbstract(newPres.getPaperAbstract());
       realPres.setPageNumbers(newPres.getPageNumbers());
       realPres.setAcknowledgements(newPres.getAcknowledgements());
-      realPres.setSlidesUrl(newPres.getSlidesUrl());
+      if (newPres.getSlidesUrl() != null && newPres.getSlidesUrl().trim() != "") {
+        realPres.setSlidesUrl(newPres.getSlidesUrl());
+      }
       realPres.setDoiUrl(newPres.getDoiUrl());
       String youtubeEmbed = PostprocessingHelpers.getYoutubeEmbed(newPres.getVideoUrl());
-      realPres.setVideoEmbed(youtubeEmbed);
+      if (!youtubeEmbed.trim().equals("")) { // only change embed if valid youtube URL was given
+        realPres.setVideoEmbed(youtubeEmbed);
+      }
       realPres = presentationRepository.save(realPres);
       return ResponseEntity.ok(dtoConverterService.getPresentationDto(realPres));
     } else {
