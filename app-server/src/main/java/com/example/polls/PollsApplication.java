@@ -6,6 +6,7 @@ import com.example.polls.repository.AcmInfoRepository;
 import com.example.polls.repository.RoleRepository;
 import com.example.polls.repository.TrackRepository;
 import com.example.polls.repository.UserRepository;
+import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -69,7 +70,7 @@ public class PollsApplication {
             @Autowired
             PasswordEncoder passwordEncoder;
 
-            @Value("classpath:track_codes.xlsx")
+            @Value("classpath:2021_tracks.xlsx")
             private Resource trackCodesResource;
 
             @Value("classpath:acm_info.xlsx")
@@ -91,19 +92,20 @@ public class PollsApplication {
                     }
                 }
 
-                // if the DOI info hasn't been loaded, do it
-                if (acmInfoRepository.count() == 0) {
-                    XSSFWorkbook workbook = new XSSFWorkbook(acmResource.getInputStream());
-                    XSSFSheet worksheet = workbook.getSheetAt(0);
-                    for (int i = 1; i < worksheet.getPhysicalNumberOfRows(); i++) {
-                        XSSFRow row = worksheet.getRow(i);
-                        AcmInfo info = new AcmInfo();
-                        info.setPaperId((int) row.getCell(0).getNumericCellValue());
-                        info.setDoiUrl(row.getCell(1).toString());
-                        info.setAcmUrl(row.getCell(2).toString());
-                        acmInfoRepository.save(info);
-                    }
-                }
+                // TODO: Needed for 2021?
+//                // if the DOI info hasn't been loaded, do it
+//                if (acmInfoRepository.count() == 0) {
+//                    XSSFWorkbook workbook = new XSSFWorkbook(acmResource.getInputStream());
+//                    XSSFSheet worksheet = workbook.getSheetAt(0);
+//                    for (int i = 1; i < worksheet.getPhysicalNumberOfRows(); i++) {
+//                        XSSFRow row = worksheet.getRow(i);
+//                        AcmInfo info = new AcmInfo();
+//                        info.setPaperId((int) row.getCell(0).getNumericCellValue());
+//                        info.setDoiUrl(row.getCell(1).toString());
+//                        info.setAcmUrl(row.getCell(2).toString());
+//                        acmInfoRepository.save(info);
+//                    }
+//                }
 
                 // create admin account if not exists
                 if (!userRepository.existsByEmail(adminEmail)) {
