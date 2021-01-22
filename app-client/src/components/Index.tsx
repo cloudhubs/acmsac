@@ -61,7 +61,7 @@ export default function Index() {
       {/* Hero unit */}
       <Container maxWidth="md" component="main" className={classes.heroContent}>
         <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-          ACM SAC 2020
+          ACM SAC 2021
         </Typography>
 
         <Typography variant="h4" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
@@ -69,7 +69,7 @@ export default function Index() {
         </Typography>
 
         <Typography variant="h5" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
-        It is our great pleasure to announce that the ACM SAC 2020 conference platform is now open.  
+        It is our great pleasure to announce that the ACM SAC 2021 conference platform is now open.  
         </Typography>
 
         <Typography variant="h5" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
@@ -81,7 +81,7 @@ export default function Index() {
         </Typography>
 
         <Typography variant="h6" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
-        Thank you for participating in ACM SAC 2020! All the conference organizers did a fabulous job and hoped to see you all in person in Brno. You did a fabulous job by posting your presentation videos online and we really appreciate such teamwork and allowing us to make this happen remotely.
+        Thank you for participating in ACM SAC 2021! All the conference organizers did a fabulous job and hoped to see you all in person in Brno. You did a fabulous job by posting your presentation videos online and we really appreciate such teamwork and allowing us to make this happen remotely.
         </Typography>
 
         <Typography variant="h6" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
