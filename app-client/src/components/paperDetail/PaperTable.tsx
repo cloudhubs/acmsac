@@ -176,12 +176,12 @@ Chairs:
                     </Box>
                 </Typography>
  )}
-                <h2>Full-papers</h2>
-                <PaperList papers={academicPapers.filter(row => row.type != 'Poster').slice().sort((a: AcademicArticle, b: AcademicArticle) => {
+                <h2>Full papers</h2>
+                <PaperList papers={academicPapers.filter(row => row.type.toLowerCase().indexOf('poster') < 0).slice().sort((a: AcademicArticle, b: AcademicArticle) => {
                                 return a.sessionCode.localeCompare(b.sessionCode);
                             })}></PaperList>
                 <h2>Posters</h2>
-                <PaperList papers={academicPapers.filter(row => row.type == 'Poster').slice().sort((a: AcademicArticle, b: AcademicArticle) => {
+                <PaperList papers={academicPapers.filter(row => row.type.toLowerCase().indexOf('poster') >= 0).slice().sort((a: AcademicArticle, b: AcademicArticle) => {
                                 return a.sessionCode.localeCompare(b.sessionCode);
                             })}></PaperList>
             </Container>
