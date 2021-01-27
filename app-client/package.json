@@ -19,6 +19,7 @@
     "@types/react-dom": "^16.9.4",
     "attina": "^1.0.1",
     "axios": "^0.19.2",
+    "disqus-react": "^1.0.10",
     "hist": "latest",
     "history": "^4.10.1",
     "mermaid": "^8.4.5",

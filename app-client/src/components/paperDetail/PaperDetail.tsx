@@ -16,6 +16,7 @@ import Button from "@material-ui/core/Button";
 import { AcademicArticleUpdate } from "../../model/AcademicArticleUpdate";
 import PaperDetailPut from "../../http/PaperDetailPut";
 import FetchPresentationById from "../../http/FetchPresentationById";
+import { DiscussionEmbed } from 'disqus-react';
 
 const styles = {
   input: {
@@ -136,12 +137,24 @@ const PaperDetail = ({classes}) => {
                 <br />
                 <br />
                 <br />
-                <Container maxWidth="xl" component="main" className="chatContainer">
+                {/* <Container maxWidth="xl" component="main" className="chatContainer">
                     <Grid container spacing={4}>
                         <Grid item md={12}>
                             <Chat/>
                         </Grid>
                     </Grid>
+                </Container> */}
+                <Container maxWidth="xl" component="main" className="disqusContainer">
+                <DiscussionEmbed
+                    shortname='acmsac2021'
+                    config={
+                        {
+                            url: `https://acmsac.ecs.baylor.edu/${selectedPaper.paperId}`,
+                            identifier: `${selectedPaper.paperId}`,
+                            title: `${selectedPaper.paperId}`
+                        }
+                    }
+                />
                 </Container>
                 <Grid container spacing={2} className='authorMeta'>
                     <Grid item md={6}>

@@ -7,6 +7,7 @@ import {useGlobalState} from "../../../state";
 import FetchTrackByCode from "../../../http/FetchTrackByCode";
 import FetchAcademicPapers from "../../../http/FetchAcademicPapers";
 import TrackChat from "../../../components/chat/TrackChat";
+import { DiscussionEmbed } from 'disqus-react';
 
 
 const TrackDetail = () => {
@@ -37,8 +38,20 @@ const TrackDetail = () => {
     return (
         <div>
             <PaperTable/>
-            <Container maxWidth="xl" component="main" className="chatContainer">
+            {/* <Container maxWidth="xl" component="main" className="chatContainer">
                 <TrackChat/>
+            </Container> */}
+            <Container maxWidth="xl" component="main" className="disqusContainer">
+                <DiscussionEmbed
+                    shortname='acmsac2021'
+                    config={
+                        {
+                            url: `https://acmsac.ecs.baylor.edu/${code}`,
+                            identifier: `${code}`,
+                            title: `${code}`
+                        }
+                    }
+                />
             </Container>
         </div>
     );
