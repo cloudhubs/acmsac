@@ -2,10 +2,8 @@ package com.example.polls;
 
 import com.example.polls.exception.AppException;
 import com.example.polls.model.*;
-import com.example.polls.repository.AcmInfoRepository;
-import com.example.polls.repository.RoleRepository;
-import com.example.polls.repository.TrackRepository;
-import com.example.polls.repository.UserRepository;
+import com.example.polls.repository.*;
+import com.example.polls.service.ImportService;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -63,6 +61,12 @@ public class PollsApplication {
 
             @Autowired
             private RoleRepository roleRepository;
+
+            @Autowired
+            private PresentationRepository presentationRepository;
+
+            @Autowired
+            private ImportService importService;
 
             @Autowired
             private AcmInfoRepository acmInfoRepository;
@@ -127,6 +131,11 @@ public class PollsApplication {
                     admin.setRoles(roles);
 
                     userRepository.save(admin);
+                }
+
+                // run import if no presentations
+                if (presentationRepository.count() == 0) {
+                    importService.importUsers();
                 }
 
             }

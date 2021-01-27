@@ -30,7 +30,8 @@ const PaperDetail = ({classes}) => {
     const [currentUser] = useGlobalState('currentUser');
 
     // console.log(selectedPaper);
-    const isAuthor = selectedPaper.authors?selectedPaper.authors.filter(author => author.email == currentUser.email).length > 0: false;
+    const isAuthorOrAdmin = currentUser.roles.includes("ROLE_ADMIN") || currentUser.roles.includes("ROLE_CHAIR") || 
+        (selectedPaper.authors ? selectedPaper.authors.filter(author => author.email == currentUser.email).length > 0: false);
     const [isEditable, setEditable] = React.useState<boolean>(false);
     const [token] = useGlobalState('serverToken');
     const [paperUpdate, setPaperUpdate] = React.useState<AcademicArticleUpdate>(new AcademicArticleUpdate(selectedPaper));
@@ -78,11 +79,11 @@ const PaperDetail = ({classes}) => {
                     {selectedPaper.title}
                 </Typography>
                 <br />
-                {isAuthor ? (isEditable ? <Button color="primary" variant="outlined" onClick={onSave}>Save</Button> 
+                {isAuthorOrAdmin ? (isEditable ? <Button color="primary" variant="outlined" onClick={onSave}>Save</Button> 
                                 : <Button color="primary" variant="outlined" onClick={()=>setEditable(true)}>Edit</Button>)
                     : <br />
                 }
-                { !(selectedPaper.hideFromPublic && currentUser.blocked) &&
+                { selectedPaper.userCanView && !currentUser.blocked &&
                     <>
                         <Grid container spacing={2} className='slidesVideo'>
                             <Grid item md={6}>
@@ -90,16 +91,21 @@ const PaperDetail = ({classes}) => {
                                     Video
                                 </Typography>
                                 <Paper className="videoBox" style={{ textAlign: "center", padding: "15px", minHeight: "100%"}}>
-                                    <Video url={selectedPaper.videoEmbed} />
-                                    {isEditable && <TextField
-                                        fullWidth
-                                        label="Add new video URL"
-                                        value = {paperUpdate.videoUrl}
-                                        onChange={(event) => {
-                                            const videoUrl = event.target.value;
-                                            setPaperUpdate((p) => ({...p,videoUrl}));
-                                        }}
-                                    />}
+                                    
+                                    {isEditable &&
+                                        <>
+                                        <TextField
+                                            fullWidth
+                                            label="Add new YouTube URL"
+                                            value = {paperUpdate.videoUrl}
+                                            helperText="Paste in a YouTube URL in the format https://www.youtube.com/watch?v=4vd2rCBjHp8"
+                                            onChange={(event) => {
+                                                const videoUrl = event.target.value;
+                                                setPaperUpdate((p) => ({...p,videoUrl}));
+                                            }}
+                                        />
+                                        </>}
+                                    {!isEditable && <Video url={selectedPaper.videoEmbed} />}
                                 </Paper>
 
                             </Grid>
@@ -114,12 +120,13 @@ const PaperDetail = ({classes}) => {
                                            fullWidth
                                            label="Add new slides url"
                                            value = {paperUpdate.slidesUrl}
+                                           helperText="Paste in a URL leading to your PDF, e.g. 'https://scholar.harvard.edu/files/mickens/files/thisworldofours.pdf'. If using Google Drive, get a public sharing URL; it should follow the format https://drive.google.com/file/d/0Bze24YskmJNeT1VnNUJHdWpwWDQ/view?usp=sharing"
                                            onChange={(event) => {
                                            const slidesUrl = event.target.value;
                                            setPaperUpdate((p) => ({...p,slidesUrl}));
                                            }}
                                       />}
-                                    <Slides url={selectedPaper && selectedPaper.presentation.embed} />
+                                      {!isEditable && <Slides url={selectedPaper && selectedPaper.presentation.embed} />}
                                 </Paper>
 
                             </Grid>
@@ -127,10 +134,24 @@ const PaperDetail = ({classes}) => {
                         </Grid>
                     </>
                 }
-                {selectedPaper.hideFromPublic &&
+                {!selectedPaper.userCanView && selectedPaper.hideFromPublic &&
                     <>
                         <Typography variant="h5" align="center" color="textPrimary" component="h1">
                             Author does not wish to open presentation to the public
+                        </Typography>
+                    </>
+                }
+                {!selectedPaper.isReleased && !selectedPaper.userCanView &&
+                    <>
+                        <Typography variant="body1" align="center" color="textPrimary">
+                            This presentation is not yet released. View its details below and check back after its session to view a recorded presentation and its slides!
+                        </Typography>
+                    </>
+                }
+                {!selectedPaper.isReleased && selectedPaper.userCanView &&
+                    <>
+                        <Typography variant="body1" align="center" color="textPrimary">
+                            Note: This presentation is not yet released. You can view this because you are either a track chair or an author on the paper. Others will not be able to view your video or slides until the track chair makes it public.
                         </Typography>
                     </>
                 }
@@ -144,18 +165,18 @@ const PaperDetail = ({classes}) => {
                         </Grid>
                     </Grid>
                 </Container> */}
-                <Container maxWidth="xl" component="main" className="disqusContainer">
-                <DiscussionEmbed
-                    shortname='acmsac2021'
-                    config={
-                        {
-                            url: `https://acmsac.ecs.baylor.edu/${selectedPaper.paperId}`,
-                            identifier: `${selectedPaper.paperId}`,
-                            title: `${selectedPaper.paperId}`
+                {!isEditable && <Container maxWidth="xl" component="main" className="disqusContainer">
+                    <DiscussionEmbed
+                        shortname='acmsac2021'
+                        config={
+                            {
+                                url: `https://acmsac.ecs.baylor.edu/${selectedPaper.paperId}`,
+                                identifier: `${selectedPaper.paperId}`,
+                                title: `${selectedPaper.paperId}`
+                            }
                         }
-                    }
-                />
-                </Container>
+                    />
+                </Container>}
                 <Grid container spacing={2} className='authorMeta'>
                     <Grid item md={6}>
                         <Typography variant="h6" align="center" color="textSecondary" component="p">

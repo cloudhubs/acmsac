@@ -7,6 +7,8 @@ import com.example.polls.model.Presentation;
 import com.example.polls.model.User;
 import com.example.polls.repository.PresentationRepository;
 import com.example.polls.repository.UserRepository;
+import com.example.polls.security.CurrentUser;
+import com.example.polls.security.UserPrincipal;
 import com.example.polls.service.DtoConverterService;
 import com.example.polls.service.PostprocessingHelpers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,9 +47,9 @@ public class PresentationController {
 
   @GetMapping("/user/{userid}")
   public List<PresentationDto> getAllByPresenter(@PathVariable("userid") Long userId) {
-    Optional<User> presenter = userRepository.findById(userId);
-    if (presenter.isPresent()) {
-      List<Presentation> presentations = presentationRepository.findAllByPresenter(presenter.get());
+    Optional<User> user = userRepository.findById(userId);
+    if (user.isPresent()) {
+      List<Presentation> presentations = presentationRepository.findAllByAuthorsContaining(user.get());
       return dtoConverterService.getPresentationDtoList(presentations);
     }
     return new ArrayList<>();
@@ -64,11 +66,15 @@ public class PresentationController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<PresentationDto> update(@PathVariable("id") long id, @RequestBody PresentationUpdateDto newPres) {
+  public ResponseEntity<PresentationDto> update(@PathVariable("id") long id, @RequestBody PresentationUpdateDto newPres, @CurrentUser UserPrincipal currentUser) {
     // TODO: security lol
     Optional<Presentation> pres = presentationRepository.findById(id);
     if (pres.isPresent()) {
       Presentation realPres = pres.get();
+      String email = currentUser.getEmail();
+      if (!realPres.getAuthors().stream().anyMatch(u -> u.getEmail().equals(email))) {
+        ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+      }
       realPres.setTitle(newPres.getTitle());
       realPres.setTrackCode(newPres.getTrackCode());
       realPres.setSessionCode(newPres.getSessionCode()); // TODO: this probably just breaks everything
@@ -76,7 +82,7 @@ public class PresentationController {
       realPres.setPaperAbstract(newPres.getPaperAbstract());
       realPres.setPageNumbers(newPres.getPageNumbers());
       realPres.setAcknowledgements(newPres.getAcknowledgements());
-      if (newPres.getSlidesUrl() != null && newPres.getSlidesUrl().trim() != "") {
+      if (newPres.getSlidesUrl() != null && !newPres.getSlidesUrl().trim().equals("")) {
         realPres.setSlidesUrl(newPres.getSlidesUrl());
       }
       realPres.setDoiUrl(newPres.getDoiUrl());

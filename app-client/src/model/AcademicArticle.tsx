@@ -18,6 +18,8 @@ export class AcademicArticle {
     doiUrl: string;
     acmUrl: string;
     hideFromPublic: boolean;
+    isReleased: boolean;
+    userCanView: boolean;
     presentation: Presentation;
     presenter: Person;
     authors: Person[] = [];
