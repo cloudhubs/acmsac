@@ -135,9 +135,19 @@ public class PollsApplication {
 
                 // run import if no presentations
                 if (presentationRepository.count() == 0) {
-                    importService.importUsers();
+                    int triesLeft = 2;
+                    while (triesLeft > 0) {
+                        triesLeft--;
+                        try {
+                            importService.importUsers();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            if (triesLeft > 0) {
+                                System.out.println("Failed to import users/presentations, retrying");
+                            }
+                        }
+                    }
                 }
-
             }
         };
     }
