@@ -20,10 +20,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ImportService {
@@ -47,20 +44,36 @@ public class ImportService {
 
   private final String DEFAULT_ORGANIZER_PW = "acmsaccommittee2021";
   private final String DEFAULT_REGISTRANT_PW = "acmsacregistrant2021";
+  private final String DEFAULT_CHAIR_PW = "acmsac2021-";
   private final String PRESENTATION_RESOURCE_NAME = "classpath:2021_papers.xlsx";
   private final String USER_RESOURCE_NAME = "classpath:2021_users.xlsx";
+  private final String TRACK_CHAIR_RESOURCE_NAME = "classpath:2021_track_chairs.xlsx";
 
   public void importUsers() {
     try {
-      // create users
+      Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
+              .orElseThrow(() -> new AppException("User Role not set."));
+      Role trackRole = roleRepository.findByName(RoleName.ROLE_CHAIR)
+              .orElseThrow(() -> new AppException("Track Chair Role not set."));
+
+      // create track chair users
+      Resource trackResource = resourceLoader.getResource(TRACK_CHAIR_RESOURCE_NAME);
+      XSSFWorkbook trackWorkbook = new XSSFWorkbook(trackResource.getInputStream());
+      XSSFSheet trackSheet = trackWorkbook.getSheetAt(0);
+      Set<Role> trackRoles = new HashSet<>(Arrays.asList(userRole, trackRole));
+      for (int i = 1; i < trackSheet.getPhysicalNumberOfRows(); i++) {
+        XSSFRow row = trackSheet.getRow(i);
+        User user = createTrackChairFromImportRow(row, trackRoles); // create user objects
+      }
+
+      // create author users
       Resource userResource = resourceLoader.getResource(USER_RESOURCE_NAME);
       XSSFWorkbook userWorkbook = new XSSFWorkbook(userResource.getInputStream());
       XSSFSheet userSheet = userWorkbook.getSheetAt(0);
-      Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
-              .orElseThrow(() -> new AppException("User Role not set."));
+
       for (int i = 1; i < userSheet.getPhysicalNumberOfRows(); i++) {
         XSSFRow row = userSheet.getRow(i);
-        User user = createUserFromImportRow(row, userRole); // create user objects
+        User user = createUserFromImportRow(row, Collections.singleton(userRole)); // create user objects
       }
 
       // create presentations
@@ -134,12 +147,45 @@ public class ImportService {
   }
 
   /**
+   * Creates new user for track chair and adds them to the list of chairs for the track
+   * @param row
+   * @param trackRoles
+   * @return
+   */
+  private User createTrackChairFromImportRow(XSSFRow row, Set<Role> trackRoles) {
+    String email = row.getCell(1).toString().trim();
+    String fullName = row.getCell(2).toString().trim() + " " + row.getCell(3).toString().trim();
+    String trackCode = row.getCell(4, Row.CREATE_NULL_AS_BLANK).toString().trim();
+    User chair;
+    if (userRepository.existsByEmail(email)) {
+      chair = userRepository.findByEmail(email).get();
+    } else {
+      String pw = DEFAULT_CHAIR_PW + trackCode.toLowerCase();
+      chair = createUser(fullName, email, email, pw, "", "",
+              "", "", "", "", "", true, trackRoles);
+    }
+    Optional<Track> track = trackRepository.findByCodeIgnoreCase(trackCode);
+    if (track.isPresent()) {
+      Track realTrack = track.get();
+      if (!realTrack.getChairs().contains(chair)) {
+        realTrack.getChairs().add(chair);
+        try {
+          trackRepository.save(realTrack);
+        } catch (Exception e) {
+          throw new ImportException("Could not update track!", e);
+        }
+      }
+    }
+    return chair;
+  }
+
+  /**
    * Creates user from row of user import file, or retrieves them if they exist
    * @param row
-   * @param userRole
+   * @param userRoles
    * @return created/retrieved user
    */
-  private User createUserFromImportRow(XSSFRow row, Role userRole) {
+  private User createUserFromImportRow(XSSFRow row, Set<Role> userRoles) {
     String email = row.getCell(2).toString().trim();
     if (userRepository.existsByEmail(email)) {
       return userRepository.findByEmail(email).get();
@@ -156,7 +202,7 @@ public class ImportService {
     String picUrl = "";
 
     return createUser(fullName, username, email, password, affiliation, country,
-            orcid, linkedIn, googleScholar, bio, picUrl, false, userRole);
+            orcid, linkedIn, googleScholar, bio, picUrl, false, userRoles);
   }
 
   /**
@@ -187,6 +233,9 @@ public class ImportService {
       authors = userRepository.saveAll(authors);
       String presenterEmail = row.getCell(124, Row.CREATE_NULL_AS_BLANK).toString().trim();
       User presenter = userRepository.findByEmail(presenterEmail).orElse(null);
+      if (presenter == null) {
+        presenter = authors.get(0);
+      }
       presentation.setTitle(row.getCell(6, Row.CREATE_NULL_AS_BLANK).toString());
       presentation.setPaperId(paperId);
       presentation.setAuthorsString(authors.stream().map(User::getName).reduce((a, b) -> a + ", " + b).get());
@@ -325,7 +374,7 @@ public class ImportService {
    */
   private User createUser(String name, String username, String email, String password,
                           String affiliation, String country, String orcid, String linkedIn,
-                          String googleScholar, String bio, String picUrl, boolean hasPassword, Role userRole) {
+                          String googleScholar, String bio, String picUrl, boolean hasPassword, Set<Role> roles) {
     try {
       if (email != null) {
         email = email.toLowerCase();
@@ -337,7 +386,7 @@ public class ImportService {
 
       user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-      user.setRoles(Collections.singleton(userRole));
+      user.setRoles(roles);
       return userRepository.save(user);
     } catch (Exception e) {
       throw new ImportException("Could not create user! " + e.getMessage(), e);

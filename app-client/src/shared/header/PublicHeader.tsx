@@ -104,11 +104,11 @@ const PublicHeader = () => {
                         Password Reminder
                     </Button>
 
-                    <Button color="primary" variant="outlined" className={classes.link} onClick={(event: React.MouseEvent<HTMLElement>) => {
+                    {/* <Button color="primary" variant="outlined" className={classes.link} onClick={(event: React.MouseEvent<HTMLElement>) => {
                         onVisitorLogin(event)
                     }}>
                         Tour
-                    </Button>
+                    </Button> */}
 
                     <Button color="primary" variant="outlined" className={classes.link} onClick={(event: React.MouseEvent<HTMLElement>) => {
                         onLogin(event)
