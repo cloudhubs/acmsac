@@ -170,9 +170,9 @@ const PaperDetail = ({classes}) => {
                         shortname='acmsac2021'
                         config={
                             {
-                                url: `https://acmsac.ecs.baylor.edu/${selectedPaper.paperId}`,
-                                identifier: `${selectedPaper.paperId}`,
-                                title: `${selectedPaper.paperId}`
+                                url: `https://acmsac.ecs.baylor.edu/app/track/${selectedPaper.trackCode}/${selectedPaper.id}`,
+                                identifier: `${selectedPaper.trackCode}/${selectedPaper.id}`,
+                                title: `${selectedPaper.trackCode}/${selectedPaper.id}`
                             }
                         }
                     />
