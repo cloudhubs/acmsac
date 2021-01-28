@@ -79,8 +79,8 @@ const PaperTable = () => {
 */    return (
         <div>
 
-            <div className="breadcrumbs"><a href={"/#/app"}>ACM SAC 2020</a> &nbsp;
-                <a href={"/#/app/track"}>TRACKS</a> &nbsp;
+            <div className="breadcrumbs"><a href={"/app"}>ACM SAC 2020</a> &nbsp;
+                <a href={"/app/track"}>TRACKS</a> &nbsp;
                 {code}</div>
 
             <Container maxWidth="lg" component="main" className="trackDetail">
