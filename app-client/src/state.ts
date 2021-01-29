@@ -12,6 +12,7 @@ import {Track} from "./model/Track";
 import {ServerMessage} from "./model/ServerMessage";
 import {AcademicArticle} from "./model/AcademicArticle";
 import {CurrentUser} from "./model/CurrentUser";
+import { Session } from "./model/Session";
 
 
 
@@ -57,6 +58,9 @@ const defaultState: State = {
   },
   trackDetail: new Track(),
   tracks: [],
+  sessions: [],
+  selectedSession: new Session(),
+  presentations: [],
   selectedPaper: new AcademicArticle(),
   academicPapers: [],
   serverError: new ServerError(),
@@ -131,6 +135,21 @@ export const reducer = (state = initialState, action: Action) => {
       return {
         ...state,
         trackDetail: action.trackDetail
+      }
+    case "setAllSessions":
+      return {
+        ...state,
+        sessions: action.sessions
+      }
+    case "setSelectedSession":
+      return {
+        ...state,
+        selectedSession: action.session
+      }
+    case "setPresentations":
+      return {
+        ...state,
+        presentations: action.presentations
       }
     case "setReminderMessage":
       return {
