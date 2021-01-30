@@ -2,11 +2,22 @@ import { dispatch } from "../state";
 import { ServerToken } from "../model/ServerToken";
 import { Session } from "../model/Session";
 
-const setSessions = (sessions: Session[]) =>
+const setSessions = (sessions: any[]) => {
+  let sessions_new = sessions.map<Session>((s: any) => ({
+    trackCode: s.trackCode,
+    sessionCode: s.sessionCode,
+    sessionChair: s.sessionChair,
+    primaryStart: new Date(s.primaryStart),
+    primaryEnd: new Date(s.primaryEnd),
+    secondaryStart: new Date(s.secondaryStart),
+    secondaryEnd: new Date(s.secondaryEnd),
+  }));
+  console.log(typeof sessions_new[0].primaryStart);
   dispatch({
-    sessions: sessions,
+    sessions: sessions_new,
     type: "setAllSessions",
   });
+}
 
 const FetchSession = {
   async getSessions(token: ServerToken) {

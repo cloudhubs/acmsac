@@ -13,8 +13,7 @@ import {ServerMessage} from "./model/ServerMessage";
 import {AcademicArticle} from "./model/AcademicArticle";
 import {CurrentUser} from "./model/CurrentUser";
 import { Session } from "./model/Session";
-
-
+import { jsonDateParser } from "json-date-parser"
 
 // {
 //   id: 0,
@@ -77,7 +76,7 @@ const defaultState: State = {
 const LOCAL_STORAGE_KEY = "reallyawesomestoragekey.yeah";
 const parseState = (str: string | null): State | null => {
   try {
-    const state = JSON.parse(str || "");
+    const state = JSON.parse(str || "", jsonDateParser);
     // if (typeof state.count !== "number") throw new Error();
     // if (typeof state.person.age !== "number") throw new Error();
     // if (typeof state.person.firstName !== "string") throw new Error();

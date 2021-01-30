@@ -3,24 +3,35 @@ import React from "react";
 import { Session } from "../../model/Session";
 import { dispatch, useGlobalState } from "../../state";
 
+const NOP = () => {};
+
 const setSelectedSession = (selectedSession: Session) => {
-  console.log("set to " + JSON.stringify(selectedSession))
+  console.log("set to " + JSON.stringify(selectedSession));
   dispatch({
     session: selectedSession,
     type: "setSelectedSession",
   });
-}
+};
 
 function SessionHeader() {
-  let [session] = useGlobalState("sessions");
+  let [sessions] = useGlobalState("sessions");
+  let [selectedSession] = useGlobalState("selectedSession");
 
   return (
     <>
-      {session.map((session) => (
-        <Button variant="contained" onClick={() => setSelectedSession(session)}>
-          {session.sessionCode}
-        </Button>
-      ))}
+      {sessions.map((session) => {
+        let isSelected: boolean =
+          session.sessionCode === selectedSession.sessionCode;
+        return (
+          <Button
+            color={isSelected ? "primary" : "default"}
+            variant="contained"
+            onClick={isSelected ? NOP : () => setSelectedSession(session)}
+          >
+            {session.sessionCode}
+          </Button>
+        );
+      })}
     </>
   );
 }
