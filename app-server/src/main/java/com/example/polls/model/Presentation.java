@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +55,10 @@ public class Presentation {
 
   @Lob
   private String doiUrl;
+  
+  private LocalDateTime primaryStart, primaryEnd;
+
+  private LocalDateTime secondaryStart, secondaryEnd;
 
   /**
    * Indicates the author does not want this presentation shown to others

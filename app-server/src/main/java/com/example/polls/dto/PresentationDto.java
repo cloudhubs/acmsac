@@ -13,6 +13,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,6 +41,8 @@ public class PresentationDto {
   private boolean userCanView;
   private List<UserDto> authors = new ArrayList<>();
   private List<Comment> comments = new ArrayList<>();
+  private LocalDateTime primaryStart, primaryEnd;
+  private LocalDateTime secondaryStart, secondaryEnd;
 
   /**
    *
@@ -64,6 +67,10 @@ public class PresentationDto {
     this.hideFromPublic = presentation.isHideFromPublic();
     this.released = presentation.isReleased();
     this.userCanView = !restricted;
+    this.primaryStart = presentation.getPrimaryStart();
+    this.primaryEnd = presentation.getPrimaryEnd();
+    this.secondaryStart = presentation.getSecondaryStart();
+    this.secondaryEnd = presentation.getSecondaryEnd();
 
     // restrict view, if necessary
     this.videoEmbed = restricted ? "" : presentation.getVideoEmbed();

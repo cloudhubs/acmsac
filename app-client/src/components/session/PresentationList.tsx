@@ -1,42 +1,33 @@
 import {
   Card,
   CardContent,
-  CardHeader,
   Grid,
+  GridList,
+  GridListTile,
   Typography,
 } from "@material-ui/core";
 import React, { useEffect } from "react";
-import FetchPresentationsBySession from "../../http/FetchPresentationsBySession";
-import { Presentation } from "../../model/Presentation";
-import { Session } from "../../model/Session";
+import FetchAcademicPapersBySession from "../../http/FetchAcademicPapersBySession";
 import { useGlobalState } from "../../state";
-
-const dateString = (start: Date, end: Date) => `${start.toLocaleTimeString()} ${start.toLocaleDateString()}-${end.toLocaleDateString()} ${end.toLocaleDateString()}`;
-
-const PresentationEntry = (pres: Presentation) => {
-  return (
-    <>
-      <Grid container dir="row">
-        <Grid item xs></Grid>
-      </Grid>
-    </>
-  );
-};
+import PresentationEntry from "./PresentationEntry";
+import { dateTimePair } from "./SessionViewUtils";
 
 function PresentationList() {
-  let [presentations] = useGlobalState("presentations");
+  let [papers] = useGlobalState("academicPapers");
   let [session] = useGlobalState("selectedSession");
   const [token] = useGlobalState("serverToken");
-  
+
   useEffect(() => {
-    console.log(JSON.stringify(session));
     if (session.sessionCode !== "") {
-      FetchPresentationsBySession.getPresentations(token, session);
+      FetchAcademicPapersBySession.getAcademicPapersBySession(
+        token,
+        session.sessionCode
+      );
     }
   }, [session]);
 
   // If no presentations found, report to user clearly
-  if (presentations.length === 0)
+  if (papers.length === 0)
     return <Typography variant="body1">NONE FOUND</Typography>;
 
   // Otherwise, return the list
@@ -45,12 +36,12 @@ function PresentationList() {
       <Card>
         <CardContent>
           <Typography variant="h6">
-            {dateString(session.primaryStart, session.primaryEnd)} &{" "}
-            {dateString(session.secondaryStart, session.secondaryEnd)}
+            {dateTimePair(session.primaryStart, session.primaryEnd)} &{" "}
+            {dateTimePair(session.secondaryStart, session.secondaryEnd)}
           </Typography>
-          <Grid container dir="col">
-            {presentations.map(PresentationEntry)}
-          </Grid>
+          {papers.map((paper) => (
+            <PresentationEntry paper={paper} />
+          ))}
         </CardContent>
       </Card>
     </>

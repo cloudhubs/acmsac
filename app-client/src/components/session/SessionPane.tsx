@@ -4,8 +4,6 @@ import FetchSession from "../../http/FetchSession";
 import { useGlobalState } from "../../state";
 import SessionHeader from "./SessionHeader";
 import PresentationList from "./PresentationList";
-import FetchPresentationsBySession from "../../http/FetchPresentationsBySession";
-import {Session} from "../../model/Session";
 
 const SessionPane: () => JSX.Element = () => {
   const [sessions] = useGlobalState("sessions");
@@ -15,10 +13,7 @@ const SessionPane: () => JSX.Element = () => {
   // Method to retrieve all session names
   const getSessions = async () => {
     // If the tracks are already loaded, don't load again; that would be a lot of work.
-    if (sessions.length === 0) {
-      console.log("fetch sessions");
-      await FetchSession.getSessions(token);
-    }
+    await FetchSession.getSessions(token);
   };
 
   // Start by fetching sessions and session names

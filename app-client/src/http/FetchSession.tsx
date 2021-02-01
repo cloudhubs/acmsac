@@ -12,7 +12,6 @@ const setSessions = (sessions: any[]) => {
     secondaryStart: new Date(s.secondaryStart),
     secondaryEnd: new Date(s.secondaryEnd),
   }));
-  console.log(typeof sessions_new[0].primaryStart);
   dispatch({
     sessions: sessions_new,
     type: "setAllSessions",

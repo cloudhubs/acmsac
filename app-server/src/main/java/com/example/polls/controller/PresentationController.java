@@ -47,7 +47,8 @@ public class PresentationController {
 
   @GetMapping("/session/{sessionCode}")
   public List<PresentationDto> getAllBySession(@PathVariable String sessionCode) {
-    return dtoConverterService.getPresentationDtoList(presentationRepository.findAllBySessionCodeIgnoreCase(sessionCode));
+    return presentationRepository.findAllBySessionCodeIgnoreCase(sessionCode).parallelStream().map(dtoConverterService::getPresentationDto).collect(Collectors.toList());
+//    return dtoConverterService.getPresentationDtoList();
   }
 
   @GetMapping("/user/{userid}")
