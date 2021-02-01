@@ -49,7 +49,7 @@ public class UserController {
     @GetMapping("/user/me")
     public UserDto getCurrentUser(@CurrentUser UserPrincipal currentUser) {
         User user = userRepository.findById(currentUser.getId()).get();
-        return new UserDto(user);
+        return DtoConverterService.getUserDto(user);
     }
 
     @PutMapping("/user/me")
@@ -64,7 +64,7 @@ public class UserController {
         user.setOrcid(updatedUser.getOrcid());
         user.setPicUrl(updatedUser.getPicUrl());
         user = userRepository.save(user);
-        return new UserDto(user);
+        return DtoConverterService.getUserDto(user);
     }
 
     @GetMapping("/user/checkUsernameAvailability")

@@ -10,4 +10,5 @@ export class CurrentUser {
     bio: string;
     picUrl: string;
     blocked: boolean;
+    roles: string[];
 }

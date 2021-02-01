@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { HashRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import './App.css';
 import BetaRouter from './router/BetaRouter';
 import PublicRouter from './router/PublicRouter';
@@ -13,13 +13,8 @@ const App = () => {
     const history = createBrowserHistory();
     // Initialize google analytics page view tracking
     history.listen(location => {
-        let hash = location.hash;
-        if(hash[0] === '#'){
-            hash = hash.substr(1);
-        }
-
-        ReactGA.set({ page: hash }); // Update the user's current page
-        ReactGA.pageview(hash); // Record a pageview for the given page
+        ReactGA.set({ page: location.pathname }); // Update the user's current page
+        ReactGA.pageview(location.pathname); // Record a page view for the given page
     });
     return (
         <Router history={history} basename={"/"}>

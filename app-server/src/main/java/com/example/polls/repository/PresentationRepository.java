@@ -19,4 +19,6 @@ public interface PresentationRepository extends JpaRepository<Presentation, Long
   List<Presentation> findAllBySessionCodeIgnoreCase(String sessionCode);
 
   List<Presentation> findAllByPresenter(User presenter);
+
+  List<Presentation> findAllByAuthorsContaining(User user);
 }

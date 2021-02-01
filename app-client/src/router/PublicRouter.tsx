@@ -1,6 +1,6 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React from "react";
-import { HashRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 import PublicFooter from "../shared/footer/PublicFooter";
 import PublicHeader from "../shared/header/PublicHeader";
 import Index from "../components/Index";

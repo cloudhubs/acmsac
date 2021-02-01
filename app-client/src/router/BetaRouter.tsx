@@ -1,6 +1,6 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React, {useEffect} from "react";
-import { HashRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import TrackList from '../pages/beta/private/TrackList';
 import PublicFooter from "../shared/footer/PublicFooter";
 import PrivateHeader from '../shared/header/PrivateHeader';

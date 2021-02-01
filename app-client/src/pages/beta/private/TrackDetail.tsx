@@ -46,7 +46,7 @@ const TrackDetail = () => {
                     shortname='acmsac2021'
                     config={
                         {
-                            url: `https://acmsac.ecs.baylor.edu/${code}`,
+                            url: `https://acmsac.ecs.baylor.edu/app/track/${code}`,
                             identifier: `${code}`,
                             title: `${code}`
                         }
