@@ -33,7 +33,7 @@ public class Track {
   private String affiliations;
 
   @ManyToMany(fetch = FetchType.EAGER)
-  private List<User> chairs = new ArrayList();
+  private List<User> chairs = new ArrayList<>();
 
   // don't use Set, order matters
   @OneToMany
