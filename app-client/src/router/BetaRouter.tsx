@@ -21,7 +21,7 @@ import CurrentUser from '../components/currentUser/CurrentUser';
 const BetaRouter = () => {
 
     const [auth] = useGlobalState('authenticated');
-    console.log(auth);
+    console.log("Are we authed? " + auth);
     const [token] = useGlobalState('serverToken');
     const history = useHistory();
 
