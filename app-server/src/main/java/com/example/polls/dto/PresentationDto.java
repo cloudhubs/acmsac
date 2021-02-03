@@ -39,6 +39,7 @@ public class PresentationDto {
   private boolean hideFromPublic;
   private boolean released;
   private boolean userCanView;
+  private boolean userCanEdit;
   private List<UserDto> authors = new ArrayList<>();
   private List<Comment> comments = new ArrayList<>();
   private LocalDateTime primaryStart, primaryEnd;
@@ -47,9 +48,10 @@ public class PresentationDto {
   /**
    *
    * @param presentation
-   * @param restricted Whether or not the video and presentation should be censored (use if user is non-privileged and the presentation is not yet public)
+   * @param isViewRestricted User cannot view presentation (frontend helper, presentation/video will be empty)
+   * @param isEditRestricted User cannot edit presentation (frontend helper, security done elsewhere)
    */
-  public PresentationDto(Presentation presentation, boolean restricted) {
+  public PresentationDto(Presentation presentation, boolean isViewRestricted, boolean isEditRestricted) {
     this.id = presentation.getId();
     this.title = presentation.getTitle();
     this.paperId = presentation.getPaperId();
@@ -66,15 +68,16 @@ public class PresentationDto {
     this.type = presentation.getType();
     this.hideFromPublic = presentation.isHideFromPublic();
     this.released = presentation.isReleased();
-    this.userCanView = !restricted;
     this.primaryStart = presentation.getPrimaryStart();
     this.primaryEnd = presentation.getPrimaryEnd();
     this.secondaryStart = presentation.getSecondaryStart();
     this.secondaryEnd = presentation.getSecondaryEnd();
+    this.userCanView = !isViewRestricted;
+    this.userCanEdit = !isEditRestricted;
 
     // restrict view, if necessary
-    this.videoEmbed = restricted ? "" : presentation.getVideoEmbed();
-    this.presentation = restricted ? new PresentationLinks("", "", "")
+    this.videoEmbed = isViewRestricted ? "" : presentation.getVideoEmbed();
+    this.presentation = isViewRestricted ? new PresentationLinks("", "", "")
             : PostprocessingHelpers.processPresentationLink(presentation.getSlidesUrl());
   }
 

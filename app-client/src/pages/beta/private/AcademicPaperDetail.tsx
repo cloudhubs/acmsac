@@ -6,9 +6,6 @@ import FetchPresentationById from "../../../http/FetchPresentationById";
 import {Container, Typography} from "@material-ui/core";
 
 const AcademicPaperDetail = () => {
-
-    console.log("academic paper detail1");
-
     const [token] = useGlobalState('serverToken');
     const {track, code} = useParams();
     const [serverError] = useGlobalState('serverError');

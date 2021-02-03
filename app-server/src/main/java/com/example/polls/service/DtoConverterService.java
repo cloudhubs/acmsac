@@ -12,6 +12,7 @@ import com.example.polls.security.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,6 +34,9 @@ public class DtoConverterService {
   @Autowired
   UserDetailsService userDetailsServiceAuto;
 
+  @Autowired
+  SecurityService securityService;
+
   private static UserDetailsService userDetailsService;
 
   @PostConstruct
@@ -46,19 +50,15 @@ public class DtoConverterService {
   }
 
   private PresentationDto getPresentationDto(Presentation pres, boolean alwaysRestrict) {
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    String userEmail = auth != null ? ((UserDetails)auth.getPrincipal()).getUsername() : "";
     boolean restrictPres = true; // assume we restrict the presentation until otherwise shown
-    if (!alwaysRestrict) {
-      // if we aren't skipping restriction check, lift restriction if pres is released, user is one of its authors, or user is admin/chair
-      if (pres.isReleased() ||
-              pres.getAuthors().stream().anyMatch(u -> u.getEmail().equals(userEmail)) ||
-              (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_CHAIR")))
-      ) {
-        restrictPres = false;
+    boolean restrictEdit = true;
+    if (!alwaysRestrict && securityService.PresIsViewable(pres)) {
+      restrictPres = false;
+      if (securityService.PresIsEditable(pres)) {
+        restrictEdit = false;
       }
     }
-    PresentationDto dto = new PresentationDto(pres, restrictPres);
+    PresentationDto dto = new PresentationDto(pres, restrictPres, restrictEdit);
     Optional<AcmInfo> info = acmRepo.findByPaperId(pres.getPaperId());
     if (info.isPresent()) {
       dto.setDoiUrl(info.get().getDoiUrl());

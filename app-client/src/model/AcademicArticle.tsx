@@ -20,6 +20,7 @@ export class AcademicArticle {
     hideFromPublic: boolean;
     isReleased: boolean;
     userCanView: boolean;
+    userCanEdit: boolean;
     presentation: Presentation;
     presenter: Person;
     authors: Person[] = [];

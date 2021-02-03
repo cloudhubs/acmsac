@@ -48,8 +48,11 @@ const PrivateHeader = () => {
             <AppBar position="static" color="default" elevation={0} className={classes.appBar}>
                 <Toolbar className={classes.toolbar}>
                     <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
-                        ACM SAC 2020
+                        ACM SAC 2021
                     </Typography>
+                    <Button color="primary" variant="outlined" className={classes.link}>
+                        <Link to="/">Home</Link>
+                    </Button>
                     <Button color="primary" variant="outlined" className={classes.link}>
                         <Link to="/app/track">Tracks</Link>
                     </Button>

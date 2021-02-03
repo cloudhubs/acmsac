@@ -74,7 +74,7 @@ public class PostprocessingHelpers {
       // if we get here, no further processing was needed
       return new PresentationLinks(original, original, original);
     } catch (Exception e) {
-      e.printStackTrace();
+//      e.printStackTrace();
       // just skip it
       return new PresentationLinks(original, original, original);
     }
