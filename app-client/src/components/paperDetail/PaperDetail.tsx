@@ -9,7 +9,6 @@ import { useGlobalState } from "../../state";
 import { Author } from "../../pages/public/Author";
 import { Slides } from "./Slides";
 import { Video } from "./Video";
-import Chat from "../chat/Chat";
 import TextField from "@material-ui/core/TextField";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
@@ -30,9 +29,11 @@ const PaperDetail = ({classes}) => {
     const [currentUser] = useGlobalState('currentUser');
 
     // console.log(selectedPaper);
-    const isAuthorOrAdmin = currentUser.roles.includes("ROLE_ADMIN") || currentUser.roles.includes("ROLE_CHAIR") || 
-        (selectedPaper.authors ? selectedPaper.authors.filter(author => author.email == currentUser.email).length > 0: false);
-    const [isEditable, setEditable] = React.useState<boolean>(false);
+    // this is all calculated on the backend now
+    // const isAuthorOrAdmin = currentUser.roles.includes("ROLE_ADMIN") || currentUser.roles.includes("ROLE_CHAIR") || 
+    //     (selectedPaper.authors ? selectedPaper.authors.filter(author => author.email == currentUser.email).length > 0: false);
+    const isEditable = selectedPaper.userCanEdit;
+    const [isEditMode, setEditMode] = React.useState<boolean>(false);
     const [token] = useGlobalState('serverToken');
     const [paperUpdate, setPaperUpdate] = React.useState<AcademicArticleUpdate>(new AcademicArticleUpdate(selectedPaper));
 
@@ -54,6 +55,14 @@ const PaperDetail = ({classes}) => {
         });
     }
 
+    const hasVideo = (): boolean => {
+        return selectedPaper.videoEmbed != null && selectedPaper.videoEmbed.trim() != "";
+    }
+
+    const hasSlides = (): boolean => {
+        return selectedPaper.presentation != null && selectedPaper.presentation.embed != "";
+    }
+
     const onSave = async () => {
         const updatedPres = await PaperDetailPut.doSend(token, selectedPaper.id, paperUpdate);
         if (updatedPres === null) {
@@ -61,7 +70,7 @@ const PaperDetail = ({classes}) => {
             // give notification here
         }
         FetchPresentationById.getById(token, selectedPaper.id);
-        setEditable(false);
+        setEditMode(false);
     }
 
     useEffect(() => {
@@ -79,9 +88,40 @@ const PaperDetail = ({classes}) => {
                     {selectedPaper.title}
                 </Typography>
                 <br />
-                {isAuthorOrAdmin ? (isEditable ? <Button color="primary" variant="outlined" onClick={onSave}>Save</Button> 
-                                : <Button color="primary" variant="outlined" onClick={()=>setEditable(true)}>Edit</Button>)
-                    : <br />
+                {isEditable &&
+                    <>
+                    <Grid
+                        container
+                        direction="row"
+                        justify="center"
+                        alignItems="center"
+                    >
+                        <Grid item xs={8}>
+                            <Paper className={classes.paper}>
+                                {isEditMode ?
+                                    <Typography variant="body1" align="center" color="textPrimary">
+                                        Review your changes and click the Save button to update your presentation. <Button color="primary" variant="outlined" onClick={onSave}>Save</Button> 
+                                    </Typography>
+                                    :
+                                    <>
+                                    {(hasVideo() && hasSlides()) ?
+                                        <Typography variant="body1" align="center" color="textPrimary">
+                                            <i>This is your presentation, or you are authorized to modify it. To update your presentation, click the edit button.</i> <Button color="primary" variant="outlined" onClick={()=>setEditMode(true)}>Edit</Button>
+                                        </Typography>
+                                        :
+                                        <Typography variant="body1" align="center" color="textPrimary" component="p">
+                                            <i>NOTE: You are missing {!hasVideo() ? "a video" + (!hasSlides() ? " and slides" : "") : "slides"}. Click the edit button to fix this now!</i> <Button color="primary" variant="outlined" onClick={()=>setEditMode(true)}>Edit</Button>
+                                        </Typography>
+                                    }
+                                    
+                                    </>
+                                }
+                            </Paper>
+                        </Grid>
+                        
+                    </Grid>
+                    <br />
+                    </>
                 }
                 { selectedPaper.userCanView && !currentUser.blocked &&
                     <>
@@ -92,7 +132,7 @@ const PaperDetail = ({classes}) => {
                                 </Typography>
                                 <Paper className="videoBox" style={{ textAlign: "center", padding: "15px", minHeight: "100%"}}>
                                     
-                                    {isEditable &&
+                                    {isEditMode &&
                                         <>
                                         <TextField
                                             fullWidth
@@ -105,7 +145,7 @@ const PaperDetail = ({classes}) => {
                                             }}
                                         />
                                         </>}
-                                    {!isEditable && <Video url={selectedPaper.videoEmbed} />}
+                                    {!isEditMode && <Video url={selectedPaper.videoEmbed} />}
                                 </Paper>
 
                             </Grid>
@@ -115,7 +155,7 @@ const PaperDetail = ({classes}) => {
                                     Slides ({<Link target="_blank" className="exLink" href={selectedPaper && selectedPaper.presentation.download}>author link to PDF - if no preview</Link>})
                                 </Typography>
                                 <Paper className="paperBox" style={{ textAlign: "center", padding: "15px", minHeight: "100%" }}>
-                                    {isEditable && <TextField
+                                    {isEditMode && <TextField
 
                                            fullWidth
                                            label="Add new slides url"
@@ -126,7 +166,7 @@ const PaperDetail = ({classes}) => {
                                            setPaperUpdate((p) => ({...p,slidesUrl}));
                                            }}
                                       />}
-                                      {!isEditable && <Slides url={selectedPaper && selectedPaper.presentation.embed} />}
+                                      {!isEditMode && <Slides url={selectedPaper && selectedPaper.presentation.embed} />}
                                 </Paper>
 
                             </Grid>
@@ -165,7 +205,7 @@ const PaperDetail = ({classes}) => {
                         </Grid>
                     </Grid>
                 </Container> */}
-                {!isEditable && <Container maxWidth="xl" component="main" className="disqusContainer">
+                {!isEditMode && <Container maxWidth="xl" component="main" className="disqusContainer">
                     <DiscussionEmbed
                         shortname='acmsac2021'
                         config={
@@ -190,7 +230,7 @@ const PaperDetail = ({classes}) => {
                                             Title
                                         </TableCell>
                                         <TableCell align="left" scope="row">
-                                            {isEditable?
+                                            {isEditMode ?
                                                     <TextField InputProps={{className:classes.input}} fullWidth
                                                    value = {paperUpdate.title}
                                                    onChange={(event) => {
@@ -246,7 +286,7 @@ const PaperDetail = ({classes}) => {
                                             Paper Abstract
                                         </TableCell>
                                         <TableCell align="left" scope="row">
-                                            {isEditable?
+                                            {isEditMode?
                                             <TextField InputProps={{className:classes.input}} fullWidth multiline
                                              value = {paperUpdate.paperAbstract}
                                              onChange={(event) => {
@@ -262,7 +302,7 @@ const PaperDetail = ({classes}) => {
                                             ACM URL
                                         </TableCell>
                                         <TableCell  align="left" scope="row">
-                                            {/* {isEditable?
+                                            {/* {isEditMode?
                                             <TextField InputProps={{className:classes.input}} fullWidth
                                              value = {selectedPaper.acmUrl}
                                              onChange={(event) => {
@@ -279,7 +319,7 @@ const PaperDetail = ({classes}) => {
                                             DOI
                                         </TableCell>
                                         <TableCell  align="left" scope="row">
-                                            {isEditable?
+                                            {isEditMode?
                                             <TextField InputProps={{className:classes.input}} fullWidth
                                              value = {paperUpdate.doiUrl}
                                              onChange={(event) => {
@@ -295,7 +335,7 @@ const PaperDetail = ({classes}) => {
                                                 Page Numbers
                                             </TableCell>
                                             <TableCell  align="left" scope="row">
-                                                {isEditable?
+                                                {isEditMode?
                                                 <TextField InputProps={{className:classes.input}} fullWidth
                                                 value = {paperUpdate.pageNumbers}
                                                 onChange={(event) => {
@@ -312,7 +352,7 @@ const PaperDetail = ({classes}) => {
                                                 Acknowledgements
                                             </TableCell>
                                             <TableCell align="left" scope="row">
-                                                {isEditable?
+                                                {isEditMode?
                                                 <TextField InputProps={{className:classes.input}} fullWidth
                                                 value = {paperUpdate.acknowledgements}
                                                 onChange={(event) => {

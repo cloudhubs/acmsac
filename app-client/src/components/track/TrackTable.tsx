@@ -58,6 +58,7 @@ const TrackTable = () => {
 
             <Container maxWidth="lg" component="main" className={classes.heroContent}>
 
+
                 <Typography variant="h4" align="right" color="textSecondary" component="p" className={classes.subHeroContent}>
                     <TransitionsModal givenOpen={open}/>
                 </Typography>
