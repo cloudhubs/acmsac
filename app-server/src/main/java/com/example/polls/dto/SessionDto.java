@@ -6,6 +6,8 @@ import lombok.Data;
 
 @Data
 public class SessionDto {
+  String sessionName;
+
   String trackCode;
 
   String sessionCode;

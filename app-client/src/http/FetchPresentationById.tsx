@@ -1,10 +1,16 @@
 import { useHistory, useParams } from "react-router-dom";
 import { AcademicArticle } from "../model/AcademicArticle";
-import { dispatch, useGlobalState } from "../state";
+import { dispatch } from "../state";
 import { ServerToken } from "../model/ServerToken";
 
 const setSelectedPaper = (selectedPaper: AcademicArticle) => dispatch({
-    selectedPaper: selectedPaper,
+    selectedPaper: ({
+        ...selectedPaper,
+        primaryStart: new Date(selectedPaper.primaryStart),
+        primaryEnd: new Date(selectedPaper.primaryEnd),
+        secondaryStart: new Date(selectedPaper.secondaryStart),
+        secondaryEnd: new Date(selectedPaper.secondaryEnd),
+    }),
     type: 'setSelectedPaper',
 });
 

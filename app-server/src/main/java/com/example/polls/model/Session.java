@@ -29,6 +29,9 @@ public class Session {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
+  @Lob
+  private String sessionName;
+
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn
   private Track track;
@@ -48,9 +51,10 @@ public class Session {
   /** Extra date storage, if we have 2 sessions */
   private LocalDateTime secondaryEnd;
 
-	public Session(Track track, String sessionCode, String sessionChair, LocalDateTime primaryStart, LocalDateTime primaryEnd,
+	public Session(String sessionName, Track track, String sessionCode, String sessionChair, LocalDateTime primaryStart, LocalDateTime primaryEnd,
 	    LocalDateTime secondaryStart, LocalDateTime secondaryEnd) {
 		super();
+		this.sessionName = sessionName;
 		this.track = track;
 		this.sessionCode = sessionCode;
 		this.sessionChair = sessionChair;

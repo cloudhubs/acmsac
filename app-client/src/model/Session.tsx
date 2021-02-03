@@ -1,4 +1,5 @@
 export class Session {
+    sessionName: string;
     trackCode: string;
     sessionCode: string;
     sessionChair: string;

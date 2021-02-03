@@ -1,9 +1,11 @@
 package com.example.polls.service;
 
 import com.example.polls.dto.PresentationDto;
+import com.example.polls.dto.SessionDto;
 import com.example.polls.dto.UserDto;
 import com.example.polls.model.AcmInfo;
 import com.example.polls.model.Presentation;
+import com.example.polls.model.Session;
 import com.example.polls.model.User;
 import com.example.polls.repository.AcmInfoRepository;
 import com.example.polls.security.CustomUserDetailsService;
@@ -74,6 +76,20 @@ public class DtoConverterService {
     UserDetails details = userDetailsService.loadUserByUsername(user.getUsername());
     List<String> roles = details.getAuthorities().stream().map(Object::toString).collect(Collectors.toList());
     UserDto dto = new UserDto(user, roles);
+    return dto;
+  }
+
+  public SessionDto createSession(Session s) {
+    SessionDto dto = new SessionDto();
+    System.out.println(s.getPrimaryStart() + ", " + s.getPrimaryEnd());
+    dto.setSessionName(s.getSessionName());
+    dto.setTrackCode(s.getTrack().getCode());
+    dto.setSessionChair(s.getSessionChair());
+    dto.setSessionCode(s.getSessionCode());
+    dto.setPrimaryStart(s.getPrimaryStart());
+    dto.setPrimaryEnd(s.getPrimaryEnd());
+    dto.setSecondaryStart(s.getSecondaryStart());
+    dto.setSecondaryEnd(s.getSecondaryEnd());
     return dto;
   }
 }

@@ -18,6 +18,7 @@ import com.example.polls.model.Session;
 import com.example.polls.model.Track;
 import com.example.polls.repository.SessionRepository;
 import com.example.polls.repository.TrackRepository;
+import com.example.polls.service.DtoConverterService;
 
 @RestController
 @RequestMapping("/api/sessions")
@@ -28,36 +29,29 @@ public class SessionController {
   @Autowired
   TrackRepository trackRepository;
 
+  @Autowired
+  DtoConverterService converter;
+
   @GetMapping("/")
   public ResponseEntity<List<SessionDto>> getAllSessions() {
     List<Session> sessions = sessionRepository.findAll();
-    return ResponseEntity.ok(sessions.stream().map(s -> {
-      SessionDto dto = new SessionDto();
-      dto.setTrackCode(s.getTrack().getCode());
-      dto.setSessionChair(s.getSessionChair());
-      dto.setSessionCode(s.getSessionCode());
-      dto.setPrimaryStart(s.getPrimaryStart());
-      dto.setPrimaryEnd(s.getPrimaryEnd());
-      dto.setSecondaryStart(s.getSecondaryStart());
-      dto.setSecondaryEnd(s.getSecondaryEnd());
-      return dto;
-    }).collect(Collectors.toList()));
+    return ResponseEntity.ok(sessions.stream().map(converter::createSession).collect(Collectors.toList()));
   }
 
   @PostMapping("/")
-  public ResponseEntity<Void> createSession(@RequestBody SessionDto newSess) {
+  public ResponseEntity<String> createSession(@RequestBody SessionDto newSess) {
     // TODO: security lol
 
     // Get the track
     Optional<Track> t = trackRepository.findByCodeIgnoreCase(newSess.getTrackCode());
     if (t.isEmpty())
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No session found");
 
     // Create the session
-    Session s = new Session(t.get(), newSess.getSessionCode(), newSess.getSessionChair(), newSess.getPrimaryStart(),
+    Session s = new Session(newSess.getSessionName(), t.get(), newSess.getSessionCode(), newSess.getSessionChair(), newSess.getPrimaryStart(),
         newSess.getPrimaryEnd(), newSess.getSecondaryEnd(), newSess.getSecondaryEnd());
     sessionRepository.save(s);
-    return ResponseEntity.ok(null);
+    return ResponseEntity.ok("");
   }
 
   @GetMapping("/codes")
