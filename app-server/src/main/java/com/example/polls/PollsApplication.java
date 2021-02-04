@@ -4,6 +4,7 @@ import com.example.polls.exception.AppException;
 import com.example.polls.model.*;
 import com.example.polls.repository.*;
 import com.example.polls.service.ImportService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -25,6 +26,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.TimeZone;
 
+@Slf4j
 @SpringBootApplication
 @EntityScan(basePackageClasses = {
         PollsApplication.class,
@@ -85,6 +87,7 @@ public class PollsApplication {
 
                 // if the track codes have not been loaded, do it now
                 if (trackRepository.count() == 0) {
+                    log.info("Importing tracks");
                     XSSFWorkbook workbook = new XSSFWorkbook(trackCodesResource.getInputStream());
                     XSSFSheet worksheet = workbook.getSheetAt(0);
                     for (int i = 0; i < worksheet.getPhysicalNumberOfRows(); i++) {
@@ -94,6 +97,9 @@ public class PollsApplication {
                         track.setName(row.getCell(1).toString());
                         trackRepository.save(track);
                     }
+                    log.info("Done importing tracks");
+                } else {
+                    log.info("Skipped importing tracks");
                 }
 
                 // TODO: Needed for 2021?
@@ -139,14 +145,18 @@ public class PollsApplication {
                     while (triesLeft > 0) {
                         triesLeft--;
                         try {
+                            log.info("Importing users/presentations");
                             importService.importUsers();
+                            log.info("Done importing users/presentations");
                         } catch (Exception e) {
                             e.printStackTrace();
                             if (triesLeft > 0) {
-                                System.out.println("Failed to import users/presentations, retrying");
+                                log.info("Failed to import users/presentations, retrying");
                             }
                         }
                     }
+                } else {
+                    log.info("Skipped importing users/presentations");
                 }
             }
         };
