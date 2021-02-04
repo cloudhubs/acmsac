@@ -9,6 +9,7 @@ import CheckList from "../pages/public/CheckList";
 import Search from "../pages/public/Search";
 import CheckDetail from "../pages/public/CheckDetail";
 import BetaRouter from "./BetaRouter";
+import GATracker from '../shared/GATracker';
 
 const PublicRouter = () => {
 
@@ -51,6 +52,7 @@ const PublicRouter = () => {
                     </Switch>
                 </div>
                 <PublicFooter />
+                <Route render={GATracker} />
             </Router>
         </div>
             
