@@ -51,7 +51,6 @@ const actions = (paper: AcademicArticle) => {
 
 const PresentationEntry = (props: PresentationEntryProps) => {
   let paper = props.paper;
-  console.log(JSON.stringify(paper));
   return (
     <Accordion>
       <AccordionSummary>

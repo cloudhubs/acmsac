@@ -1,5 +1,6 @@
 package com.example.polls.model;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
@@ -17,11 +18,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "sessions", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {
-                "sessionCode"
-        })
-})
+@Table(name = "sessions", uniqueConstraints = { @UniqueConstraint(columnNames = { "sessionCode" }) })
 @Data
 @NoArgsConstructor
 public class Session {
@@ -37,30 +34,30 @@ public class Session {
   private Track track;
 
   private String sessionCode;
-  
+
   @Lob
   private String sessionChair;
-  
-  private LocalDateTime primaryStart;
-  
-  private LocalDateTime primaryEnd;
-  
-  /** Extra date storage, if we have 2 sessions */
-  private LocalDateTime secondaryStart;
+
+  private Instant primaryStart;
+
+  private Instant primaryEnd;
 
   /** Extra date storage, if we have 2 sessions */
-  private LocalDateTime secondaryEnd;
+  private Instant secondaryStart;
 
-	public Session(String sessionName, Track track, String sessionCode, String sessionChair, LocalDateTime primaryStart, LocalDateTime primaryEnd,
-	    LocalDateTime secondaryStart, LocalDateTime secondaryEnd) {
-		super();
-		this.sessionName = sessionName;
-		this.track = track;
-		this.sessionCode = sessionCode;
-		this.sessionChair = sessionChair;
-		this.primaryStart = primaryStart;
-		this.primaryEnd = primaryEnd;
-		this.secondaryStart = secondaryStart;
-		this.secondaryEnd = secondaryEnd;
-	}
+  /** Extra date storage, if we have 2 sessions */
+  private Instant secondaryEnd;
+
+  public Session(String sessionName, Track track, String sessionCode, String sessionChair, Instant primaryStart,
+      Instant primaryEnd, Instant secondaryStart, Instant secondaryEnd) {
+    super();
+    this.sessionName = sessionName;
+    this.track = track;
+    this.sessionCode = sessionCode;
+    this.sessionChair = sessionChair;
+    this.primaryStart = primaryStart;
+    this.primaryEnd = primaryEnd;
+    this.secondaryStart = secondaryStart;
+    this.secondaryEnd = secondaryEnd;
+  }
 }

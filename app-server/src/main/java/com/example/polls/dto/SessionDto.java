@@ -1,6 +1,6 @@
 package com.example.polls.dto;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import lombok.Data;
 
@@ -14,13 +14,13 @@ public class SessionDto {
   
   String sessionChair;
   
-  LocalDateTime primaryStart;
+  Instant primaryStart;
   
-  LocalDateTime primaryEnd;
+  Instant primaryEnd;
   
   /** Extra date storage, if we have 2 sessions */
-  LocalDateTime secondaryStart;
+  Instant secondaryStart;
 
   /** Extra date storage, if we have 2 sessions */
-  LocalDateTime secondaryEnd;
+  Instant secondaryEnd;
 }

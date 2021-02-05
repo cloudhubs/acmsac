@@ -14,7 +14,6 @@ import PresentationEntry from "./PresentationEntry";
 import { dateTimePair } from "./SessionViewUtils";
 
 function combineDays(paper: AcademicArticle, paperSet: AcademicArticle[][]) {
-  console.log(typeof paper.primaryStart)
   let day = paper.primaryStart.getUTCDay();
   if (!paperSet[day]) paperSet[day] = [];
   paperSet[day].push(paper);
