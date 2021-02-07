@@ -11,7 +11,13 @@ import { Session } from "../../model/Session";
 import { useGlobalState } from "../../state";
 import PresentationList from "./PresentationList";
 import SessionHeader from "./DayScheduleHeader";
-import { setSelectedDay, setSelectedSession } from "./SessionViewUtils";
+import {
+  getDayTime,
+  sameDay,
+  setSelectedDay,
+  setSelectedSession,
+} from "./SessionViewUtils";
+import FetchAcademicPapersBySession from "../../http/FetchAcademicPapersBySession";
 
 type SessionSlot = {
   session: Session;
@@ -52,48 +58,57 @@ function SlotListComponent(props: { slots: SessionSlot[] }) {
 
 function DaySchedulePane(props: { date: Date }) {
   const [selected] = useGlobalState("selectedSession");
+  const [token] = useGlobalState("serverToken");
   const [selectedDay] = useGlobalState("selectedDay");
   const [sessions] = useGlobalState("sessions");
   const [papers] = useGlobalState("academicPapers");
   let [slots, setSlots] = useState([] as SessionSlot[]);
 
-  // Find sessions
-  useEffect(() => {
+  // Update the 'slots'--session + papers
+  const updateSlots = async () => {
+    // If the papers are already in-memory, don't re-fetch
+    if (papers.length === 0 || papers[0].sessionCode !== selected.sessionCode)
+      await FetchAcademicPapersBySession.getAcademicPapersBySession(
+        token,
+        selected.sessionCode
+      );
+
+    // Set up the slots
     setSlots(
       sessions
-        .filter(
-          (session) => session.primaryStart.getDate() == props.date.getDate()
-        )
+        .filter((session) => sameDay(session.primaryStart, props.date))
         .sort(sortSessionsByTime)
         .map((s) => ({
           session: s,
           papers: papers.filter((p) => s.sessionCode == p.sessionCode),
         }))
     );
-  }, [sessions]);
+  };
 
-  // If the selection changes,
+  // If the selected day changes, set slots
+  const updateSelectedSession = () => {
+    if (selectedDay !== null && sameDay(selectedDay, props.date))
+      if (
+        !slots.find(
+          (slot) => slot.session.sessionCode === selected.sessionCode
+        ) &&
+        slots.length > 0
+      ) {
+        setSelectedSession(slots[0].session);
+      }
+  };
+
+  // Set effects
   useEffect(() => {
-    if (
-      selectedDay !== null &&
-      selectedDay.getTime() === props.date.getTime() &&
-      !slots.find(
-        (slot) => slot.session.sessionCode === selected.sessionCode
-      ) &&
-      slots.length > 0
-    ) {
-      console.log(`No ${selected.sessionCode}, ${JSON.stringify(slots)}`);
-      setSelectedSession(slots[0].session);
-    }
-  }, [selectedDay]);
+    updateSlots();
+  }, [selected]);
+  useEffect(updateSelectedSession, [selectedDay]);
 
-  // Otherwise, return the list
+  // Create UI
   return (
     <>
       <Accordion
-        expanded={
-          selectedDay !== null && selectedDay.getTime() === props.date.getTime()
-        }
+        expanded={selectedDay !== null && sameDay(selectedDay, props.date)}
         onChange={(_, expanded) => setSelectedDay(expanded ? props.date : null)}
         TransitionProps={{ unmountOnExit: true }}
       >

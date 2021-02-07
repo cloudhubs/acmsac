@@ -4,6 +4,8 @@ import FetchSession from "../../http/FetchSession";
 import { useGlobalState } from "../../state";
 import DaySchedulePane from "./DaySchedulePane";
 import { Session } from "../../model/Session";
+import { getDayTime } from "./SessionViewUtils";
+import FetchAcademicPapers from "../../http/FetchAcademicPapers";
 
 const SchedulePane: () => JSX.Element = () => {
   const [sessions] = useGlobalState("sessions");
@@ -11,7 +13,6 @@ const SchedulePane: () => JSX.Element = () => {
 
   // Method to retrieve all session names
   const getSessions = async () => {
-    // If the tracks are already loaded, don't load again; that would be a lot of work.
     await FetchSession.getSessions(token);
   };
 
@@ -42,8 +43,7 @@ function createDaySchedules(sessions: Session[]) {
   let days: Map<number, Date> = new Map<number, Date>();
   for (let session of sessions) {
     // Take the milliseconds of midnight the provided day to use as a key
-    let date = session.primaryStart.getTime();
-    date -= date % 86400000;
+    let date = getDayTime(session.primaryStart);
     if (!days.has(date)) days.set(date, session.primaryStart);
   }
 

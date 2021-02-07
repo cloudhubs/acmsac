@@ -8,6 +8,12 @@ export const NOP = () => {};
 
 export const stopEvent = (event) => event.stopPropagation();
 
+export const sameDay = (date1: Date, date2: Date): boolean => {
+  return getDayTime(date1) === getDayTime(date2);
+}
+
+export const getDayTime = (date: Date) => date.getTime() - date.getTime() % 86400000;
+
 export const setSelectedDay = (selectedDay: Date | null) => {
   dispatch({
     selectedDay: selectedDay,

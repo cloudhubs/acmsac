@@ -8,7 +8,7 @@ export class Session {
     primaryStart: Date;
     primaryEnd: Date;
 
-    secondaryMeetingLink: string;
-    secondaryStart: Date;
-    secondaryEnd: Date;
+    secondaryMeetingLink: string | null;
+    secondaryStart: Date | null;
+    secondaryEnd: Date | null;
 }

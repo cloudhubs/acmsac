@@ -1,18 +1,14 @@
 import {
-  Card,
-  CardContent,
   Grid,
   ExpansionPanel as Accordion,
   ExpansionPanelSummary as AccordionSummary,
   ExpansionPanelDetails as AccordionDetails,
   Typography,
-  Button,
   Link,
 } from "@material-ui/core";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AcademicArticle } from "../../model/AcademicArticle";
 import { Session } from "../../model/Session";
-import { useGlobalState } from "../../state";
 import PresentationEntry from "./PresentationEntry";
 import { dateTimePair, stopEvent } from "./SessionViewUtils";
 
@@ -30,9 +26,17 @@ const meetingLink = (url: string) => (
 function PresentationList(props: PresentationListProps) {
   const session = props.session;
   const papers = props.papers;
+  let [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    console.log(JSON.stringify(papers));
+  });
 
   return (
-    <Accordion>
+    <Accordion expanded={open} onChange={(_, open) => {
+      if (papers.length !== 0)
+        setOpen(open);
+    }}>
       <AccordionSummary>
         <Grid container direction="row">
           <Grid container item xs direction="column">
@@ -42,12 +46,16 @@ function PresentationList(props: PresentationListProps) {
                 {meetingLink(session.primaryMeetingLink)})
               </Typography>
             </Grid>
-            <Grid item xs>
-              <Typography variant="h6">
-                {dateTimePair(session.secondaryStart, session.secondaryEnd)} (
-                {meetingLink(session.secondaryMeetingLink)})
-              </Typography>
-            </Grid>
+            {session.secondaryStart &&
+              session.secondaryEnd &&
+              session.secondaryMeetingLink && (
+                <Grid item xs>
+                  <Typography variant="h6">
+                    {dateTimePair(session.secondaryStart, session.secondaryEnd)}{" "}
+                    ({meetingLink(session.secondaryMeetingLink)})
+                  </Typography>
+                </Grid>
+              )}
           </Grid>
           <Grid item xs>
             <Typography variant="h6">{session.sessionName}</Typography>
@@ -59,11 +67,6 @@ function PresentationList(props: PresentationListProps) {
       </AccordionSummary>
       <AccordionDetails>
         <Grid container direction="column">
-          {papers.length === 0 && (
-            <Grid item xs>
-              <Typography variant="body1">NO PRESENTATIONS FOUND</Typography>
-            </Grid>
-          )}
           {papers.map((paper) => (
             <Grid item xs key={paper.title}>
               <PresentationEntry paper={paper} />

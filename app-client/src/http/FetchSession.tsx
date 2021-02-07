@@ -7,8 +7,8 @@ const setSessions = (sessions: Session[]) => {
     ...s,
     primaryStart: new Date(s.primaryStart),
     primaryEnd: new Date(s.primaryEnd),
-    secondaryStart: new Date(s.secondaryStart),
-    secondaryEnd: new Date(s.secondaryEnd),
+    secondaryStart: s.secondaryStart? new Date(s.secondaryStart) : null,
+    secondaryEnd: s.secondaryEnd? new Date(s.secondaryEnd) : null,
   }));
   dispatch({
     sessions: sessions_new,
