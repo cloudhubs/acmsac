@@ -38,25 +38,30 @@ public class Session {
   @Lob
   private String sessionChair;
 
+  private String primaryMeetingLink;
+
   private Instant primaryStart;
 
   private Instant primaryEnd;
 
-  /** Extra date storage, if we have 2 sessions */
+  private String secondaryMeetingLink;
+
   private Instant secondaryStart;
 
-  /** Extra date storage, if we have 2 sessions */
   private Instant secondaryEnd;
 
-  public Session(String sessionName, Track track, String sessionCode, String sessionChair, Instant primaryStart,
-      Instant primaryEnd, Instant secondaryStart, Instant secondaryEnd) {
+  public Session(String sessionName, Track track, String sessionCode, String sessionChair, String primaryMeetingURL,
+      Instant primaryStart, Instant primaryEnd, String secondaryMeetingURL, Instant secondaryStart,
+      Instant secondaryEnd) {
     super();
     this.sessionName = sessionName;
     this.track = track;
     this.sessionCode = sessionCode;
     this.sessionChair = sessionChair;
+    this.primaryMeetingLink = primaryMeetingURL;
     this.primaryStart = primaryStart;
     this.primaryEnd = primaryEnd;
+    this.secondaryMeetingLink = secondaryMeetingURL;
     this.secondaryStart = secondaryStart;
     this.secondaryEnd = secondaryEnd;
   }

@@ -14,13 +14,15 @@ public class SessionDto {
   
   String sessionChair;
   
+  String primaryMeetingLink;
+  
   Instant primaryStart;
   
   Instant primaryEnd;
-  
-  /** Extra date storage, if we have 2 sessions */
+
+  String secondaryMeetingLink;
+
   Instant secondaryStart;
 
-  /** Extra date storage, if we have 2 sessions */
   Instant secondaryEnd;
 }

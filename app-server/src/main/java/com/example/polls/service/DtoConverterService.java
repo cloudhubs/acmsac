@@ -79,15 +79,17 @@ public class DtoConverterService {
     return dto;
   }
 
-  public SessionDto createSession(Session s) {
+  public SessionDto getSessionDto(Session s) {
     SessionDto dto = new SessionDto();
     System.out.println(s.getPrimaryStart() + ", " + s.getPrimaryEnd());
     dto.setSessionName(s.getSessionName());
     dto.setTrackCode(s.getTrack().getCode());
     dto.setSessionChair(s.getSessionChair());
     dto.setSessionCode(s.getSessionCode());
+    dto.setPrimaryMeetingLink(s.getPrimaryMeetingLink());
     dto.setPrimaryStart(s.getPrimaryStart());
     dto.setPrimaryEnd(s.getPrimaryEnd());
+    dto.setSecondaryMeetingLink(s.getSecondaryMeetingLink());
     dto.setSecondaryStart(s.getSecondaryStart());
     dto.setSecondaryEnd(s.getSecondaryEnd());
     return dto;

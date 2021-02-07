@@ -35,7 +35,7 @@ public class SessionController {
   @GetMapping("/")
   public ResponseEntity<List<SessionDto>> getAllSessions() {
     List<Session> sessions = sessionRepository.findAll();
-    return ResponseEntity.ok(sessions.stream().map(converter::createSession).collect(Collectors.toList()));
+    return ResponseEntity.ok(sessions.stream().map(converter::getSessionDto).collect(Collectors.toList()));
   }
 
   @PostMapping("/")
@@ -48,8 +48,9 @@ public class SessionController {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No session found");
 
     // Create the session
-    Session s = new Session(newSess.getSessionName(), t.get(), newSess.getSessionCode(), newSess.getSessionChair(), newSess.getPrimaryStart(),
-        newSess.getPrimaryEnd(), newSess.getSecondaryEnd(), newSess.getSecondaryEnd());
+    Session s = new Session(newSess.getSessionName(), t.get(), newSess.getSessionCode(), newSess.getSessionChair(),
+        newSess.getPrimaryMeetingLink(), newSess.getPrimaryStart(), newSess.getPrimaryEnd(),
+        newSess.getSecondaryMeetingLink(), newSess.getSecondaryEnd(), newSess.getSecondaryEnd());
     sessionRepository.save(s);
     return ResponseEntity.ok("");
   }
