@@ -10,7 +10,7 @@ import { AcademicArticle } from "../../model/AcademicArticle";
 import { Session } from "../../model/Session";
 import { useGlobalState } from "../../state";
 import PresentationList from "./PresentationList";
-import SessionHeader from "./SessionHeader";
+import SessionHeader from "./DayScheduleHeader";
 
 type SessionSlot = {
   session: Session;

@@ -6,7 +6,7 @@ import DaySchedulePane from "./DaySchedulePane";
 import { Session } from "../../model/Session";
 import { JsxElement } from "typescript";
 
-const SessionPane: () => JSX.Element = () => {
+const SchedulePane: () => JSX.Element = () => {
   const [sessions] = useGlobalState("sessions");
   const [token] = useGlobalState("serverToken");
 
@@ -60,4 +60,4 @@ function createDaySchedules(sessions: Session[]) {
   return result;
 }
 
-export default SessionPane;
+export default SchedulePane;
