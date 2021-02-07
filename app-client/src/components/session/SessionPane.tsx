@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Paper, Typography } from "@material-ui/core";
 import FetchSession from "../../http/FetchSession";
 import { useGlobalState } from "../../state";
-import SessionHeader from "./SessionHeader";
-import PresentationList from "./PresentationList";
+import DaySchedulePane from "./DaySchedulePane";
+import { Session } from "../../model/Session";
+import { JsxElement } from "typescript";
 
 const SessionPane: () => JSX.Element = () => {
   const [sessions] = useGlobalState("sessions");
-  let [selectedSession] = useGlobalState("selectedSession");
   const [token] = useGlobalState("serverToken");
 
   // Method to retrieve all session names
@@ -33,10 +33,31 @@ const SessionPane: () => JSX.Element = () => {
         </Typography>
       </Paper>
 
-      <SessionHeader />
-      {selectedSession.sessionCode !== "" && <PresentationList />}
+      {createDaySchedules(sessions)}
     </Paper>
   );
 };
+
+function createDaySchedules(sessions: Session[]) {
+  // Filter to unique days
+  let days: Map<number, Date> = new Map<number, Date>();
+  for (let session of sessions) {
+    // Take the milliseconds of midnight the provided day to use as a key
+    let date = session.primaryStart.getTime();
+    date -= date % 86400000;
+    if (!days.has(date)) days.set(date, session.primaryStart);
+  }
+
+  // Create one pane per day
+  let result = [] as JSX.Element[];
+  let iter = days.values();
+  let entry = iter.next();
+  while (!entry.done) {
+    console.log(entry.value);
+    result.push(<DaySchedulePane date={entry.value} />);
+    entry = iter.next();
+  }
+  return result;
+}
 
 export default SessionPane;

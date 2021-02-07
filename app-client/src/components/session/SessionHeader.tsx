@@ -13,13 +13,12 @@ const setSelectedSession = (selectedSession: Session) => {
   });
 };
 
-function SessionHeader() {
-  let [sessions] = useGlobalState("sessions");
+function SessionHeader(props: { sessions: Session[] }) {
   let [selectedSession] = useGlobalState("selectedSession");
 
   return (
     <>
-      {sessions.map((session) => {
+      {props.sessions.map((session) => {
         let isSelected: boolean =
           session.sessionCode === selectedSession.sessionCode;
         return (

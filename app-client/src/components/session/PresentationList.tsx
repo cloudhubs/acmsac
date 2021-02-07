@@ -2,16 +2,22 @@ import {
   Card,
   CardContent,
   Grid,
-  GridList,
-  GridListTile,
+  ExpansionPanel as Accordion,
+  ExpansionPanelSummary as AccordionSummary,
+  ExpansionPanelDetails as AccordionDetails,
   Typography,
 } from "@material-ui/core";
-import React, { useEffect } from "react";
-import FetchAcademicPapersBySession from "../../http/FetchAcademicPapersBySession";
+import React from "react";
 import { AcademicArticle } from "../../model/AcademicArticle";
+import { Session } from "../../model/Session";
 import { useGlobalState } from "../../state";
 import PresentationEntry from "./PresentationEntry";
 import { dateTimePair } from "./SessionViewUtils";
+
+type PresentationListProps = {
+  session: Session;
+  papers: AcademicArticle[];
+};
 
 function combineDays(paper: AcademicArticle, paperSet: AcademicArticle[][]) {
   let day = paper.primaryStart.getUTCDay();
@@ -20,64 +26,56 @@ function combineDays(paper: AcademicArticle, paperSet: AcademicArticle[][]) {
 }
 
 function sortArticlesByDate(a: AcademicArticle, b: AcademicArticle): number {
-  let aStr = a.primaryStart.toISOString(), bStr = b.primaryStart.toISOString();
+  let aStr = a.primaryStart.toISOString(),
+    bStr = b.primaryStart.toISOString();
   return aStr < bStr ? -1 : aStr == bStr ? 0 : 1;
 }
 
-function PresentationList() {
-  let [papers] = useGlobalState("academicPapers");
-  let [session] = useGlobalState("selectedSession");
-  const [token] = useGlobalState("serverToken");
-  const formatter = new Intl.DateTimeFormat();
-
-  useEffect(() => {
-    if (session.sessionCode !== "") {
-      FetchAcademicPapersBySession.getAcademicPapersBySession(
-        token,
-        session.sessionCode
-      );
-    }
-  }, [session]);
+function PresentationList(props: PresentationListProps) {
+  let [selected] = useGlobalState("selectedSession");
+  const session = props.session;
+  const papers = props.papers;
 
   // If no presentations found, report to user clearly
   if (papers.length === 0)
-    return <Typography variant="body1">NONE FOUND</Typography>;
+    return (
+      <Accordion disabled expanded={false}>
+        <AccordionSummary>
+          <Typography variant="body1">No papers in this session</Typography>
+        </AccordionSummary>
+      </Accordion>
+    );
 
   // Otherwise, return the list
-  let paperSet: AcademicArticle[][] = [];
-  papers.map((p) => combineDays(p, paperSet));
   return (
-    <>
-      <Card>
-        <CardContent>
-          <Grid container direction="row">
-            <Grid item xs>
-              <Typography variant="h6">
-                {dateTimePair(session.primaryStart, session.primaryEnd)}
-                <br />&{" "}
-                {dateTimePair(session.secondaryStart, session.secondaryEnd)}
-              </Typography>
-            </Grid>
-            <Grid item xs>
-              <Typography variant="h6">{session.sessionName}</Typography>
-            </Grid>
-            <Grid item xs>
-              <br />
-            </Grid>
+    <Accordion>
+      <AccordionSummary>
+        <Grid container direction="row">
+          <Grid item xs>
+            <Typography variant="h6">
+              {dateTimePair(session.primaryStart, session.primaryEnd)}
+              <br />&{" "}
+              {dateTimePair(session.secondaryStart, session.secondaryEnd)}
+            </Typography>
           </Grid>
-          {paperSet.map((daysPapers, i) => (
-            <Card>
-              <CardContent>
-                {formatter.format(daysPapers[0].primaryStart.getDay())}
-                {daysPapers.sort(sortArticlesByDate).map((paper) => (
-                  <PresentationEntry paper={paper} />
-                ))}
-              </CardContent>
-            </Card>
+          <Grid item xs>
+            <Typography variant="h6">{session.sessionName}</Typography>
+          </Grid>
+          <Grid item xs>
+            <br />
+          </Grid>
+        </Grid>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Grid container direction="column">
+          {papers.map((paper) => (
+            <Grid item xs key={paper.title}>
+              <PresentationEntry paper={paper} />
+            </Grid>
           ))}
-        </CardContent>
-      </Card>
-    </>
+        </Grid>
+      </AccordionDetails>
+    </Accordion>
   );
 }
 
