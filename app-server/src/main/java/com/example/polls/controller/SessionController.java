@@ -43,13 +43,14 @@ public class SessionController {
     // TODO: security lol
 
     // Get the track
-    Optional<Track> t = trackRepository.findByCodeIgnoreCase(newSess.getTrackCode());
-    if (t.isEmpty())
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No session found");
+    String code = newSess.getTrackCode();
+    Optional<Track> t = code != null ? trackRepository.findByCodeIgnoreCase(code) : null;
+    if (t != null && t.isEmpty())
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No track found");
 
     // Create the session
-    Session s = new Session(newSess.getSessionName(), t.get(), newSess.getSessionCode(), newSess.getSessionChair(),
-        newSess.getPrimaryMeetingLink(), newSess.getPrimaryStart(), newSess.getPrimaryEnd(),
+    Session s = new Session(newSess.getSessionName(), t != null ? t.get() : null, newSess.getSessionCode(),
+        newSess.getSessionChair(), newSess.getPrimaryMeetingLink(), newSess.getPrimaryStart(), newSess.getPrimaryEnd(),
         newSess.getSecondaryMeetingLink(), newSess.getSecondaryEnd(), newSess.getSecondaryEnd());
     sessionRepository.save(s);
     return ResponseEntity.ok("");

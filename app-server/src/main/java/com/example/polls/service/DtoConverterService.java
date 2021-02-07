@@ -6,6 +6,7 @@ import com.example.polls.dto.UserDto;
 import com.example.polls.model.AcmInfo;
 import com.example.polls.model.Presentation;
 import com.example.polls.model.Session;
+import com.example.polls.model.Track;
 import com.example.polls.model.User;
 import com.example.polls.repository.AcmInfoRepository;
 import com.example.polls.security.CustomUserDetailsService;
@@ -81,9 +82,10 @@ public class DtoConverterService {
 
   public SessionDto getSessionDto(Session s) {
     SessionDto dto = new SessionDto();
-    System.out.println(s.getPrimaryStart() + ", " + s.getPrimaryEnd());
+    Track track = s.getTrack();
+    if (track != null)
+      dto.setTrackCode(track.getCode());
     dto.setSessionName(s.getSessionName());
-    dto.setTrackCode(s.getTrack().getCode());
     dto.setSessionChair(s.getSessionChair());
     dto.setSessionCode(s.getSessionCode());
     dto.setPrimaryMeetingLink(s.getPrimaryMeetingLink());

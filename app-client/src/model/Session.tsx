@@ -1,6 +1,6 @@
 export class Session {
     sessionName: string;
-    trackCode: string;
+    trackCode: string | null;
     sessionCode: string;
     sessionChair: string;
 
