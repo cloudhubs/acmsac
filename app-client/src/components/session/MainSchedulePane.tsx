@@ -4,7 +4,6 @@ import FetchSession from "../../http/FetchSession";
 import { useGlobalState } from "../../state";
 import DaySchedulePane from "./DaySchedulePane";
 import { Session } from "../../model/Session";
-import { JsxElement } from "typescript";
 
 const SchedulePane: () => JSX.Element = () => {
   const [sessions] = useGlobalState("sessions");
@@ -53,7 +52,6 @@ function createDaySchedules(sessions: Session[]) {
   let iter = days.values();
   let entry = iter.next();
   while (!entry.done) {
-    console.log(entry.value);
     result.push(<DaySchedulePane date={entry.value} />);
     entry = iter.next();
   }

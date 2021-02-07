@@ -14,7 +14,7 @@ import DescriptionIcon from "@material-ui/icons/Description";
 import VideocamIcon from "@material-ui/icons/Videocam";
 
 import { AcademicArticle } from "../../model/AcademicArticle";
-import { dateTimePair } from "./SessionViewUtils";
+import { dateTimePair, stopEvent } from "./SessionViewUtils";
 import { Person } from "../../model/Person";
 
 type PresentationEntryProps = {
@@ -25,8 +25,6 @@ const personToString = (person: Person, i: number) => {
   let prefix = i == 0 ? "" : ", ";
   return `${prefix}${person.name} (${person.affiliation}, ${person.country})`;
 };
-
-const stopEvent = (event) => event.stopPropagation();
 
 const actions = (paper: AcademicArticle) => {
   return (

@@ -11,6 +11,7 @@ import { Session } from "../../model/Session";
 import { useGlobalState } from "../../state";
 import PresentationList from "./PresentationList";
 import SessionHeader from "./DayScheduleHeader";
+import { setSelectedDay, setSelectedSession } from "./SessionViewUtils";
 
 type SessionSlot = {
   session: Session;
@@ -19,19 +20,17 @@ type SessionSlot = {
 
 const formatter = new Intl.DateTimeFormat();
 
-function sortSessionsByTime(a: SessionSlot, b: SessionSlot) {
-  let aTime = a.session.primaryStart.getTime(),
-    bTime = b.session.primaryStart.getTime();
+function sortSessionsByTime(a: Session, b: Session) {
+  let aTime = a.primaryStart.getTime(),
+    bTime = b.primaryStart.getTime();
   return bTime - aTime;
 }
 
 function SlotListComponent(props: { slots: SessionSlot[] }) {
-  let sessions = props.slots
-    .map((slot) => slot.session)
-    .reduce((acc, session) => {
-      acc.push(session);
-      return acc;
-    }, [] as Session[]);
+  const [selected] = useGlobalState("selectedSession");
+  const slots = props.slots;
+  let sessions = props.slots.map((slot) => slot.session);
+
   return (
     <>
       <Grid container direction="column">
@@ -39,17 +38,21 @@ function SlotListComponent(props: { slots: SessionSlot[] }) {
         <Grid item xs key="SLOT_LIST_COMPONENT_HEADER_KEY">
           <SessionHeader sessions={sessions} />
         </Grid>
-        {props.slots.sort(sortSessionsByTime).map((slot) => (
-          <Grid item xs key={slot.session.sessionName}>
-            <PresentationList session={slot.session} papers={slot.papers} />
-          </Grid>
-        ))}
+        {slots
+          .filter((slot) => slot.session.sessionCode === selected.sessionCode)
+          .map((slot) => (
+            <Grid item xs key={slot.session.sessionName}>
+              <PresentationList session={slot.session} papers={slot.papers} />
+            </Grid>
+          ))}
       </Grid>
     </>
   );
 }
 
 function DaySchedulePane(props: { date: Date }) {
+  const [selected] = useGlobalState("selectedSession");
+  const [selectedDay] = useGlobalState("selectedDay");
   const [sessions] = useGlobalState("sessions");
   const [papers] = useGlobalState("academicPapers");
   let [slots, setSlots] = useState([] as SessionSlot[]);
@@ -58,7 +61,10 @@ function DaySchedulePane(props: { date: Date }) {
   useEffect(() => {
     setSlots(
       sessions
-        .filter((s) => s.primaryStart.getDate() == props.date.getDate())
+        .filter(
+          (session) => session.primaryStart.getDate() == props.date.getDate()
+        )
+        .sort(sortSessionsByTime)
         .map((s) => ({
           session: s,
           papers: papers.filter((p) => s.sessionCode == p.sessionCode),
@@ -66,10 +72,31 @@ function DaySchedulePane(props: { date: Date }) {
     );
   }, [sessions]);
 
+  // If the selection changes,
+  useEffect(() => {
+    if (
+      selectedDay !== null &&
+      selectedDay.getTime() === props.date.getTime() &&
+      !slots.find(
+        (slot) => slot.session.sessionCode === selected.sessionCode
+      ) &&
+      slots.length > 0
+    ) {
+      console.log(`No ${selected.sessionCode}, ${JSON.stringify(slots)}`);
+      setSelectedSession(slots[0].session);
+    }
+  }, [selectedDay]);
+
   // Otherwise, return the list
   return (
     <>
-      <Accordion>
+      <Accordion
+        expanded={
+          selectedDay !== null && selectedDay.getTime() === props.date.getTime()
+        }
+        onChange={(_, expanded) => setSelectedDay(expanded ? props.date : null)}
+        TransitionProps={{ unmountOnExit: true }}
+      >
         <AccordionSummary>
           <Typography variant="h6">{formatter.format(props.date)}</Typography>
         </AccordionSummary>

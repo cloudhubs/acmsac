@@ -4,8 +4,11 @@ export class Session {
     sessionCode: string;
     sessionChair: string;
 
+    primaryMeetingLink: string;
     primaryStart: Date;
     primaryEnd: Date;
+
+    secondaryMeetingLink: string;
     secondaryStart: Date;
     secondaryEnd: Date;
 }

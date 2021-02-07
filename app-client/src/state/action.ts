@@ -5,7 +5,6 @@ import {ServerMessage} from "../model/ServerMessage";
 import {ServerError} from "../model/ServerError";
 import {CurrentUser} from "../model/CurrentUser";
 import { Session } from '../model/Session';
-import { Presentation } from '../model/Presentation';
 
 export type Action =
 | { type: "setCurrentUser", currentUser: CurrentUser }
@@ -21,4 +20,4 @@ export type Action =
 | { type: "setServerToken"; serverToken: ServerToken }
 | { type: "setAllSessions"; sessions: Session[] }
 | { type: "setSelectedSession"; session: Session }
-| { type: "setPresentations"; presentations: Presentation[] };
+| { type: "setSelectedDay"; selectedDay: Date | null };

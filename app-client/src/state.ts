@@ -59,7 +59,7 @@ const defaultState: State = {
   tracks: [],
   sessions: [],
   selectedSession: new Session(),
-  presentations: [],
+  selectedDay: null,
   selectedPaper: new AcademicArticle(),
   academicPapers: [],
   serverError: new ServerError(),
@@ -145,10 +145,10 @@ export const reducer = (state = initialState, action: Action) => {
         ...state,
         selectedSession: action.session
       }
-    case "setPresentations":
+    case "setSelectedDay":
       return {
         ...state,
-        presentations: action.presentations
+        selectedDay: action.selectedDay
       }
     case "setReminderMessage":
       return {
