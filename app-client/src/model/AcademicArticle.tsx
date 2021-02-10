@@ -25,5 +25,9 @@ export class AcademicArticle {
     presenter: Person;
     authors: Person[] = [];
     comments: Comment[] = [];
+    primaryStart: Date;
+    primaryEnd: Date;
+    secondaryStart: Date;
+    secondaryEnd: Date;
 }
 

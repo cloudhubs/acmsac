@@ -9,6 +9,7 @@ import CheckList from "../pages/public/CheckList";
 import Search from "../pages/public/Search";
 import CheckDetail from "../pages/public/CheckDetail";
 import BetaRouter from "./BetaRouter";
+import SessionsView from '../pages/beta/private/SessionsView';
 import GATracker from '../shared/GATracker';
 
 const PublicRouter = () => {
@@ -46,6 +47,7 @@ const PublicRouter = () => {
                         <Route exact path="/reminder" component={EarlyRegister} />
                         <Route exact path="/api/check/:email" component={CheckList} />
                         <Route exact path="/api/check/:email/:paperId" component={CheckDetail} />
+                        <Route exact path="/sessions" component={SessionsView} />
                         <Route path="*">
                             <Redirect path="/"/>
                         </Route>

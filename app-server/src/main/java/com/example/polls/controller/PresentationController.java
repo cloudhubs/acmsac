@@ -49,6 +49,12 @@ public class PresentationController {
     //return presentationRepository.findAllByTrackCodeIgnoreCase(trackCode).stream().map(p -> new PresentationDto(p)).collect(Collectors.toList());
   }
 
+  @GetMapping("/session/{sessionCode}")
+  public List<PresentationDto> getAllBySession(@PathVariable String sessionCode) {
+    return presentationRepository.findAllBySessionCodeIgnoreCase(sessionCode).parallelStream().map(dtoConverterService::getPresentationDto).collect(Collectors.toList());
+//    return dtoConverterService.getPresentationDtoList();
+  }
+
   @GetMapping("/user/{userid}")
   public List<PresentationDto> getAllByPresenter(@PathVariable("userid") Long userId) {
     Optional<User> user = userRepository.findById(userId);
