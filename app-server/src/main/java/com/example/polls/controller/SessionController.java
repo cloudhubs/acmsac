@@ -51,7 +51,7 @@ public class SessionController {
     // Create the session
     Session s = new Session(newSess.getSessionName(), t != null ? t.get() : null, newSess.getSessionCode(),
         newSess.getSessionChair(), newSess.getPrimaryMeetingLink(), newSess.getPrimaryStart(), newSess.getPrimaryEnd(),
-        newSess.getSecondaryMeetingLink(), newSess.getSecondaryEnd(), newSess.getSecondaryEnd());
+        newSess.getSecondaryMeetingLink(), newSess.getSecondaryStart(), newSess.getSecondaryEnd());
     sessionRepository.save(s);
     return ResponseEntity.ok("");
   }

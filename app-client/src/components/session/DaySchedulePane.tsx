@@ -35,8 +35,20 @@ function sortSessionsByTime(a: Session, b: Session) {
 function SlotListComponent(props: { slots: SessionSlot[] }) {
   const [selected] = useGlobalState("selectedSession");
   const slots = props.slots;
-  let sessions = props.slots.map((slot) => slot.session);
+  let sessions: Session[] = [];
 
+  // Get unique slots
+  for (let slot of props.slots) {
+    if (
+      !sessions.find(
+        (storedSession) =>
+          storedSession.sessionCode === slot.session.sessionCode
+      )
+    )
+      sessions.push(slot.session);
+  }
+
+  // Generate UI
   return (
     <>
       <Grid container direction="column">
@@ -45,6 +57,11 @@ function SlotListComponent(props: { slots: SessionSlot[] }) {
           <SessionHeader sessions={sessions} />
         </Grid>
         {slots
+          .sort(
+            (slotA, slotB) =>
+              slotA.session.primaryStart.getUTCMilliseconds() -
+              slotB.session.primaryStart.getUTCMilliseconds()
+          )
           .filter((slot) => slot.session.sessionCode === selected.sessionCode)
           .map((slot) => (
             <Grid item xs key={slot.session.sessionName}>
@@ -64,15 +81,19 @@ function DaySchedulePane(props: { date: Date }) {
   const [papers] = useGlobalState("academicPapers");
   let [slots, setSlots] = useState([] as SessionSlot[]);
 
-  // Update the 'slots'--session + papers
-  const updateSlots = async () => {
+  const updatePapers = async () => {
     // If the papers are already in-memory, don't re-fetch
-    if (papers.length === 0 || papers[0].sessionCode !== selected.sessionCode)
+    if (papers.length === 0 || papers[0].sessionCode !== selected.sessionCode) {
+      console.log(selected.sessionCode);
       await FetchAcademicPapersBySession.getAcademicPapersBySession(
         token,
         selected.sessionCode
       );
+    }
+  };
 
+  // Update the 'slots'--session + papers
+  const updateSlots = () => {
     // Set up the slots
     setSlots(
       sessions
@@ -87,6 +108,7 @@ function DaySchedulePane(props: { date: Date }) {
 
   // If the selected day changes, set slots
   const updateSelectedSession = () => {
+    console.log("updating selection");
     if (selectedDay !== null && sameDay(selectedDay, props.date))
       if (
         !slots.find(
@@ -94,14 +116,20 @@ function DaySchedulePane(props: { date: Date }) {
         ) &&
         slots.length > 0
       ) {
+        console.log(`set to ${slots[0].session}`);
         setSelectedSession(slots[0].session);
       }
   };
 
   // Set effects
   useEffect(() => {
-    updateSlots();
+    console.log("updating papers");
+    updatePapers();
   }, [selected]);
+  useEffect(() => {
+    console.log("updating slots");
+    updateSlots();
+  }, [papers])
   useEffect(updateSelectedSession, [selectedDay]);
 
   // Create UI

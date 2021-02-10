@@ -28,10 +28,6 @@ function PresentationList(props: PresentationListProps) {
   const papers = props.papers;
   let [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    console.log(JSON.stringify(papers));
-  });
-
   return (
     <Accordion expanded={open} onChange={(_, open) => {
       if (papers.length !== 0)

@@ -18,7 +18,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "sessions", uniqueConstraints = { @UniqueConstraint(columnNames = { "sessionCode" }) })
+@Table(name = "sessions")
 @Data
 @NoArgsConstructor
 public class Session {
