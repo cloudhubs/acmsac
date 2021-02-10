@@ -17,6 +17,7 @@ import Search from "../pages/public/Search";
 import EarlyRegister from "../pages/public/EarlyRegister";
 import PublicRouter from "./PublicRouter";
 import CurrentUser from '../components/currentUser/CurrentUser';
+import GATracker from '../shared/GATracker';
 
 const BetaRouter = () => {
 
@@ -97,6 +98,7 @@ const BetaRouter = () => {
                     </Switch>
                 </div>
                 <PublicFooter />
+                <Route render={GATracker} />
             </Router>
         </div>
             
