@@ -18,6 +18,7 @@ import EarlyRegister from "../pages/public/EarlyRegister";
 import PublicRouter from "./PublicRouter";
 import CurrentUser from '../components/currentUser/CurrentUser';
 import SessionsView from '../pages/beta/private/SessionsView';
+import GATracker from '../shared/GATracker';
 
 const BetaRouter = () => {
 
@@ -99,6 +100,7 @@ const BetaRouter = () => {
                     </Switch>
                 </div>
                 <PublicFooter />
+                <Route render={GATracker} />
             </Router>
         </div>
             

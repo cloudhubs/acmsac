@@ -3,19 +3,19 @@ import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-d
 import './App.css';
 import BetaRouter from './router/BetaRouter';
 import PublicRouter from './router/PublicRouter';
-import ReactGA from 'react-ga';
+// import ReactGA from 'react-ga';
 import { createBrowserHistory } from 'history';
 import { withRoot } from './withRoot';
 
 const App = () => {
-    const trackingId: string = "UA-162125692-1"
-    ReactGA.initialize(trackingId);
+    // const trackingId: string = "UA-162125692-1"
+    // ReactGA.initialize(trackingId);
     const history = createBrowserHistory();
     // Initialize google analytics page view tracking
-    history.listen(location => {
-        ReactGA.set({ page: location.pathname }); // Update the user's current page
-        ReactGA.pageview(location.pathname); // Record a page view for the given page
-    });
+    // history.listen(location => {
+    //     ReactGA.set({ page: location.pathname }); // Update the user's current page
+    //     ReactGA.pageview(location.pathname); // Record a page view for the given page
+    // });
     return (
         <Router history={history} basename={"/"}>
             <div>
