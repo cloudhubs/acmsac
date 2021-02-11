@@ -48,6 +48,7 @@ public class ImportService {
   private final String PRESENTATION_RESOURCE_NAME = "classpath:2021_papers.xlsx";
   private final String USER_RESOURCE_NAME = "classpath:2021_users.xlsx";
   private final String TRACK_CHAIR_RESOURCE_NAME = "classpath:2021_track_chairs.xlsx";
+  private final String SESSION_RESOURCE_NAME = "classpath:2021_sessions.xlsx";
 
   public void importUsers() {
     try {
@@ -56,7 +57,10 @@ public class ImportService {
       Role trackRole = roleRepository.findByName(RoleName.ROLE_CHAIR)
               .orElseThrow(() -> new AppException("Track Chair Role not set."));
 
-      // create track chair users
+      /**
+       * Create track chair users
+       */
+
       Resource trackResource = resourceLoader.getResource(TRACK_CHAIR_RESOURCE_NAME);
       XSSFWorkbook trackWorkbook = new XSSFWorkbook(trackResource.getInputStream());
       XSSFSheet trackSheet = trackWorkbook.getSheetAt(0);
@@ -66,7 +70,10 @@ public class ImportService {
         User user = createTrackChairFromImportRow(row, trackRoles); // create user objects
       }
 
-      // create author users
+      /**
+       * Create author users
+       */
+
       Resource userResource = resourceLoader.getResource(USER_RESOURCE_NAME);
       XSSFWorkbook userWorkbook = new XSSFWorkbook(userResource.getInputStream());
       XSSFSheet userSheet = userWorkbook.getSheetAt(0);
@@ -76,7 +83,10 @@ public class ImportService {
         User user = createUserFromImportRow(row, Collections.singleton(userRole)); // create user objects
       }
 
-      // create presentations
+      /**
+       * Create presentations
+       */
+
       Resource presentationResource = resourceLoader.getResource(PRESENTATION_RESOURCE_NAME);
       XSSFWorkbook presentationWorkbook = new XSSFWorkbook(presentationResource.getInputStream());
       XSSFSheet presentationSheet = presentationWorkbook.getSheetAt(0);
@@ -87,6 +97,19 @@ public class ImportService {
         if (!paperId.equals("")) {
           createPresentationFromImportRow(row);
         }
+      }
+
+      /**
+       * Create track chair users
+       */
+
+      Resource sessionResource = resourceLoader.getResource(SESSION_RESOURCE_NAME);
+      XSSFWorkbook sessionWorkbook = new XSSFWorkbook(sessionResource.getInputStream());
+      XSSFSheet sessionSheet = sessionWorkbook.getSheetAt(0);
+
+      for (int i = 1; i < sessionSheet.getPhysicalNumberOfRows(); i++) {
+        XSSFRow row = sessionSheet.getRow(i);
+        createSessionFromImportRow(row);
       }
 
       // TODO: do we need these users?
@@ -145,6 +168,8 @@ public class ImportService {
       throw new ImportException("Could not open one of the excel files!", e);
     }
   }
+
+
 
   /**
    * Creates new user for track chair and adds them to the list of chairs for the track
@@ -262,67 +287,26 @@ public class ImportService {
     }
   }
 
-  /**
-   * TODO: Do we still have chairs?
-   */
-//  /**
-//   * Creates a user from a row of the chair form excel file, or retrieves them if they exist
-//   * @param row
-//   * @return
-//   */
-//  private User createOrRetrieveChairFromImportRow(XSSFRow row) {
-//    String trackCode = row.getCell(3, Row.CREATE_NULL_AS_BLANK).toString().trim();
-//    String email = row.getCell(1, Row.CREATE_NULL_AS_BLANK).toString().trim();
-//    String[] nameAndAffiliation = row.getCell(6, Row.CREATE_NULL_AS_BLANK).toString().split(",", 2);
-//    String fullName = nameAndAffiliation.length > 0 ? nameAndAffiliation[0] : "";
-//    String username = email;
-//    String password = trackCode.toLowerCase();
-//    String affiliation = nameAndAffiliation.length > 1 ? nameAndAffiliation[1] : "";
-//    String orcid = row.getCell(12, Row.CREATE_NULL_AS_BLANK).toString();
-//    String linkedIn = row.getCell(13, Row.CREATE_NULL_AS_BLANK).toString();
-//    String googleScholar = row.getCell(14, Row.CREATE_NULL_AS_BLANK).toString();
-//    String bio = row.getCell(15, Row.CREATE_NULL_AS_BLANK).toString();
-//    String picUrl = row.getCell(16, Row.CREATE_NULL_AS_BLANK).toString();
-//
-//    User user = null;
-//
-//    // if this chair has already had an account made for them, just retrieve it
-//    if (userRepository.existsByEmail(email)) {
-//      return userRepository.findByEmail(email).get();
-//    } else {
-//      return createUser(fullName, username, email, password, affiliation, "", orcid, linkedIn,
-//              googleScholar, bio, picUrl);
-//    }
-//  }
-//
-//  /**
-//   * Updates a track with the given chair and info from  a row of the chair form excel file
-//   * @param row
-//   * @param chair
-//   */
-//  private void updateTrackFromImportRow(XSSFRow row, User chair) {
-//    String trackCode = row.getCell(3, Row.CREATE_NULL_AS_BLANK).toString().trim();
-//    boolean isMainChair = !row.getCell(4).toString().contains("Co-chair");
-//
-//    if (isMainChair) {
-//      Track track = trackRepository.findByCodeIgnoreCase(trackCode).get();
-//      track.setTrackUrl(row.getCell(5, Row.CREATE_NULL_AS_BLANK).toString());
-//      track.setVideoEmbed(row.getCell(10, Row.CREATE_NULL_AS_BLANK).toString());
-//      track.setMessage(row.getCell(11, Row.CREATE_NULL_AS_BLANK).toString());
-//      track.setAcknowledgement(row.getCell(9, Row.CREATE_NULL_AS_BLANK).toString());
-//      track.setAffiliations(row.getCell(8, Row.CREATE_NULL_AS_BLANK).toString());
-//
-//      if (!track.getChairs().contains(chair)) {
-//        track.getChairs().add(chair);
-//      }
-//
-//      try {
-//        trackRepository.save(track);
-//      } catch (Exception e) {
-//        throw new ImportException("Could not update track!", e);
-//      }
-//    }
-//  }
+  private void createSessionFromImportRow(XSSFRow row) {
+    String sessionId = row.getCell(0, Row.CREATE_NULL_AS_BLANK).toString();
+    // TODO: make the session
+
+    // loop through papers
+    boolean morePapers = true;
+    int orderNum = 1;
+    do {
+      int paperId = (int) row.getCell(1, Row.CREATE_NULL_AS_BLANK).getNumericCellValue();
+      if (paperId != 0) { // TODO: DOES THIS WORK? Probs not
+        Presentation pres = presentationRepository.findByPaperId(paperId).orElse(null);
+        if (pres != null) {
+          // TODO: add this presentation to the session
+        }
+        orderNum++;
+      } else {
+        morePapers = false;
+      }
+    } while(morePapers);
+  }
 
   // TODO: where are these users?
 //  private void addOrganizerFromImportRow(XSSFRow row) {
