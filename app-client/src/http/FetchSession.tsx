@@ -1,15 +1,9 @@
 import { dispatch } from "../state";
 import { ServerToken } from "../model/ServerToken";
-import { Session } from "../model/Session";
+import { mapSessionBackendToFrontend, Session } from "../model/Session";
 
 const setSessions = (sessions: Session[]) => {
-  let sessions_new = sessions.map((s: Session) => ({
-    ...s,
-    primaryStart: new Date(s.primaryStart),
-    primaryEnd: new Date(s.primaryEnd),
-    secondaryStart: s.secondaryStart? new Date(s.secondaryStart) : null,
-    secondaryEnd: s.secondaryEnd? new Date(s.secondaryEnd) : null,
-  }));
+  let sessions_new = sessions.map(mapSessionBackendToFrontend);
   dispatch({
     sessions: sessions_new,
     type: "setAllSessions",

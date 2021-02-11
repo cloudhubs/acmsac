@@ -12,27 +12,24 @@ import { Session } from "../../model/Session";
 import PresentationEntry from "./PresentationEntry";
 import { dateTimePair, stopEvent } from "./SessionViewUtils";
 
-type PresentationListProps = {
-  session: Session;
-  papers: AcademicArticle[];
-};
-
 const meetingLink = (url: string) => (
   <Link href={url} onClick={stopEvent} onFocus={stopEvent}>
     Go to meeting room
   </Link>
 );
 
-function PresentationList(props: PresentationListProps) {
+function PresentationList(props: { session: Session }) {
   const session = props.session;
-  const papers = props.papers;
+  const papers = session.presentations;
   let [open, setOpen] = useState(false);
 
   return (
-    <Accordion expanded={open} onChange={(_, open) => {
-      if (papers.length !== 0)
-        setOpen(open);
-    }}>
+    <Accordion
+      expanded={open}
+      onChange={(_, open) => {
+        if (papers.length !== 0) setOpen(open);
+      }}
+    >
       <AccordionSummary>
         <Grid container direction="row">
           <Grid container item xs direction="column">

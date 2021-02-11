@@ -86,11 +86,15 @@ public class DtoConverterService {
     if (track != null)
       dto.setTrackCode(track.getCode());
     dto.setSessionName(s.getSessionName());
-    dto.setSessionChair(s.getSessionChair());
     dto.setSessionCode(s.getSessionCode());
+    dto.setPresentations(s.getPresentations());
+
+    dto.setPrimarySessionChair(s.getPrimarySessionChair());
     dto.setPrimaryMeetingLink(s.getPrimaryMeetingLink());
     dto.setPrimaryStart(s.getPrimaryStart());
     dto.setPrimaryEnd(s.getPrimaryEnd());
+
+    dto.setSecondarySessionChair(s.getSecondarySessionChair());
     dto.setSecondaryMeetingLink(s.getSecondaryMeetingLink());
     dto.setSecondaryStart(s.getSecondaryStart());
     dto.setSecondaryEnd(s.getSecondaryEnd());

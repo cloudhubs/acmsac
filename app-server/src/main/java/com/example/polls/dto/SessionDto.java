@@ -1,7 +1,9 @@
 package com.example.polls.dto;
 
 import java.time.Instant;
+import java.util.Set;
 
+import com.example.polls.model.Presentation;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
@@ -15,9 +17,13 @@ public class SessionDto {
 
   String trackCode;
 
+  Long sessionID;
+
   String sessionCode;
   
   String sessionChair;
+
+  String primarySessionChair;
   
   String primaryMeetingLink;
 
@@ -27,6 +33,8 @@ public class SessionDto {
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = PATTERN, timezone = TZ)
   Instant primaryEnd;
 
+  String secondarySessionChair;
+
   String secondaryMeetingLink;
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = PATTERN, timezone = TZ)
@@ -34,4 +42,7 @@ public class SessionDto {
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = PATTERN, timezone = TZ)
   Instant secondaryEnd;
+
+  /** Presentations occurring within any room in this session */
+  Set<Presentation> presentations;
 }

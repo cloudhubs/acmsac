@@ -1,16 +1,10 @@
 import { useHistory, useParams } from "react-router-dom";
-import { AcademicArticle } from "../model/AcademicArticle";
+import { AcademicArticle, mapArticleBackendToFrontend } from "../model/AcademicArticle";
 import { dispatch } from "../state";
 import { ServerToken } from "../model/ServerToken";
 
 const setSelectedPaper = (selectedPaper: AcademicArticle) => dispatch({
-    selectedPaper: ({
-        ...selectedPaper,
-        primaryStart: new Date(selectedPaper.primaryStart),
-        primaryEnd: new Date(selectedPaper.primaryEnd),
-        secondaryStart: new Date(selectedPaper.secondaryStart),
-        secondaryEnd: new Date(selectedPaper.secondaryEnd),
-    }),
+    selectedPaper: mapArticleBackendToFrontend(selectedPaper),
     type: 'setSelectedPaper',
 });
 

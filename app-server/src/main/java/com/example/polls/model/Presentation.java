@@ -12,11 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "presentations", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {
-                "paperId"
-        })
-})
+@Table(name = "presentations", uniqueConstraints = { @UniqueConstraint(columnNames = { "paperId" }) })
 @Data
 public class Presentation {
   @Id
@@ -38,6 +34,8 @@ public class Presentation {
   @Lob
   private String sessionChair;
 
+  private String sessionMeeting;
+
   private LocalDate date;
 
   @Lob
@@ -57,7 +55,8 @@ public class Presentation {
 
   @Lob
   private String doiUrl;
-  
+
+  // CANDIDATES FOR DELETION
   private Instant primaryStart, primaryEnd;
 
   private Instant secondaryStart, secondaryEnd;
@@ -89,14 +88,13 @@ public class Presentation {
   }
 
   public Presentation(String title, int paperId, String authorsString, String trackCode, String sessionCode,
-                      String sessionChair, LocalDate date, String paperAbstract, String pageNumbers,
-                      String acknowledgements, String videoEmbed, String slidesUrl, User presenter, String type) {
+      LocalDate date, String paperAbstract, String pageNumbers, String acknowledgements, String videoEmbed,
+      String slidesUrl, User presenter, String type) {
     this.title = title;
     this.paperId = paperId;
     this.authorsString = authorsString;
     this.trackCode = trackCode;
     this.sessionCode = sessionCode;
-    this.sessionChair = sessionChair;
     this.date = date;
     this.paperAbstract = paperAbstract;
     this.pageNumbers = pageNumbers;

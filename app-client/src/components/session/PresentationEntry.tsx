@@ -6,8 +6,6 @@ import {
   ExpansionPanelSummary as AccordionSummary,
   ExpansionPanelDetails as AccordionDetails,
   IconButton,
-  GridList,
-  GridListTile,
 } from "@material-ui/core";
 
 import DescriptionIcon from "@material-ui/icons/Description";
@@ -56,8 +54,12 @@ const PresentationEntry = (props: PresentationEntryProps) => {
           <Grid item>
             <Typography variant="body1">
               {dateTimePair(paper.primaryStart, paper.primaryEnd)}
-              <br />&<br />
-              {dateTimePair(paper.secondaryStart, paper.secondaryEnd)}
+              {paper.secondaryStart && paper.secondaryEnd && (
+                <>
+                  <br />&<br />
+                  {dateTimePair(paper.secondaryStart, paper.secondaryEnd)}
+                </>
+              )}
             </Typography>
           </Grid>
           <Grid item lg>

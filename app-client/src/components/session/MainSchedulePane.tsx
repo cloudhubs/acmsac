@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Paper, Typography } from "@material-ui/core";
+import { Grid, Paper, Typography } from "@material-ui/core";
 import FetchSession from "../../http/FetchSession";
 import { useGlobalState } from "../../state";
 import DaySchedulePane from "./DaySchedulePane";
-import { Session } from "../../model/Session";
+import { isCrossDaySession, Session } from "../../model/Session";
 import { getDayTime } from "./SessionViewUtils";
 import FetchAcademicPapers from "../../http/FetchAcademicPapers";
 
@@ -33,7 +33,9 @@ const SchedulePane: () => JSX.Element = () => {
         </Typography>
       </Paper>
 
-      {createDaySchedules(sessions)}
+      <Grid container direction="column">
+        {createDaySchedules(sessions)}
+      </Grid>
     </Paper>
   );
 };
@@ -42,9 +44,10 @@ function createDaySchedules(sessions: Session[]) {
   // Filter to unique days
   let days: Map<number, Date> = new Map<number, Date>();
   for (let session of sessions) {
-    // Take the milliseconds of midnight the provided day to use as a key
     let date = getDayTime(session.primaryStart);
-    if (!days.has(date)) days.set(date, session.primaryStart);
+    if (!days.has(date)) {
+      days.set(date, session.primaryStart);
+    }
   }
 
   // Create one pane per day
@@ -52,7 +55,11 @@ function createDaySchedules(sessions: Session[]) {
   let iter = days.values();
   let entry = iter.next();
   while (!entry.done) {
-    result.push(<DaySchedulePane date={entry.value} />);
+    result.push(
+      <Grid item xs>
+        <DaySchedulePane date={entry.value} />
+      </Grid>
+    );
     entry = iter.next();
   }
   return result;

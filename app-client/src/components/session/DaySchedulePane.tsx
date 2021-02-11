@@ -6,131 +6,61 @@ import {
   Typography,
   Grid,
 } from "@material-ui/core";
-import { AcademicArticle } from "../../model/AcademicArticle";
 import { Session } from "../../model/Session";
 import { useGlobalState } from "../../state";
-import PresentationList from "./PresentationList";
-import SessionHeader from "./DayScheduleHeader";
-import {
-  getDayTime,
-  sameDay,
-  setSelectedDay,
-  setSelectedSession,
-} from "./SessionViewUtils";
-import FetchAcademicPapersBySession from "../../http/FetchAcademicPapersBySession";
+import { formatter, MILLIS_IN_DAY, sameDay, setSelectedDay } from "./SessionViewUtils";
+import TimeSlotSchedulePane from "./TimeSlotSchedulePane";
 
-type SessionSlot = {
-  session: Session;
-  papers: AcademicArticle[];
+type TimeSlot = {
+  time: Date;
+  slots: Session[];
 };
 
-const formatter = new Intl.DateTimeFormat();
+const makeSlots = (sessions: Session[], date: Date) => {
+  let slots: Map<number, TimeSlot> = new Map<number, TimeSlot>();
 
-function sortSessionsByTime(a: Session, b: Session) {
-  let aTime = a.primaryStart.getTime(),
-    bTime = b.primaryStart.getTime();
-  return bTime - aTime;
-}
+  // Filter to only the slots occurring today
+  let todaysSessions = sessions.filter(
+    (s) =>
+      sameDay(s.primaryStart, date) ||
+      (s.secondaryEnd && sameDay(s.secondaryEnd, date))
+  );
 
-function SlotListComponent(props: { slots: SessionSlot[] }) {
-  const [selected] = useGlobalState("selectedSession");
-  const slots = props.slots;
-  let sessions: Session[] = [];
+  // Find sessions for today
+  for (let session of todaysSessions) {
+    let offset = session.primaryStart.getTime() % MILLIS_IN_DAY;
+    if (!slots.has(offset)) {
+      slots.set(offset, {
+        time: session.primaryStart,
+        slots: [] as Session[],
+      });
+    }
 
-  // Get unique slots
-  for (let slot of props.slots) {
-    if (
-      !sessions.find(
-        (storedSession) =>
-          storedSession.sessionCode === slot.session.sessionCode
-      )
-    )
-      sessions.push(slot.session);
+    // Record session to any relevant slots
+    slots.get(offset)?.slots.push(session);
   }
 
-  // Generate UI
-  return (
-    <>
-      <Grid container direction="column">
-        {/* If you make a session with a name like that, you DESERVE the React error you'll get. */}
-        <Grid item xs key="SLOT_LIST_COMPONENT_HEADER_KEY">
-          <SessionHeader sessions={sessions} />
-        </Grid>
-        {slots
-          .sort(
-            (slotA, slotB) =>
-              slotA.session.primaryStart.getUTCMilliseconds() -
-              slotB.session.primaryStart.getUTCMilliseconds()
-          )
-          .filter((slot) => slot.session.sessionCode === selected.sessionCode)
-          .map((slot) => (
-            <Grid item xs key={slot.session.sessionName}>
-              <PresentationList session={slot.session} papers={slot.papers} />
-            </Grid>
-          ))}
-      </Grid>
-    </>
-  );
-}
+  // Create and return time slots... man iterators for maps are painful
+  let retVal = [] as TimeSlot[];
+  let iter = slots.values();
+  let next = iter.next();
+  while (!next.done) {
+    retVal.push(next.value);
+    next = iter.next();
+  }
+  return retVal;
+};
 
 function DaySchedulePane(props: { date: Date }) {
-  const [selected] = useGlobalState("selectedSession");
-  const [token] = useGlobalState("serverToken");
   const [selectedDay] = useGlobalState("selectedDay");
   const [sessions] = useGlobalState("sessions");
-  const [papers] = useGlobalState("academicPapers");
-  let [slots, setSlots] = useState([] as SessionSlot[]);
-
-  const updatePapers = async () => {
-    // If the papers are already in-memory, don't re-fetch
-    if (papers.length === 0 || papers[0].sessionCode !== selected.sessionCode) {
-      console.log(selected.sessionCode);
-      await FetchAcademicPapersBySession.getAcademicPapersBySession(
-        token,
-        selected.sessionCode
-      );
-    }
-  };
+  let [slots, setSlots] = useState(
+    makeSlots(sessions, props.date) as TimeSlot[]
+  );
 
   // Update the 'slots'--session + papers
-  const updateSlots = () => {
-    // Set up the slots
-    setSlots(
-      sessions
-        .filter((session) => sameDay(session.primaryStart, props.date))
-        .sort(sortSessionsByTime)
-        .map((s) => ({
-          session: s,
-          papers: papers.filter((p) => s.sessionCode == p.sessionCode),
-        }))
-    );
-  };
-
-  // If the selected day changes, set slots
-  const updateSelectedSession = () => {
-    console.log("updating selection");
-    if (selectedDay !== null && sameDay(selectedDay, props.date))
-      if (
-        !slots.find(
-          (slot) => slot.session.sessionCode === selected.sessionCode
-        ) &&
-        slots.length > 0
-      ) {
-        console.log(`set to ${slots[0].session}`);
-        setSelectedSession(slots[0].session);
-      }
-  };
-
-  // Set effects
-  useEffect(() => {
-    console.log("updating papers");
-    updatePapers();
-  }, [selected]);
-  useEffect(() => {
-    console.log("updating slots");
-    updateSlots();
-  }, [papers])
-  useEffect(updateSelectedSession, [selectedDay]);
+  const updateSlots = () => setSlots(makeSlots(sessions, props.date));
+  useEffect(updateSlots, [sessions]);
 
   // Create UI
   return (
@@ -138,17 +68,25 @@ function DaySchedulePane(props: { date: Date }) {
       <Accordion
         expanded={selectedDay !== null && sameDay(selectedDay, props.date)}
         onChange={(_, expanded) => setSelectedDay(expanded ? props.date : null)}
-        TransitionProps={{ unmountOnExit: true }}
       >
         <AccordionSummary>
           <Typography variant="h6">{formatter.format(props.date)}</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          {slots.length > 0 ? (
-            <SlotListComponent slots={slots} />
-          ) : (
-            <Typography variant="body1">NONE FOUND</Typography>
-          )}
+          <Grid container direction="column">
+            {slots.length > 0 ? (
+              slots.map((slot) => (
+                <Grid item xs key={slot.time.getTime()}>
+                  <TimeSlotSchedulePane
+                    date={slot.time}
+                    sessions={slot.slots}
+                  />
+                </Grid>
+              ))
+            ) : (
+              <Typography variant="body1">NONE FOUND</Typography>
+            )}
+          </Grid>
         </AccordionDetails>
       </Accordion>
     </>
