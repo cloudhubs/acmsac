@@ -3,9 +3,8 @@ import { Grid, Paper, Typography } from "@material-ui/core";
 import FetchSession from "../../http/FetchSession";
 import { useGlobalState } from "../../state";
 import DaySchedulePane from "./DaySchedulePane";
-import { isCrossDaySession, Session } from "../../model/Session";
-import { getDayTime } from "./SessionViewUtils";
-import FetchAcademicPapers from "../../http/FetchAcademicPapers";
+import { Session } from "../../model/Session";
+import { compareDates } from "./SessionViewUtils";
 
 const SchedulePane: () => JSX.Element = () => {
   const [sessions] = useGlobalState("sessions");
@@ -40,29 +39,39 @@ const SchedulePane: () => JSX.Element = () => {
   );
 };
 
+function registerDate(date: Date, map: Map<number, Date>) {
+  // Simple hash of date only
+  let iso = 31 * (31 * (31 * date.getFullYear() + date.getMonth()) + date.getDay());
+  if (!map.has(iso)) {
+    map.set(iso, date);
+  }
+}
+
 function createDaySchedules(sessions: Session[]) {
   // Filter to unique days
   let days: Map<number, Date> = new Map<number, Date>();
   for (let session of sessions) {
-    let date = getDayTime(session.primaryStart);
-    if (!days.has(date)) {
-      days.set(date, session.primaryStart);
+    registerDate(session.primaryStart, days);
+    if (session.secondaryEnd) {
+      registerDate(session.secondaryEnd, days);
     }
   }
 
   // Create one pane per day
-  let result = [] as JSX.Element[];
+  let result = [] as Date[];
   let iter = days.values();
   let entry = iter.next();
   while (!entry.done) {
-    result.push(
-      <Grid item xs>
-        <DaySchedulePane date={entry.value} />
-      </Grid>
-    );
+    result.push(entry.value);
     entry = iter.next();
   }
-  return result;
+  return result
+    .sort((a, b) => compareDates(a, b))
+    .map((session) => (
+      <Grid item xs>
+        <DaySchedulePane date={session} />
+      </Grid>
+    ));
 }
 
 export default SchedulePane;

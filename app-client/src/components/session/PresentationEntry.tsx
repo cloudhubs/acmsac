@@ -14,6 +14,7 @@ import VideocamIcon from "@material-ui/icons/Videocam";
 import { AcademicArticle } from "../../model/AcademicArticle";
 import { dateTimePair, stopEvent } from "./SessionViewUtils";
 import { Person } from "../../model/Person";
+import { useGlobalState } from "../../state";
 
 type PresentationEntryProps = {
   paper: AcademicArticle;
@@ -46,6 +47,7 @@ const actions = (paper: AcademicArticle) => {
 };
 
 const PresentationEntry = (props: PresentationEntryProps) => {
+  const [selectedDay] = useGlobalState("selectedDay");
   let paper = props.paper;
   return (
     <Accordion>
@@ -53,11 +55,11 @@ const PresentationEntry = (props: PresentationEntryProps) => {
         <Grid container direction="row" spacing={2}>
           <Grid item>
             <Typography variant="body1">
-              {dateTimePair(paper.primaryStart, paper.primaryEnd)}
+              {selectedDay && dateTimePair(paper.primaryStart, paper.primaryEnd, selectedDay)}
               {paper.secondaryStart && paper.secondaryEnd && (
                 <>
                   <br />&<br />
-                  {dateTimePair(paper.secondaryStart, paper.secondaryEnd)}
+                  {selectedDay && dateTimePair(paper.secondaryStart, paper.secondaryEnd, selectedDay)}
                 </>
               )}
             </Typography>
