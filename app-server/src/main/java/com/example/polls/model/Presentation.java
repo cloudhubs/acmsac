@@ -4,17 +4,15 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "presentations", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {
-                "paperId"
-        })
-})
+@Table(name = "presentations", uniqueConstraints = { @UniqueConstraint(columnNames = { "paperId" }) })
 @Data
 public class Presentation {
   @Id
@@ -36,6 +34,8 @@ public class Presentation {
   @Lob
   private String sessionChair;
 
+  private String sessionMeeting;
+
   private LocalDate date;
 
   @Lob
@@ -55,10 +55,11 @@ public class Presentation {
 
   @Lob
   private String doiUrl;
-  
-  private LocalDateTime primaryStart, primaryEnd;
 
-  private LocalDateTime secondaryStart, secondaryEnd;
+  // CANDIDATES FOR DELETION
+  private Instant primaryStart, primaryEnd;
+
+  private Instant secondaryStart, secondaryEnd;
 
   /**
    * Indicates the author does not want this presentation shown to others
@@ -87,14 +88,13 @@ public class Presentation {
   }
 
   public Presentation(String title, int paperId, String authorsString, String trackCode, String sessionCode,
-                      String sessionChair, LocalDate date, String paperAbstract, String pageNumbers,
-                      String acknowledgements, String videoEmbed, String slidesUrl, User presenter, String type) {
+      LocalDate date, String paperAbstract, String pageNumbers, String acknowledgements, String videoEmbed,
+      String slidesUrl, User presenter, String type) {
     this.title = title;
     this.paperId = paperId;
     this.authorsString = authorsString;
     this.trackCode = trackCode;
     this.sessionCode = sessionCode;
-    this.sessionChair = sessionChair;
     this.date = date;
     this.paperAbstract = paperAbstract;
     this.pageNumbers = pageNumbers;

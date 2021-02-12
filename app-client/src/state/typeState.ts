@@ -7,7 +7,6 @@ import { Track } from '../model/Track';
 import {ServerMessage} from "../model/ServerMessage";
 import {CurrentUser} from "../model/CurrentUser";
 import { Session } from '../model/Session';
-import { Presentation } from '../model/Presentation';
 
 export type State = {
     reminderMessage: ServerMessage;
@@ -15,7 +14,7 @@ export type State = {
     tracks: Track[];
     sessions: Session[];
     selectedSession: Session;
-    presentations: Presentation[];
+    selectedDay: Date | null,
     selectedPaper: AcademicArticle;
     academicPapers: AcademicArticle[];
     serverError: ServerError;

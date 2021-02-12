@@ -35,7 +35,17 @@ public class SessionController {
   @GetMapping("/")
   public ResponseEntity<List<SessionDto>> getAllSessions() {
     List<Session> sessions = sessionRepository.findAll();
-    return ResponseEntity.ok(sessions.stream().map(converter::createSession).collect(Collectors.toList()));
+    return ResponseEntity.ok(sessions.stream().map(converter::getSessionDto).collect(Collectors.toList()));
+  }
+
+  @PostMapping("/batch")
+  public ResponseEntity<String> batchSessions(@RequestBody List<SessionDto> sessions) {
+      for (SessionDto s : sessions) {
+          ResponseEntity<String> resp = createSession(s);
+          if (!resp.getStatusCode().is2xxSuccessful())
+            return resp;
+      }
+      return ResponseEntity.ok("");
   }
 
   @PostMapping("/")
@@ -43,13 +53,16 @@ public class SessionController {
     // TODO: security lol
 
     // Get the track
-    Optional<Track> t = trackRepository.findByCodeIgnoreCase(newSess.getTrackCode());
-    if (!t.isPresent())
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No session found");
+    String code = newSess.getTrackCode();
+    Optional<Track> t = code != null ? trackRepository.findByCodeIgnoreCase(code) : null;
+    if (t != null && !t.isPresent())
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No track found");
 
     // Create the session
-    Session s = new Session(newSess.getSessionName(), t.get(), newSess.getSessionCode(), newSess.getSessionChair(), newSess.getPrimaryStart(),
-        newSess.getPrimaryEnd(), newSess.getSecondaryEnd(), newSess.getSecondaryEnd());
+    Session s = new Session(newSess.getSessionName(), t != null ? t.get() : null, newSess.getSessionCode(),
+        newSess.getPrimarySessionChair(), newSess.getPrimaryMeetingLink(), newSess.getPrimaryStart(),
+        newSess.getPrimaryEnd(), newSess.getSecondarySessionChair(), newSess.getSecondaryMeetingLink(),
+        newSess.getSecondaryStart(), newSess.getSecondaryEnd());
     sessionRepository.save(s);
     return ResponseEntity.ok("");
   }

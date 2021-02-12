@@ -17,7 +17,7 @@ import Search from "../pages/public/Search";
 import EarlyRegister from "../pages/public/EarlyRegister";
 import PublicRouter from "./PublicRouter";
 import CurrentUser from '../components/currentUser/CurrentUser';
-import SessionsView from '../pages/beta/private/SessionsView';
+import ScheduleView from '../pages/beta/private/ScheduleView';
 import GATracker from '../shared/GATracker';
 
 const BetaRouter = () => {
@@ -81,7 +81,7 @@ const BetaRouter = () => {
                         <Route exact path="/app/register" component={Signup} />
                         <Route exact path="/search" component={PublicRouter} />
                         <Route exact path="/reminder" component={PublicRouter} />
-                        <Route exact path="/sessions" component={SessionsView} />
+                        <Route exact path="/sessions" component={ScheduleView} />
                         <PrivateRoute exact path="/app/currentuser">
                             <CurrentUser/>
                         </PrivateRoute>

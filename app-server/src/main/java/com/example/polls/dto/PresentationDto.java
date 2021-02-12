@@ -12,6 +12,8 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
+
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -42,8 +44,8 @@ public class PresentationDto {
   private boolean userCanEdit;
   private List<UserDto> authors = new ArrayList<>();
   private List<Comment> comments = new ArrayList<>();
-  private LocalDateTime primaryStart, primaryEnd;
-  private LocalDateTime secondaryStart, secondaryEnd;
+  private Instant primaryStart, primaryEnd;
+  private Instant secondaryStart, secondaryEnd;
 
   /**
    *
@@ -68,7 +70,6 @@ public class PresentationDto {
     this.type = presentation.getType();
     this.hideFromPublic = presentation.isHideFromPublic();
     this.released = presentation.isReleased();
-    this.userCanView = !isViewRestricted;
     this.primaryStart = presentation.getPrimaryStart();
     this.primaryEnd = presentation.getPrimaryEnd();
     this.secondaryStart = presentation.getSecondaryStart();

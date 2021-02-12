@@ -1,25 +1,15 @@
 import { Button, Grid, Paper, Typography } from "@material-ui/core";
 import React from "react";
 import { Session } from "../../model/Session";
-import { dispatch, useGlobalState } from "../../state";
+import { useGlobalState } from "../../state";
+import { NOP, setSelectedSession } from "./SessionViewUtils";
 
-const NOP = () => {};
-
-const setSelectedSession = (selectedSession: Session) => {
-  console.log("set to " + JSON.stringify(selectedSession));
-  dispatch({
-    session: selectedSession,
-    type: "setSelectedSession",
-  });
-};
-
-function SessionHeader() {
-  let [sessions] = useGlobalState("sessions");
+function SessionHeader(props: { sessions: Session[] }) {
   let [selectedSession] = useGlobalState("selectedSession");
 
   return (
     <>
-      {sessions.map((session) => {
+      {props.sessions.map((session) => {
         let isSelected: boolean =
           session.sessionCode === selectedSession.sessionCode;
         return (

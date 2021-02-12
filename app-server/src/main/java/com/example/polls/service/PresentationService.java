@@ -20,7 +20,7 @@ public class PresentationService {
   public Presentation editPres(PresentationUpdateDto newPres, Presentation oldPres) {
     oldPres.setTitle(newPres.getTitle());
     oldPres.setTrackCode(newPres.getTrackCode());
-    oldPres.setSessionCode(newPres.getSessionCode()); // TODO: this probably just breaks everything
+//    oldPres.setSessionCode(newPres.getSessionCode()); // TODO: this probably just breaks everything
     oldPres.setDate(newPres.getDate());
     oldPres.setPaperAbstract(newPres.getPaperAbstract());
     oldPres.setPageNumbers(newPres.getPageNumbers());

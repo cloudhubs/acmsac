@@ -226,8 +226,8 @@ public class ImportService {
       presentation.setPaperId(paperId);
       presentation.setAuthorsString(authors.stream().map(User::getName).reduce((a, b) -> a + ", " + b).get());
       presentation.setTrackCode(row.getCell(8, Row.CREATE_NULL_AS_BLANK).toString());
-      presentation.setSessionCode(""); // TODO: ???
-      presentation.setSessionChair(""); // TODO: ???
+//      presentation.setSessionCode(""); // TODO: ???
+//      presentation.setSessionChair(""); // TODO: ???
 //      presentation.setDate(row.getCell(13, Row.CREATE_NULL_AS_BLANK).getDateCellValue().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
       presentation.setDate(LocalDate.now()); // TODO: ???
       presentation.setPaperAbstract(row.getCell(33, Row.CREATE_NULL_AS_BLANK).toString());

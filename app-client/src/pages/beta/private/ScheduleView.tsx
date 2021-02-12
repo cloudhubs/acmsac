@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {useGlobalState} from "../../../state";
 import {Typography} from "@material-ui/core";
-import SessionPane from "../../../components/session/SessionPane";
+import SchedulePane from "../../../components/session/MainSchedulePane";
 
 // TODO finalize name with Dr. Cerny, Vincent
 const SessionsView = () => {
@@ -10,7 +10,7 @@ const SessionsView = () => {
 
     return (
         <>
-            { serverError.success? <SessionPane/> : <Typography variant="body1">{serverError.message}</Typography> }
+            { serverError.success? <SchedulePane/> : <Typography variant="body1">{serverError.message}</Typography> }
         </>
     );
 }
