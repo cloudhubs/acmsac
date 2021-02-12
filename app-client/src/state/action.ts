@@ -20,4 +20,5 @@ export type Action =
 | { type: "setServerToken"; serverToken: ServerToken }
 | { type: "setAllSessions"; sessions: Session[] }
 | { type: "setSelectedSession"; session: Session }
-| { type: "setSelectedDay"; selectedDay: Date | null };
+| { type: "setSelectedDay"; selectedDay: Date | null }
+| { type: "setSelectedTime"; selectedTime: Date | null };

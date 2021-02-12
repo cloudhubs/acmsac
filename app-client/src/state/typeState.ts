@@ -15,6 +15,7 @@ export type State = {
     sessions: Session[];
     selectedSession: Session;
     selectedDay: Date | null,
+    selectedTime: Date | null,
     selectedPaper: AcademicArticle;
     academicPapers: AcademicArticle[];
     serverError: ServerError;

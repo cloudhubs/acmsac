@@ -13,49 +13,45 @@ import SessionHeader from "./DayScheduleHeader";
 import PresentationList from "./PresentationList";
 import {
   getTimeZone,
-  sameDay,
   sameTime,
   setSelectedDay,
   setSelectedSession,
+  setSelectedTime,
 } from "./SessionViewUtils";
 
 function TimeSlotSchedulePane(props: { date: Date; sessions: Session[] }) {
   const [selected] = useGlobalState("selectedSession");
   const [selectedDay] = useGlobalState("selectedDay");
+  const [selectedTime] = useGlobalState("selectedTime");
   const date = props.date;
 
   useEffect(() => {
     if (
-      selectedDay &&
-      sameTime(selectedDay, props.date) &&
-      !sameTime(selected.primaryStart, props.date) &&
-      !(selected.secondaryEnd && sameTime(selected.secondaryEnd, props.date)) &&
-      props.sessions.length > 0
+      !selected.primaryStart ||
+      (selectedTime &&
+        sameTime(selectedTime, date) &&
+        !sameTime(selected.primaryStart, date) &&
+        !(selected.secondaryEnd && sameTime(selected.secondaryEnd, date)) &&
+        props.sessions.length > 0)
     )
       setSelectedSession(props.sessions[0]);
-  }, [selectedDay]);
+  }, [selectedDay, selectedTime, selected]);
 
   // Create UI
   return (
     <Grid container direction="column">
       <Accordion
-        expanded={selectedDay !== null && sameTime(selectedDay, date)}
+        expanded={selectedTime !== null && sameTime(selectedTime, date)}
         onChange={(_, expanded) =>
-          setSelectedDay(
-            selectedDay
-              ? expanded
-                ? new Date(
-                    selectedDay.getFullYear(),
-                    selectedDay.getMonth(),
-                    selectedDay.getDate(),
-                    date.getHours(),
-                    date.getMinutes()
-                  )
-                : new Date(
-                    selectedDay.getFullYear(),
-                    selectedDay.getMonth(),
-                    selectedDay.getDate()
-                  )
+          setSelectedTime(
+            selectedDay && expanded
+              ? new Date(
+                  selectedDay.getFullYear(),
+                  selectedDay.getMonth(),
+                  selectedDay.getDate(),
+                  date.getHours(),
+                  date.getMinutes()
+                )
               : null
           )
         }

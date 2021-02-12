@@ -31,8 +31,9 @@ export const sameDay = (dateA: Date, dateB: Date) =>
   dateA.getMonth() === dateB.getMonth() &&
   dateA.getFullYear() === dateB.getFullYear();
 
-export const sameTime = (dateA: Date, dateB: Date) =>
-  dateA.getTime() % MILLIS_IN_DAY === dateB.getTime() % MILLIS_IN_DAY;
+export const sameTime = (dateA: Date, dateB: Date) => {
+  return dateA.getTime() % MILLIS_IN_DAY === dateB.getTime() % MILLIS_IN_DAY;
+}
 
 export const compareDates = (dateA: Date, dateB: Date): number => {
   if (dateA.toISOString() < dateB.toISOString()) {
@@ -72,6 +73,13 @@ export const setSelectedDay = (selectedDay: Date | null) => {
   dispatch({
     selectedDay: selectedDay,
     type: "setSelectedDay",
+  });
+};
+
+export const setSelectedTime = (selectedTime: Date | null) => {
+  dispatch({
+    selectedTime: selectedTime,
+    type: "setSelectedTime",
   });
 };
 

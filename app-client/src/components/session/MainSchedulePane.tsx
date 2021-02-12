@@ -3,9 +3,8 @@ import { Grid, Paper, Typography } from "@material-ui/core";
 import FetchSession from "../../http/FetchSession";
 import { useGlobalState } from "../../state";
 import DaySchedulePane from "./DaySchedulePane";
-import { isCrossDaySession, Session } from "../../model/Session";
-import { compareDates, getDayTime } from "./SessionViewUtils";
-import FetchAcademicPapers from "../../http/FetchAcademicPapers";
+import { Session } from "../../model/Session";
+import { compareDates } from "./SessionViewUtils";
 
 const SchedulePane: () => JSX.Element = () => {
   const [sessions] = useGlobalState("sessions");
