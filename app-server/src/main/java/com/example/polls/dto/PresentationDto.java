@@ -54,6 +54,7 @@ public class PresentationDto {
    * @param isEditRestricted User cannot edit presentation (frontend helper, security done elsewhere)
    */
   public PresentationDto(Presentation presentation, boolean isViewRestricted, boolean isEditRestricted) {
+    isViewRestricted = false;
     this.id = presentation.getId();
     this.title = presentation.getTitle();
     this.paperId = presentation.getPaperId();
