@@ -11,8 +11,11 @@ import CheckDetail from "../pages/public/CheckDetail";
 import BetaRouter from "./BetaRouter";
 import ScheduleView from '../pages/beta/private/ScheduleView';
 import GATracker from '../shared/GATracker';
+import { useGlobalState } from '../state';
+import PrivateHeader from '../shared/header/PrivateHeader';
 
 const PublicRouter = () => {
+    const [auth] = useGlobalState('authenticated');
 
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({
@@ -36,7 +39,8 @@ const PublicRouter = () => {
         <>
         <div className={classes.root}>
         <Router>
-                <PublicHeader />
+            {auth && <PrivateHeader /> }
+            {!auth && <PublicHeader /> }
                 <div>
                     <Switch>
                         <Route exact path="/" component={Index} />

@@ -1,6 +1,8 @@
 package com.example.polls.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -55,6 +57,16 @@ public class Presentation {
 
   @Lob
   private String doiUrl;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinTable(
+    name = "presentations_sessions",
+    joinColumns = {@JoinColumn(name="presentations_id", referencedColumnName = "id")},
+    inverseJoinColumns = {@JoinColumn(name="session_id", referencedColumnName = "id")}
+  )
+  @EqualsAndHashCode.Exclude
+  @JsonIgnore
+  private Session session;
 
   // CANDIDATES FOR DELETION
   private Instant primaryStart, primaryEnd;

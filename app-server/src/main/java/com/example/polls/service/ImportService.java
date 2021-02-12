@@ -203,7 +203,7 @@ public class ImportService {
       Presentation presentation = new Presentation();
       int paperId = (int) row.getCell(1).getNumericCellValue();
       if (presentationRepository.existsByPaperId(paperId)) {
-        presentation = presentationRepository.findByPaperId(paperId).get();
+        presentation = presentationRepository.findByPaperId(paperId).orElse(new Presentation());
       }
       // get author emails (11 possible authors)
       List<String> emails = new ArrayList<>();
@@ -330,7 +330,6 @@ public class ImportService {
         presentation.setSecondaryStart(session.getSecondaryStart());
         presentation.setSecondaryEnd(session.getSecondaryEnd());
       }
-      // TODO: set order
       presentation = presentationRepository.save(presentation);
       presArray[i] = presentation;
     }
@@ -339,6 +338,7 @@ public class ImportService {
     int numPres = presArray[4] == null ? 4 : 5;
     int minutesPerPres = sessionMinutes / numPres; // if 4 presentations, divide by 4; else 5
     Instant primaryStart = session.getPrimaryStart();
+    Set<Presentation> presSet = new HashSet<>(); // holds updated presentations to be set as session children
     for (int i = 0; i < numPres; i++) {
       Presentation pres = presArray[i];
       if (pres == null) {
@@ -346,8 +346,12 @@ public class ImportService {
       }
       pres.setPrimaryStart(primaryStart.plus(i*minutesPerPres, ChronoUnit.MINUTES));
       pres.setPrimaryEnd(pres.getPrimaryStart().plus(minutesPerPres-1, ChronoUnit.MINUTES));
-      presentationRepository.save(pres);
+      pres.setSession(session);
+//      pres = presentationRepository.save(pres);
+      presSet.add(pres);
     }
+    session.setPresentations(presSet);
+    sessionRepository.save(session);
   }
 
   /**
