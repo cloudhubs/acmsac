@@ -44,7 +44,7 @@ public class SessionController {
 
     // Get the track
     Optional<Track> t = trackRepository.findByCodeIgnoreCase(newSess.getTrackCode());
-    if (t.isEmpty())
+    if (!t.isPresent())
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No session found");
 
     // Create the session
@@ -57,7 +57,7 @@ public class SessionController {
   @GetMapping("/codes")
   public ResponseEntity<List<String>> getAllSessionCodes() {
     Optional<List<String>> codes = sessionRepository.findAllSessionCodes();
-    if (codes.isEmpty())
+    if (!codes.isPresent())
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     return ResponseEntity.ok(codes.get());
   }

@@ -83,7 +83,7 @@ public class DtoConverterService {
     SessionDto dto = new SessionDto();
     System.out.println(s.getPrimaryStart() + ", " + s.getPrimaryEnd());
     dto.setSessionName(s.getSessionName());
-    dto.setTrackCode(s.getTrack().getCode());
+    dto.setTrackCode(s.getTrack() != null ? s.getTrack().getCode() : "");
     dto.setSessionChair(s.getSessionChair());
     dto.setSessionCode(s.getSessionCode());
     dto.setPrimaryStart(s.getPrimaryStart());

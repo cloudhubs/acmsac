@@ -68,7 +68,7 @@ public class PresentationDto {
     this.type = presentation.getType();
     this.hideFromPublic = presentation.isHideFromPublic();
     this.released = presentation.isReleased();
-    this.userCanView = !restricted;
+    this.userCanView = !isViewRestricted;
     this.primaryStart = presentation.getPrimaryStart();
     this.primaryEnd = presentation.getPrimaryEnd();
     this.secondaryStart = presentation.getSecondaryStart();
