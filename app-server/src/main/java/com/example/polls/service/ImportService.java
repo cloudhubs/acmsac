@@ -18,7 +18,9 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
@@ -262,8 +264,8 @@ public class ImportService {
     String endString = row.getCell(6, Row.CREATE_NULL_AS_BLANK).toString();
     ZonedDateTime zonedEnd = row.getCell(5).getDateCellValue().toInstant().atZone(ZoneId.of("Asia/Seoul"));
 
-    LocalDateTime start = getUtcDateTimeFromDateAndTime(zonedStart, startString);
-    LocalDateTime end = getUtcDateTimeFromDateAndTime(zonedEnd, endString);
+    Instant start = getInstantFromDateAndTime(zonedStart, startString);
+    Instant end = getInstantFromDateAndTime(zonedEnd, endString);
     Session existingSession = sessionRepository.findBySessionCode(sessionCode).orElse(null);
     int roundNum = (int) row.getCell(2).getNumericCellValue();
     if (roundNum == 1) { // first round row is always first, so we have to populate the name/chair/etc.
@@ -271,12 +273,14 @@ public class ImportService {
         return existingSession; // session already exists and we're on the first round, so we shouldn't make another
       }
       String sessionChair = row.getCell(10, Row.CREATE_NULL_AS_BLANK).toString();
+      String secondarySessionChair = row.getCell(12, Row.CREATE_NULL_AS_BLANK).toString();
       Session newSession = new Session();
       newSession.setSessionCode(sessionCode);
       newSession.setSessionName("Placeholder for session " + sessionCode);
       newSession.setPrimaryStart(start);
       newSession.setPrimaryEnd(end);
-      newSession.setSessionChair(sessionChair);
+      newSession.setPrimarySessionChair(sessionChair);
+      newSession.setSecondarySessionChair(secondarySessionChair);
       return sessionRepository.save(newSession);
     } else { // second round row is always after first, so retrieve the created row and just update the second starting time
       if (existingSession != null) {
@@ -288,13 +292,12 @@ public class ImportService {
     }
   }
 
-  private LocalDateTime getUtcDateTimeFromDateAndTime(ZonedDateTime zonedDate, String timeString) {
+  private Instant getInstantFromDateAndTime(ZonedDateTime zonedDate, String timeString) {
     // string should be in form "5:00am"
     timeString = timeString.replace("am", "AM").replace("pm","PM");
     LocalTime time = LocalTime.parse(timeString, DateTimeFormatter.ofPattern("h:mma"));
     zonedDate = zonedDate.withHour(time.getHour()).withMinute(time.getMinute());
-    LocalDateTime date = zonedDate.withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
-    return date;
+    return zonedDate.toInstant();
   }
 
   public void assignPaperToSession(XSSFRow row) {
@@ -307,6 +310,7 @@ public class ImportService {
       return;
     }
     int roundNum = (int) row.getCell(2).getNumericCellValue();
+    Presentation[] presArray = new Presentation[5];
     // loop through 5 papers
     for (int i = 0; i < 5; i++) {
       // paper ID starts at column 8, and happens every 4 columns for 5 papers
@@ -328,41 +332,23 @@ public class ImportService {
       }
       // TODO: set order
       presentation = presentationRepository.save(presentation);
+      presArray[i] = presentation;
     }
-
+    Duration sessionDuration = Duration.between(session.getPrimaryStart(), session.getPrimaryEnd());
+    int sessionMinutes = Math.round(sessionDuration.abs().toMinutes());
+    int numPres = presArray[4] == null ? 4 : 5;
+    int minutesPerPres = sessionMinutes / numPres; // if 4 presentations, divide by 4; else 5
+    Instant primaryStart = session.getPrimaryStart();
+    for (int i = 0; i < numPres; i++) {
+      Presentation pres = presArray[i];
+      if (pres == null) {
+        continue;
+      }
+      pres.setPrimaryStart(primaryStart.plus(i*minutesPerPres, ChronoUnit.MINUTES));
+      pres.setPrimaryEnd(pres.getPrimaryStart().plus(minutesPerPres-1, ChronoUnit.MINUTES));
+      presentationRepository.save(pres);
+    }
   }
-
-  // TODO: where are these users?
-//  private void addOrganizerFromImportRow(XSSFRow row) {
-//    String email = row.getCell(0).toString().trim();
-//    String name = row.getCell(1).toString().trim();
-//    String affiliation = row.getCell(2, Row.CREATE_NULL_AS_BLANK).toString();
-//    String password = DEFAULT_ORGANIZER_PW;
-//    if (!userRepository.existsByEmail(email)) {
-//      createUser(name, email, email, password, affiliation, "", "", "",
-//              "", "", "");
-//    }
-//  }
-//
-//  private void addRegistrantFromImportRow(XSSFRow row) {
-//    String email = row.getCell(1, Row.CREATE_NULL_AS_BLANK).toString().trim();
-//    String fullName = row.getCell(0, Row.CREATE_NULL_AS_BLANK).toString().trim();
-//    String username = email;
-//    String password = DEFAULT_REGISTRANT_PW;
-//    String affiliation = row.getCell(2, Row.CREATE_NULL_AS_BLANK).toString();
-//    String admissionItem = row.getCell(8, Row.CREATE_NULL_AS_BLANK).toString().trim();
-//
-//    // if this registrant is an author/presenter, skip
-//    if (admissionItem.equals("Main Conference")) {
-//      // if this registrant has been created for any reason, skip
-//      if (userRepository.existsByEmail(email)) {
-//        userRepository.findByEmail(email).get();
-//      } else {
-//        createUser(fullName, username, email, password, affiliation, "", "", "",
-//                "", "", "");
-//      }
-//    }
-//  }
 
   /**
    * Create a new user from extracted info
