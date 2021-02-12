@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface SessionRepository extends JpaRepository<Session, Long> {
   @Query("SELECT DISTINCT sessionCode FROM Session")
   Optional<List<String>> findAllSessionCodes();
+
+  Optional<Session> findBySessionCode(String sessionCode);
 }
