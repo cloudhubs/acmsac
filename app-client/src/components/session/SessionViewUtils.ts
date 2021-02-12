@@ -32,7 +32,7 @@ export const sameDay = (dateA: Date, dateB: Date) =>
   dateA.getFullYear() === dateB.getFullYear();
 
 export const sameTime = (dateA: Date, dateB: Date) =>
-  dateA.getTime() === dateB.getTime();
+  dateA.getTime() % MILLIS_IN_DAY === dateB.getTime() % MILLIS_IN_DAY;
 
 export const compareDates = (dateA: Date, dateB: Date): number => {
   if (dateA.toISOString() < dateB.toISOString()) {

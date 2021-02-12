@@ -11,7 +11,13 @@ import { Session } from "../../model/Session";
 import { useGlobalState } from "../../state";
 import SessionHeader from "./DayScheduleHeader";
 import PresentationList from "./PresentationList";
-import { getTimeZone, sameDay, sameTime, setSelectedDay, setSelectedSession } from "./SessionViewUtils";
+import {
+  getTimeZone,
+  sameDay,
+  sameTime,
+  setSelectedDay,
+  setSelectedSession,
+} from "./SessionViewUtils";
 
 function TimeSlotSchedulePane(props: { date: Date; sessions: Session[] }) {
   const [selected] = useGlobalState("selectedSession");
@@ -33,14 +39,24 @@ function TimeSlotSchedulePane(props: { date: Date; sessions: Session[] }) {
   return (
     <Grid container direction="column">
       <Accordion
-        expanded={
-          selectedDay !== null && sameTime(selectedDay, date)
-        }
+        expanded={selectedDay !== null && sameTime(selectedDay, date)}
         onChange={(_, expanded) =>
           setSelectedDay(
-            expanded
-              ? date
-              : new Date(date.getFullYear(), date.getMonth(), date.getDate())
+            selectedDay
+              ? expanded
+                ? new Date(
+                    selectedDay.getFullYear(),
+                    selectedDay.getMonth(),
+                    selectedDay.getDate(),
+                    date.getHours(),
+                    date.getMinutes()
+                  )
+                : new Date(
+                    selectedDay.getFullYear(),
+                    selectedDay.getMonth(),
+                    selectedDay.getDate()
+                  )
+              : null
           )
         }
       >
