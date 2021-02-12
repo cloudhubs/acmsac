@@ -31,6 +31,7 @@ const App = () => {
                     <Route exact path="/app/track" component={BetaRouter} />
                     <Route exact path="/app/track/:track" component={BetaRouter} />
                     <Route exact path="/app/track/:track/:code" component={BetaRouter}/>
+                    <Route exact path="/sessions" component={BetaRouter}/>
                     <Route path="*">
                         <Redirect path="/"/>
                     </Route>

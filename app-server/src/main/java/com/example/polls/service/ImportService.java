@@ -3,10 +3,8 @@ package com.example.polls.service;
 import com.example.polls.exception.AppException;
 import com.example.polls.exception.ImportException;
 import com.example.polls.model.*;
-import com.example.polls.repository.PresentationRepository;
-import com.example.polls.repository.RoleRepository;
-import com.example.polls.repository.TrackRepository;
-import com.example.polls.repository.UserRepository;
+import com.example.polls.repository.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -18,11 +16,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
+@Slf4j
 public class ImportService {
   @Autowired
   private PresentationRepository presentationRepository;
@@ -32,6 +33,9 @@ public class ImportService {
 
   @Autowired
   private TrackRepository trackRepository;
+
+  @Autowired
+  private SessionRepository sessionRepository;
 
   @Autowired
   private PasswordEncoder passwordEncoder;
@@ -60,7 +64,7 @@ public class ImportService {
       /**
        * Create track chair users
        */
-
+      log.info("Importing track chairs");
       Resource trackResource = resourceLoader.getResource(TRACK_CHAIR_RESOURCE_NAME);
       XSSFWorkbook trackWorkbook = new XSSFWorkbook(trackResource.getInputStream());
       XSSFSheet trackSheet = trackWorkbook.getSheetAt(0);
@@ -69,28 +73,28 @@ public class ImportService {
         XSSFRow row = trackSheet.getRow(i);
         User user = createTrackChairFromImportRow(row, trackRoles); // create user objects
       }
+      log.info("Done importing track chairs");
 
       /**
        * Create author users
        */
-
+      log.info("Importing authors");
       Resource userResource = resourceLoader.getResource(USER_RESOURCE_NAME);
       XSSFWorkbook userWorkbook = new XSSFWorkbook(userResource.getInputStream());
       XSSFSheet userSheet = userWorkbook.getSheetAt(0);
-
       for (int i = 1; i < userSheet.getPhysicalNumberOfRows(); i++) {
         XSSFRow row = userSheet.getRow(i);
         User user = createUserFromImportRow(row, Collections.singleton(userRole)); // create user objects
       }
+      log.info("Done importing authors");
 
       /**
        * Create presentations
        */
-
+      log.info("Importing presentations");
       Resource presentationResource = resourceLoader.getResource(PRESENTATION_RESOURCE_NAME);
       XSSFWorkbook presentationWorkbook = new XSSFWorkbook(presentationResource.getInputStream());
       XSSFSheet presentationSheet = presentationWorkbook.getSheetAt(0);
-
       for (int i = 1; i < presentationSheet.getPhysicalNumberOfRows(); i++) {
         XSSFRow row = presentationSheet.getRow(i);
         String paperId = row.getCell(1, Row.CREATE_NULL_AS_BLANK).toString().trim(); // make sure ID exists
@@ -98,72 +102,31 @@ public class ImportService {
           createPresentationFromImportRow(row);
         }
       }
+      log.info("Done importing presentations");
 
       /**
-       * Create track chair users
+       * Create sessions
        */
-
+      log.info("Importing sessions");
       Resource sessionResource = resourceLoader.getResource(SESSION_RESOURCE_NAME);
       XSSFWorkbook sessionWorkbook = new XSSFWorkbook(sessionResource.getInputStream());
       XSSFSheet sessionSheet = sessionWorkbook.getSheetAt(0);
-
-      for (int i = 1; i < sessionSheet.getPhysicalNumberOfRows(); i++) {
+      for (int i = 3; i < sessionSheet.getPhysicalNumberOfRows(); i++) {
         XSSFRow row = sessionSheet.getRow(i);
         createSessionFromImportRow(row);
       }
+      log.info("Done importing sessions");
 
-      // TODO: do we need these users?
-//      // create chairs and update tracks from the Google form responses
-//      Resource chairResponseResource = resourceLoader.getResource("classpath:chairs_responses.xlsx");
-//      XSSFWorkbook chairResponseWorkbook = new XSSFWorkbook(chairResponseResource.getInputStream());
-//      XSSFSheet chairResponseSheet = chairResponseWorkbook.getSheetAt(0);
-//
-//      for (int i = 1; i < chairResponseSheet.getPhysicalNumberOfRows(); i++) {
-//        XSSFRow row = chairResponseSheet.getRow(i);
-//        User chair = createOrRetrieveChairFromImportRow(row);
-//        updateTrackFromImportRow(row, chair);
-//      }
-//
-//      // create other chairs who didn't respond
-//      Resource chairResource = resourceLoader.getResource("classpath:chairs.xlsx");
-//      XSSFWorkbook chairWorkbook = new XSSFWorkbook(chairResource.getInputStream());
-//      XSSFSheet chairSheet = chairWorkbook.getSheetAt(0);
-//
-//      for (int i = 1; i < chairSheet.getPhysicalNumberOfRows(); i++) {
-//        XSSFRow row = chairSheet.getRow(i);
-//        addNonRespondingChairFromImportRow(row);
-//      }
-//
-//      // add authors to their associated presentations
-//      Resource authorResource = resourceLoader.getResource("classpath:authors.xlsx");
-//      XSSFWorkbook authorWorkbook = new XSSFWorkbook(authorResource.getInputStream());
-//      XSSFSheet authorSheet = authorWorkbook.getSheetAt(0);
-//
-//      for (int i = 1; i < authorSheet.getPhysicalNumberOfRows(); i++) {
-//        XSSFRow row = authorSheet.getRow(i);
-//        addAuthorFromImportRow(row);
-//      }
-//
-//      // add organizers
-//      Resource organizerResource = resourceLoader.getResource("classpath:organizers.xlsx");
-//      XSSFWorkbook organizerWorkbook = new XSSFWorkbook(organizerResource.getInputStream());
-//      XSSFSheet organizerSheet = organizerWorkbook.getSheetAt(0);
-//
-//      for (int i = 1; i < organizerSheet.getPhysicalNumberOfRows(); i++) {
-//        XSSFRow row = organizerSheet.getRow(i);
-//        addOrganizerFromImportRow(row);
-//      }
-//
-//      // add other registrants
-//      Resource registrantResource = resourceLoader.getResource("classpath:registrants.xlsx");
-//      XSSFWorkbook registrantWorkbook = new XSSFWorkbook(registrantResource.getInputStream());
-//      XSSFSheet registrantSheet = registrantWorkbook.getSheetAt(0);
-//
-//      for (int i = 1; i < registrantSheet.getPhysicalNumberOfRows(); i++) {
-//        XSSFRow row = registrantSheet.getRow(i);
-//        addRegistrantFromImportRow(row);
-//      }
-
+      /**
+       * assign papers to sessions
+       */
+      log.info("Assigning sessions");
+      XSSFSheet sessionPapersSheet = sessionWorkbook.getSheetAt(1);
+      for (int i = 6; i < sessionPapersSheet.getPhysicalNumberOfRows(); i++) {
+        XSSFRow row = sessionPapersSheet.getRow(i);
+        assignPaperToSession(row);
+      }
+      log.info("Done assigning sessions");
     } catch (IOException e) {
       throw new ImportException("Could not open one of the excel files!", e);
     }
@@ -287,58 +250,105 @@ public class ImportService {
     }
   }
 
-  private void createSessionFromImportRow(XSSFRow row) {
-    String sessionId = row.getCell(0, Row.CREATE_NULL_AS_BLANK).toString();
-    // TODO: make the session
+  public Session createSessionFromImportRow(XSSFRow row) {
+    String sessionCode = row.getCell(1, Row.CREATE_NULL_AS_BLANK).toString();
+    String trackCode = row.getCell(7, Row.CREATE_NULL_AS_BLANK).toString();
+    if (trackCode.trim().isEmpty()) {
+      // TODO: handle keynotes etc.
+      return null; // skip these for now; either empty row or a session we can't deal with right now
+    }
 
-    // loop through papers
-    boolean morePapers = true;
-    int orderNum = 1;
-    do {
-      int paperId = (int) row.getCell(1, Row.CREATE_NULL_AS_BLANK).getNumericCellValue();
-      if (paperId != 0) { // TODO: DOES THIS WORK? Probs not
-        Presentation pres = presentationRepository.findByPaperId(paperId).orElse(null);
-        if (pres != null) {
-          // TODO: add this presentation to the session
-        }
-        orderNum++;
-      } else {
-        morePapers = false;
+    // Session date/time stuff!
+    String startString = row.getCell(4, Row.CREATE_NULL_AS_BLANK).toString();
+    ZonedDateTime zonedStart = row.getCell(3).getDateCellValue().toInstant().atZone(ZoneId.of("Asia/Seoul"));
+    String endString = row.getCell(6, Row.CREATE_NULL_AS_BLANK).toString();
+    ZonedDateTime zonedEnd = row.getCell(5).getDateCellValue().toInstant().atZone(ZoneId.of("Asia/Seoul"));
+
+    Instant start = getInstantFromDateAndTime(zonedStart, startString);
+    Instant end = getInstantFromDateAndTime(zonedEnd, endString);
+    Session existingSession = sessionRepository.findBySessionCode(sessionCode).orElse(null);
+    int roundNum = (int) row.getCell(2).getNumericCellValue();
+    if (roundNum == 1) { // first round row is always first, so we have to populate the name/chair/etc.
+      if (existingSession != null) {
+        return existingSession; // session already exists and we're on the first round, so we shouldn't make another
       }
-    } while(morePapers);
+      String sessionChair = row.getCell(10, Row.CREATE_NULL_AS_BLANK).toString();
+      String secondarySessionChair = row.getCell(12, Row.CREATE_NULL_AS_BLANK).toString();
+      Session newSession = new Session();
+      newSession.setSessionCode(sessionCode);
+      newSession.setSessionName("Placeholder for session " + sessionCode);
+      newSession.setPrimaryStart(start);
+      newSession.setPrimaryEnd(end);
+      newSession.setPrimarySessionChair(sessionChair);
+      newSession.setSecondarySessionChair(secondarySessionChair);
+      return sessionRepository.save(newSession);
+    } else { // second round row is always after first, so retrieve the created row and just update the second starting time
+      if (existingSession != null) {
+        existingSession.setSecondaryStart(start);
+        existingSession.setSecondaryEnd(end);
+        return sessionRepository.save(existingSession);
+      }
+      return null;
+    }
   }
 
-  // TODO: where are these users?
-//  private void addOrganizerFromImportRow(XSSFRow row) {
-//    String email = row.getCell(0).toString().trim();
-//    String name = row.getCell(1).toString().trim();
-//    String affiliation = row.getCell(2, Row.CREATE_NULL_AS_BLANK).toString();
-//    String password = DEFAULT_ORGANIZER_PW;
-//    if (!userRepository.existsByEmail(email)) {
-//      createUser(name, email, email, password, affiliation, "", "", "",
-//              "", "", "");
-//    }
-//  }
-//
-//  private void addRegistrantFromImportRow(XSSFRow row) {
-//    String email = row.getCell(1, Row.CREATE_NULL_AS_BLANK).toString().trim();
-//    String fullName = row.getCell(0, Row.CREATE_NULL_AS_BLANK).toString().trim();
-//    String username = email;
-//    String password = DEFAULT_REGISTRANT_PW;
-//    String affiliation = row.getCell(2, Row.CREATE_NULL_AS_BLANK).toString();
-//    String admissionItem = row.getCell(8, Row.CREATE_NULL_AS_BLANK).toString().trim();
-//
-//    // if this registrant is an author/presenter, skip
-//    if (admissionItem.equals("Main Conference")) {
-//      // if this registrant has been created for any reason, skip
-//      if (userRepository.existsByEmail(email)) {
-//        userRepository.findByEmail(email).get();
-//      } else {
-//        createUser(fullName, username, email, password, affiliation, "", "", "",
-//                "", "", "");
-//      }
-//    }
-//  }
+  private Instant getInstantFromDateAndTime(ZonedDateTime zonedDate, String timeString) {
+    // string should be in form "5:00am"
+    timeString = timeString.replace("am", "AM").replace("pm","PM");
+    LocalTime time = LocalTime.parse(timeString, DateTimeFormatter.ofPattern("h:mma"));
+    zonedDate = zonedDate.withHour(time.getHour()).withMinute(time.getMinute());
+    return zonedDate.toInstant();
+  }
+
+  public void assignPaperToSession(XSSFRow row) {
+    String sessionCode = row.getCell(1, Row.CREATE_NULL_AS_BLANK).toString();
+    if (sessionCode.trim().isEmpty()) {
+      return;
+    }
+    Session session = sessionRepository.findBySessionCode(sessionCode).orElse(null);
+    if (session == null) {
+      return;
+    }
+    int roundNum = (int) row.getCell(2).getNumericCellValue();
+    Presentation[] presArray = new Presentation[5];
+    // loop through 5 papers
+    for (int i = 0; i < 5; i++) {
+      // paper ID starts at column 8, and happens every 4 columns for 5 papers
+      int paperId = (int) row.getCell(8 + i*4, Row.CREATE_NULL_AS_BLANK).getNumericCellValue();
+      if (paperId == 0) {
+        continue;
+      }
+      Presentation presentation = presentationRepository.findByPaperId(paperId).orElse(null);
+      if (presentation == null) {
+        continue; // TODO: handle this better
+      }
+      presentation.setSessionCode(sessionCode);
+      if (roundNum == 1) {
+        presentation.setPrimaryStart(session.getPrimaryStart());
+        presentation.setPrimaryEnd(session.getPrimaryEnd());
+      } else {
+        presentation.setSecondaryStart(session.getSecondaryStart());
+        presentation.setSecondaryEnd(session.getSecondaryEnd());
+      }
+      // TODO: set order
+      presentation = presentationRepository.save(presentation);
+      presArray[i] = presentation;
+    }
+    Duration sessionDuration = Duration.between(session.getPrimaryStart(), session.getPrimaryEnd());
+    int sessionMinutes = Math.round(sessionDuration.abs().toMinutes());
+    int numPres = presArray[4] == null ? 4 : 5;
+    int minutesPerPres = sessionMinutes / numPres; // if 4 presentations, divide by 4; else 5
+    Instant primaryStart = session.getPrimaryStart();
+    for (int i = 0; i < numPres; i++) {
+      Presentation pres = presArray[i];
+      if (pres == null) {
+        continue;
+      }
+      pres.setPrimaryStart(primaryStart.plus(i*minutesPerPres, ChronoUnit.MINUTES));
+      pres.setPrimaryEnd(pres.getPrimaryStart().plus(minutesPerPres-1, ChronoUnit.MINUTES));
+      presentationRepository.save(pres);
+    }
+  }
 
   /**
    * Create a new user from extracted info
