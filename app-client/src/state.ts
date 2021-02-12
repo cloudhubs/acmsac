@@ -60,6 +60,7 @@ const defaultState: State = {
   sessions: [],
   selectedSession: new Session(),
   selectedDay: null,
+  selectedTime: null,
   selectedPaper: new AcademicArticle(),
   academicPapers: [],
   serverError: new ServerError(),
@@ -116,6 +117,10 @@ export const reducer = (state = initialState, action: Action) => {
         serverToken: new ServerToken(),
         authenticated: false,
         selectedPaper: new AcademicArticle(),
+        selectedSession: new Session(),
+        selectedDay: null,
+        selectedTime: null,
+        sessions: [],
         academicPapers: [],
         currentUser: new CurrentUser()
       }
@@ -150,6 +155,11 @@ export const reducer = (state = initialState, action: Action) => {
         ...state,
         selectedDay: action.selectedDay
       }
+      case "setSelectedTime":
+        return {
+          ...state,
+          selectedTime: action.selectedTime
+        }
     case "setReminderMessage":
       return {
         ...state,

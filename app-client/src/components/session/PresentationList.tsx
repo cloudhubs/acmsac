@@ -6,9 +6,9 @@ import {
   Typography,
   Link,
 } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
-import { AcademicArticle } from "../../model/AcademicArticle";
+import React, { useState } from "react";
 import { Session } from "../../model/Session";
+import { useGlobalState } from "../../state";
 import PresentationEntry from "./PresentationEntry";
 import { dateTimePair, stopEvent } from "./SessionViewUtils";
 
@@ -19,6 +19,7 @@ const meetingLink = (url: string) => (
 );
 
 function PresentationList(props: { session: Session }) {
+  const [selectedDay] = useGlobalState("selectedDay");
   const session = props.session;
   const papers = session.presentations;
   let [open, setOpen] = useState(false);
@@ -35,7 +36,7 @@ function PresentationList(props: { session: Session }) {
           <Grid container item xs direction="column">
             <Grid item xs>
               <Typography variant="h6">
-                {dateTimePair(session.primaryStart, session.primaryEnd)} (
+                {selectedDay && dateTimePair(session.primaryStart, session.primaryEnd, selectedDay)} (
                 {meetingLink(session.primaryMeetingLink)})
               </Typography>
             </Grid>
@@ -44,7 +45,7 @@ function PresentationList(props: { session: Session }) {
               session.secondaryMeetingLink && (
                 <Grid item xs>
                   <Typography variant="h6">
-                    {dateTimePair(session.secondaryStart, session.secondaryEnd)}{" "}
+                    {selectedDay && dateTimePair(session.secondaryStart, session.secondaryEnd, selectedDay)}{" "}
                     ({meetingLink(session.secondaryMeetingLink)})
                   </Typography>
                 </Grid>
