@@ -40,13 +40,21 @@ const SchedulePane: () => JSX.Element = () => {
   );
 };
 
+function registerDate(date: Date, map: Map<number, Date>) {
+  // Simple hash of date only
+  let iso = 31 * (31 * (31 * date.getFullYear() + date.getMonth()) + date.getDay());
+  if (!map.has(iso)) {
+    map.set(iso, date);
+  }
+}
+
 function createDaySchedules(sessions: Session[]) {
   // Filter to unique days
   let days: Map<number, Date> = new Map<number, Date>();
   for (let session of sessions) {
-    let date = getDayTime(session.primaryStart);
-    if (!days.has(date)) {
-      days.set(date, session.primaryStart);
+    registerDate(session.primaryStart, days);
+    if (session.secondaryEnd) {
+      registerDate(session.secondaryEnd, days);
     }
   }
 

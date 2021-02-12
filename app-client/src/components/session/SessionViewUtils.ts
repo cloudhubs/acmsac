@@ -18,8 +18,6 @@ export const sameDay = (dateA: Date, dateB: Date) =>
   dateA.getFullYear() === dateB.getFullYear();
 
 export const compareDates = (dateA: Date, dateB: Date): number => {
-  let cmp1 = dateA.toISOString() < dateB.toISOString(), cmp2 = dateA.toISOString() > dateB.toISOString();
-  console.log(`${dateA.toISOString()} v. ${dateB.toISOString()}: ${cmp1} and ${cmp2}`)
   if (dateA.toISOString() < dateB.toISOString()) {
     return -1;
   } else if (dateB.toISOString() < dateA.toISOString()) {
