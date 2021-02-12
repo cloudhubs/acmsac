@@ -11,14 +11,28 @@ import { Session } from "../../model/Session";
 import { useGlobalState } from "../../state";
 import SessionHeader from "./DayScheduleHeader";
 import PresentationList from "./PresentationList";
+import { setSelectedDay } from "./SessionViewUtils";
 
 function TimeSlotSchedulePane(props: { date: Date; sessions: Session[] }) {
   const [selected] = useGlobalState("selectedSession");
+  const [selectedDay] = useGlobalState("selectedDay");
+  const date = props.date;
 
   // Create UI
   return (
     <Grid container direction="column">
-      <Accordion>
+      <Accordion
+        expanded={
+          selectedDay !== null && selectedDay.getTime() === date.getTime()
+        }
+        onChange={(_, expanded) =>
+          setSelectedDay(
+            expanded
+              ? date
+              : new Date(date.getFullYear(), date.getMonth(), date.getDate())
+          )
+        }
+      >
         <AccordionSummary>
           <Typography variant="h6">
             {props.date.toLocaleTimeString()}

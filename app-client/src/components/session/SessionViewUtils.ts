@@ -17,6 +17,39 @@ export const sameDay = (dateA: Date, dateB: Date) =>
   dateA.getMonth() === dateB.getMonth() &&
   dateA.getFullYear() === dateB.getFullYear();
 
+export const compareDates = (dateA: Date, dateB: Date): number => {
+  let cmp1 = dateA.toISOString() < dateB.toISOString(), cmp2 = dateA.toISOString() > dateB.toISOString();
+  console.log(`${dateA.toISOString()} v. ${dateB.toISOString()}: ${cmp1} and ${cmp2}`)
+  if (dateA.toISOString() < dateB.toISOString()) {
+    return -1;
+  } else if (dateB.toISOString() < dateA.toISOString()) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+/**
+ * Compares two sessions, seeing which comes first. Assumes that the two secondary
+ * sessions are the same length as the first session.
+ *
+ * @param sessionA First session
+ * @param sessionB Second session
+ */
+export const compareByTime = (sessionA: Session, sessionB: Session) => {
+  // Check primary start
+  let diff = compareDates(sessionA.primaryStart, sessionB.primaryStart);
+  if (
+    diff === 0 &&
+    sessionA.secondaryStart !== null &&
+    sessionB.secondaryStart !== null
+  ) {
+    diff = compareDates(sessionA.secondaryStart, sessionB.secondaryStart);
+  }
+
+  return diff;
+};
+
 export const getDayTime = (date: Date) =>
   date.getTime() - (date.getTime() % MILLIS_IN_DAY);
 

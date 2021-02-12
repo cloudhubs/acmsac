@@ -8,12 +8,12 @@ import {
 } from "@material-ui/core";
 import { Session } from "../../model/Session";
 import { useGlobalState } from "../../state";
-import { formatter, MILLIS_IN_DAY, sameDay, setSelectedDay } from "./SessionViewUtils";
+import { compareByTime, compareDates, formatter, MILLIS_IN_DAY, sameDay, setSelectedDay } from "./SessionViewUtils";
 import TimeSlotSchedulePane from "./TimeSlotSchedulePane";
 
 type TimeSlot = {
   time: Date;
-  slots: Session[];
+  sessions: Session[];
 };
 
 const makeSlots = (sessions: Session[], date: Date) => {
@@ -30,14 +30,15 @@ const makeSlots = (sessions: Session[], date: Date) => {
   for (let session of todaysSessions) {
     let offset = session.primaryStart.getTime() % MILLIS_IN_DAY;
     if (!slots.has(offset)) {
+      console.log(session)
       slots.set(offset, {
         time: session.primaryStart,
-        slots: [] as Session[],
+        sessions: [] as Session[],
       });
     }
 
     // Record session to any relevant slots
-    slots.get(offset)?.slots.push(session);
+    slots.get(offset)?.sessions.push(session);
   }
 
   // Create and return time slots... man iterators for maps are painful
@@ -45,17 +46,19 @@ const makeSlots = (sessions: Session[], date: Date) => {
   let iter = slots.values();
   let next = iter.next();
   while (!next.done) {
+    const slot = next.value;
+    slot.sessions = slot.sessions.sort((a, b) => compareByTime(a, b));
     retVal.push(next.value);
     next = iter.next();
   }
-  return retVal;
+  return retVal.sort((a,b) => compareDates(a.time,b.time));
 };
 
 function DaySchedulePane(props: { date: Date }) {
   const [selectedDay] = useGlobalState("selectedDay");
   const [sessions] = useGlobalState("sessions");
   let [slots, setSlots] = useState(
-    makeSlots(sessions, props.date) as TimeSlot[]
+    [] as TimeSlot[]
   );
 
   // Update the 'slots'--session + papers
@@ -79,7 +82,7 @@ function DaySchedulePane(props: { date: Date }) {
                 <Grid item xs key={slot.time.getTime()}>
                   <TimeSlotSchedulePane
                     date={slot.time}
-                    sessions={slot.slots}
+                    sessions={slot.sessions}
                   />
                 </Grid>
               ))

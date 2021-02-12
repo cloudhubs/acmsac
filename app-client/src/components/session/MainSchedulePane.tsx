@@ -4,7 +4,7 @@ import FetchSession from "../../http/FetchSession";
 import { useGlobalState } from "../../state";
 import DaySchedulePane from "./DaySchedulePane";
 import { isCrossDaySession, Session } from "../../model/Session";
-import { getDayTime } from "./SessionViewUtils";
+import { compareDates, getDayTime } from "./SessionViewUtils";
 import FetchAcademicPapers from "../../http/FetchAcademicPapers";
 
 const SchedulePane: () => JSX.Element = () => {
@@ -51,18 +51,20 @@ function createDaySchedules(sessions: Session[]) {
   }
 
   // Create one pane per day
-  let result = [] as JSX.Element[];
+  let result = [] as Date[];
   let iter = days.values();
   let entry = iter.next();
   while (!entry.done) {
-    result.push(
-      <Grid item xs>
-        <DaySchedulePane date={entry.value} />
-      </Grid>
-    );
+    result.push(entry.value);
     entry = iter.next();
   }
-  return result;
+  return result
+    .sort((a, b) => compareDates(a, b))
+    .map((session) => (
+      <Grid item xs>
+        <DaySchedulePane date={session} />
+      </Grid>
+    ));
 }
 
 export default SchedulePane;
