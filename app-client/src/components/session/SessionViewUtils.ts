@@ -5,8 +5,22 @@ export const MILLIS_IN_DAY = 86400000;
 
 export const formatter = new Intl.DateTimeFormat();
 
-export const dateTimePair = (start: Date, end: Date) =>
-  `${start.toLocaleTimeString()} - ${end.toLocaleTimeString()}`;
+export const toTimeString = (date: Date, assumedDay: Date) =>
+  assumedDay === undefined || sameDay(date, assumedDay)
+    ? date.toLocaleTimeString()
+    : date.toLocaleString();
+
+export const dateTimePair = (
+  startDate: Date,
+  endDate: Date,
+  assumedDate: Date
+) => {
+  let start = toTimeString(startDate, assumedDate);
+  let end = toTimeString(endDate, assumedDate);
+  return `${start} - ${end}`;
+};
+
+export const getTimeZone = () => formatter.resolvedOptions().timeZone;
 
 export const NOP = () => {};
 
@@ -17,6 +31,9 @@ export const sameDay = (dateA: Date, dateB: Date) =>
   dateA.getMonth() === dateB.getMonth() &&
   dateA.getFullYear() === dateB.getFullYear();
 
+export const sameTime = (dateA: Date, dateB: Date) =>
+  dateA.getTime() === dateB.getTime();
+
 export const compareDates = (dateA: Date, dateB: Date): number => {
   if (dateA.toISOString() < dateB.toISOString()) {
     return -1;
@@ -25,7 +42,7 @@ export const compareDates = (dateA: Date, dateB: Date): number => {
   } else {
     return 0;
   }
-}
+};
 
 /**
  * Compares two sessions, seeing which comes first. Assumes that the two secondary
