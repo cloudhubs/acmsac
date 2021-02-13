@@ -51,7 +51,7 @@ const PublicRouter = () => {
                         <Route exact path="/reminder" component={EarlyRegister} />
                         <Route exact path="/api/check/:email" component={CheckList} />
                         <Route exact path="/api/check/:email/:paperId" component={CheckDetail} />
-                        <Route exact path="/sessions" component={ScheduleView} />
+                        <Route exact path="/sessions" component={BetaRouter} />
                         <Route path="*">
                             <Redirect path="/"/>
                         </Route>

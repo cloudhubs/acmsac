@@ -25,11 +25,11 @@ const SchedulePane: () => JSX.Element = () => {
       {/* Header text + description */}
       <Paper>
         <Typography variant="h1">ACM SAC 2021</Typography>
-        <Typography variant="body1">
+        {/* <Typography variant="body1">
           Welcome! Here is some text that gives the warm fuzzies.
           <br />
           TODO put in something meaningful :P
-        </Typography>
+        </Typography> */}
       </Paper>
 
       <Grid container direction="column">

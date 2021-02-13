@@ -54,6 +54,9 @@ const PrivateHeader = () => {
                         <Link to="/">Home</Link>
                     </Button>
                     <Button color="primary" variant="outlined" className={classes.link}>
+                        <Link to="/sessions">Schedule</Link>
+                    </Button>
+                    <Button color="primary" variant="outlined" className={classes.link}>
                         <Link to="/app/track">Tracks</Link>
                     </Button>
                     <Button color="primary" variant="outlined" className={classes.link}>
