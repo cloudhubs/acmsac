@@ -8,11 +8,18 @@ import {
 } from "@material-ui/core";
 import { Session } from "../../model/Session";
 import { useGlobalState } from "../../state";
-import { compareByTime, compareDates, formatter, MILLIS_IN_DAY, sameDay, setSelectedDay } from "./SessionViewUtils";
+import {
+  compareByTime,
+  compareDates,
+  MILLIS_IN_DAY,
+  sameDay,
+  setSelectedDay,
+} from "./SessionViewUtils";
 import TimeSlotSchedulePane from "./TimeSlotSchedulePane";
 
 type TimeSlot = {
   time: Date;
+  timeSecondary?: Date;
   sessions: Session[];
 };
 
@@ -32,6 +39,9 @@ const makeSlots = (sessions: Session[], date: Date) => {
     if (!slots.has(offset)) {
       slots.set(offset, {
         time: session.primaryStart,
+        timeSecondary: session.secondaryStart
+          ? session.secondaryStart
+          : undefined,
         sessions: [] as Session[],
       });
     }
@@ -50,15 +60,13 @@ const makeSlots = (sessions: Session[], date: Date) => {
     retVal.push(next.value);
     next = iter.next();
   }
-  return retVal.sort((a,b) => compareDates(a.time,b.time));
+  return retVal.sort((a, b) => compareDates(a.time, b.time));
 };
 
 function DaySchedulePane(props: { date: Date }) {
   const [selectedDay] = useGlobalState("selectedDay");
   const [sessions] = useGlobalState("sessions");
-  let [slots, setSlots] = useState(
-    [] as TimeSlot[]
-  );
+  let [slots, setSlots] = useState([] as TimeSlot[]);
 
   // Update the 'slots'--session + papers
   const updateSlots = () => setSlots(makeSlots(sessions, props.date));
@@ -72,7 +80,13 @@ function DaySchedulePane(props: { date: Date }) {
         onChange={(_, expanded) => setSelectedDay(expanded ? props.date : null)}
       >
         <AccordionSummary>
-          <Typography variant="h6">{formatter.format(props.date)}</Typography>
+          <Typography variant="h6">
+            {props.date.toLocaleDateString([], {
+              timeZone: "Asia/Seoul",
+              weekday: "long",
+            })}
+            &nbsp;({props.date.toLocaleDateString()})
+          </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Grid container direction="column">
@@ -81,6 +95,7 @@ function DaySchedulePane(props: { date: Date }) {
                 <Grid item xs key={slot.time.getTime()}>
                   <TimeSlotSchedulePane
                     date={slot.time}
+                    dateSecondary={slot.timeSecondary}
                     sessions={slot.sessions}
                   />
                 </Grid>

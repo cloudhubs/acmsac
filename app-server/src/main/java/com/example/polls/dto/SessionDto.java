@@ -23,7 +23,7 @@ public class SessionDto {
   
   String sessionChair;
 
-  String primarySessionChair;
+  String primaryChair1, primaryChair2;
   
   String primaryMeetingLink;
 
@@ -33,7 +33,7 @@ public class SessionDto {
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = PATTERN, timezone = TZ)
   Instant primaryEnd;
 
-  String secondarySessionChair;
+  String secondaryChair1, secondaryChair2;
 
   String secondaryMeetingLink;
 

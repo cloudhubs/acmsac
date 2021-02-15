@@ -40,12 +40,12 @@ public class SessionController {
 
   @PostMapping("/batch")
   public ResponseEntity<String> batchSessions(@RequestBody List<SessionDto> sessions) {
-      for (SessionDto s : sessions) {
-          ResponseEntity<String> resp = createSession(s);
-          if (!resp.getStatusCode().is2xxSuccessful())
-            return resp;
-      }
-      return ResponseEntity.ok("");
+    for (SessionDto s : sessions) {
+      ResponseEntity<String> resp = createSession(s);
+      if (!resp.getStatusCode().is2xxSuccessful())
+        return resp;
+    }
+    return ResponseEntity.ok("");
   }
 
   @PostMapping("/")
@@ -60,9 +60,9 @@ public class SessionController {
 
     // Create the session
     Session s = new Session(newSess.getSessionName(), t != null ? t.get() : null, newSess.getSessionCode(),
-        newSess.getPrimarySessionChair(), newSess.getPrimaryMeetingLink(), newSess.getPrimaryStart(),
-        newSess.getPrimaryEnd(), newSess.getSecondarySessionChair(), newSess.getSecondaryMeetingLink(),
-        newSess.getSecondaryStart(), newSess.getSecondaryEnd());
+        newSess.getPrimaryChair1(), newSess.getPrimaryChair2(), newSess.getPrimaryMeetingLink(),
+        newSess.getPrimaryStart(), newSess.getPrimaryEnd(), newSess.getSecondaryChair1(), newSess.getSecondaryChair2(),
+        newSess.getSecondaryMeetingLink(), newSess.getSecondaryStart(), newSess.getSecondaryEnd());
     sessionRepository.save(s);
     return ResponseEntity.ok("");
   }

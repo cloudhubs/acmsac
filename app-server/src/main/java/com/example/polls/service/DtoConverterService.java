@@ -89,12 +89,14 @@ public class DtoConverterService {
     dto.setSessionCode(s.getSessionCode());
     dto.setPresentations(s.getPresentations());
 
-    dto.setPrimarySessionChair(s.getPrimarySessionChair());
+    dto.setPrimaryChair1(s.getPrimaryChair1());
+    dto.setPrimaryChair2(s.getPrimaryChair2());
     dto.setPrimaryMeetingLink(s.getPrimaryMeetingLink());
     dto.setPrimaryStart(s.getPrimaryStart());
     dto.setPrimaryEnd(s.getPrimaryEnd());
 
-    dto.setSecondarySessionChair(s.getSecondarySessionChair());
+    dto.setSecondaryChair1(s.getSecondaryChair1());
+    dto.setSecondaryChair2(s.getSecondaryChair2());
     dto.setSecondaryMeetingLink(s.getSecondaryMeetingLink());
     dto.setSecondaryStart(s.getSecondaryStart());
     dto.setSecondaryEnd(s.getSecondaryEnd());

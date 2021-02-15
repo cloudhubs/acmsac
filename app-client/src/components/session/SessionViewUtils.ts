@@ -3,12 +3,15 @@ import { dispatch } from "../../state";
 
 export const MILLIS_IN_DAY = 86400000;
 
-export const formatter = new Intl.DateTimeFormat();
+const formatter = new Intl.DateTimeFormat();
 
-export const toTimeString = (date: Date, assumedDay: Date) =>
-  assumedDay === undefined || sameDay(date, assumedDay)
-    ? date.toLocaleTimeString()
-    : date.toLocaleString();
+export const toTimeString = (date: Date, assumedDay?: Date) => {
+  let result: string = date.toLocaleTimeString([], { hour: "2-digit", minute:"2-digit" });
+  if (assumedDay && !sameDay(date, assumedDay)) {
+    result = `${result} ${compareDates(assumedDay, date) < 0? "(+1)" : "(-1)"}`
+  }
+  return result;
+}
 
 export const dateTimePair = (
   startDate: Date,

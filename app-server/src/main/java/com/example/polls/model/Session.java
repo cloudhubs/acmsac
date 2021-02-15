@@ -30,7 +30,7 @@ public class Session {
   private String sessionCode;
 
   @Lob
-  private String primarySessionChair;
+  private String primaryChair1, primaryChair2;
 
   private String primaryMeetingLink;
 
@@ -38,31 +38,33 @@ public class Session {
 
   private Instant primaryEnd = Instant.now();
 
-  private String secondarySessionChair;
+  private String secondaryChair1, secondaryChair2;
 
   private String secondaryMeetingLink;
 
-  private Instant secondaryStart = Instant.now();;
+  private Instant secondaryStart = Instant.now();
 
-  private Instant secondaryEnd = Instant.now();;
+  private Instant secondaryEnd = Instant.now();
 
   /** Presentations occurring within any room in this session */
-  @OneToMany(fetch = FetchType.EAGER, mappedBy = "session", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+  @OneToMany(fetch = FetchType.EAGER, mappedBy = "session", cascade = { CascadeType.MERGE, CascadeType.PERSIST })
   @EqualsAndHashCode.Exclude
   private Set<Presentation> presentations = new HashSet<>();
 
-  public Session(String sessionName, Track track, String sessionCode, String primarySessionChair,
-      String primaryMeetingURL, Instant primaryStart, Instant primaryEnd, String secondarySessionChair,
-      String secondaryMeetingURL, Instant secondaryStart, Instant secondaryEnd) {
+  public Session(String sessionName, Track track, String sessionCode, String primaryChair1, String primaryChair2,
+      String primaryMeetingURL, Instant primaryStart, Instant primaryEnd, String secondaryChair1,
+      String secondaryChair2, String secondaryMeetingURL, Instant secondaryStart, Instant secondaryEnd) {
     super();
     this.sessionName = sessionName;
     this.track = track;
     this.sessionCode = sessionCode;
-    this.primarySessionChair = primarySessionChair;
+    this.primaryChair1 = primaryChair1;
+    this.primaryChair2 = primaryChair2;
     this.primaryMeetingLink = primaryMeetingURL;
     this.primaryStart = primaryStart;
     this.primaryEnd = primaryEnd;
-    this.secondarySessionChair = secondarySessionChair;
+    this.secondaryChair1 = secondaryChair1;
+    this.secondaryChair2 = secondaryChair2;
     this.secondaryMeetingLink = secondaryMeetingURL;
     this.secondaryStart = secondaryStart;
     this.secondaryEnd = secondaryEnd;
