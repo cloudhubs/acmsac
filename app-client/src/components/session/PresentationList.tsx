@@ -1,8 +1,8 @@
 import {
   Grid,
-  ExpansionPanel as Accordion,
-  ExpansionPanelSummary as AccordionSummary,
-  ExpansionPanelDetails as AccordionDetails,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   Typography,
   Link,
 } from "@material-ui/core";

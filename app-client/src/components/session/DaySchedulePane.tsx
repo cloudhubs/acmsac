@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import {
-  ExpansionPanel as Accordion,
-  ExpansionPanelSummary as AccordionSummary,
-  ExpansionPanelDetails as AccordionDetails,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   Typography,
   Grid,
 } from "@material-ui/core";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { Session } from "../../model/Session";
 import { useGlobalState } from "../../state";
 import {
@@ -79,7 +80,7 @@ function DaySchedulePane(props: { date: Date }) {
         expanded={selectedDay !== null && sameDay(selectedDay, props.date)}
         onChange={(_, expanded) => setSelectedDay(expanded ? props.date : null)}
       >
-        <AccordionSummary>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant="h6">
             {props.date.toLocaleDateString([], {
               timeZone: "Asia/Seoul",

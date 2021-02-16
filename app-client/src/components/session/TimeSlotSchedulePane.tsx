@@ -2,12 +2,12 @@ import React, { useEffect } from "react";
 
 import {
   Grid,
-  ExpansionPanel as Accordion,
-  ExpansionPanelSummary as AccordionSummary,
-  ExpansionPanelDetails as AccordionDetails,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   Typography,
 } from "@material-ui/core";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { Session } from "../../model/Session";
 import { useGlobalState } from "../../state";
 import SessionHeader from "./DayScheduleHeader";
@@ -66,7 +66,7 @@ function TimeSlotSchedulePane(props: TimeSlotScheduleProps) {
           )
         }
       >
-        <AccordionSummary>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           {selectedDay && (
             <Grid container direction="row">
               <Grid item xs>

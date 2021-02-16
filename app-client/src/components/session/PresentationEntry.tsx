@@ -2,9 +2,9 @@ import React from "react";
 import {
   Grid,
   Typography,
-  ExpansionPanel as Accordion,
-  ExpansionPanelSummary as AccordionSummary,
-  ExpansionPanelDetails as AccordionDetails,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   IconButton,
 } from "@material-ui/core";
 

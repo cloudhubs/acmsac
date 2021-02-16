@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Paper, Typography } from "@material-ui/core";
 import FetchSession from "../../http/FetchSession";
 import { useGlobalState } from "../../state";
-// import SessionHeader from "./SessionHeader";
 import PresentationList from "./PresentationList";
 import SessionHeader from "./DayScheduleHeader";
 
