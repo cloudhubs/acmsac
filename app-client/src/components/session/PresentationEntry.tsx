@@ -7,9 +7,11 @@ import {
   AccordionDetails,
   IconButton,
 } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
 
 import DescriptionIcon from "@material-ui/icons/Description";
 import VideocamIcon from "@material-ui/icons/Videocam";
+import ChatIcon from "@material-ui/icons/Chat";
 
 import { AcademicArticle } from "../../model/AcademicArticle";
 import { dateTimePair, stopEvent } from "./SessionViewUtils";
@@ -42,6 +44,17 @@ const actions = (paper: AcademicArticle) => {
           </IconButton>
         </a>
       )}
+      {paper.trackCode && paper.id && (
+        <a
+          href={`app/track/${paper.trackCode}/${paper.id}`}
+          onClick={stopEvent}
+          onFocus={stopEvent}
+        >
+          <IconButton>
+            <ChatIcon />
+          </IconButton>
+        </a>
+      )}
     </>
   );
 };
@@ -55,11 +68,17 @@ const PresentationEntry = (props: PresentationEntryProps) => {
         <Grid container direction="row" spacing={2}>
           <Grid item>
             <Typography variant="body1">
-              {selectedDay && dateTimePair(paper.primaryStart, paper.primaryEnd, selectedDay)}
+              {selectedDay &&
+                dateTimePair(paper.primaryStart, paper.primaryEnd, selectedDay)}
               {paper.secondaryStart && paper.secondaryEnd && (
                 <>
                   <br />&<br />
-                  {selectedDay && dateTimePair(paper.secondaryStart, paper.secondaryEnd, selectedDay)}
+                  {selectedDay &&
+                    dateTimePair(
+                      paper.secondaryStart,
+                      paper.secondaryEnd,
+                      selectedDay
+                    )}
                 </>
               )}
             </Typography>
