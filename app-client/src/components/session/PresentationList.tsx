@@ -68,15 +68,20 @@ function PresentationList(props: { session: Session }) {
             {session.secondaryChair1 &&
               session.secondaryChair2 &&
               `Secondary Chairs: ${session.secondaryChair1}, ${session.secondaryChair2}`}
-            Tracks:{" "}
-            {session.trackCodes.map((code, i) => (
+            {session.trackCodes && session.trackCodes.length > 0 && (
               <>
-                {i !== 0 ? ", " : ""}
-                <AccordionSafeAnchor href={`app/track/${code}`}>
-                  {code}
-                </AccordionSafeAnchor>
+                <br />
+                Tracks:{" "}
+                {session.trackCodes.map((code, i) => (
+                  <>
+                    {i !== 0 ? ", " : ""}
+                    <AccordionSafeAnchor href={`app/track/${code}`}>
+                      {code}
+                    </AccordionSafeAnchor>
+                  </>
+                ))}
               </>
-            ))}
+            )}
           </Grid>
         </Grid>
       </AccordionSummary>
