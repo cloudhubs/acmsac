@@ -2,11 +2,12 @@ import React, { useEffect } from "react";
 
 import {
   Grid,
-  ExpansionPanel as Accordion,
-  ExpansionPanelSummary as AccordionSummary,
-  ExpansionPanelDetails as AccordionDetails,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   Typography,
 } from "@material-ui/core";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { Session } from "../../model/Session";
 import { useGlobalState } from "../../state";
 import SessionHeader from "./DayScheduleHeader";
@@ -14,12 +15,21 @@ import PresentationList from "./PresentationList";
 import {
   getTimeZone,
   sameTime,
-  setSelectedDay,
   setSelectedSession,
   setSelectedTime,
+  toTimeString,
 } from "./SessionViewUtils";
 
-function TimeSlotSchedulePane(props: { date: Date; sessions: Session[] }) {
+type TimeSlotScheduleProps = {
+  date: Date;
+  dateSecondary?: Date;
+  sessions: Session[];
+};
+
+const showTimeForPanel = (time: Date, today: Date) =>
+  `${toTimeString(time, today)} ${getTimeZone()}`;
+
+function TimeSlotSchedulePane(props: TimeSlotScheduleProps) {
   const [selected] = useGlobalState("selectedSession");
   const [selectedDay] = useGlobalState("selectedDay");
   const [selectedTime] = useGlobalState("selectedTime");
@@ -56,10 +66,23 @@ function TimeSlotSchedulePane(props: { date: Date; sessions: Session[] }) {
           )
         }
       >
-        <AccordionSummary>
-          <Typography variant="h6">
-            {props.date.toLocaleTimeString()} {getTimeZone()}
-          </Typography>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          {selectedDay && (
+            <Grid container direction="row">
+              <Grid item xs>
+                <Typography variant="h6">
+                  {showTimeForPanel(props.date, selectedDay)}
+                </Typography>
+              </Grid>
+              {props.dateSecondary && (
+                <Grid item xs>
+                  <Typography variant="h6">
+                    {showTimeForPanel(props.dateSecondary, selectedDay)}
+                  </Typography>
+                </Grid>
+              )}
+            </Grid>
+          )}
         </AccordionSummary>
         <AccordionDetails>
           <Grid container direction="column">

@@ -279,8 +279,8 @@ public class ImportService {
       newSession.setSessionName("Placeholder for session " + sessionCode);
       newSession.setPrimaryStart(start);
       newSession.setPrimaryEnd(end);
-      newSession.setPrimarySessionChair(sessionChair);
-      newSession.setSecondarySessionChair(secondarySessionChair);
+      newSession.setPrimaryChair1(sessionChair);
+      newSession.setSecondaryChair1(secondarySessionChair);
       return sessionRepository.save(newSession);
     } else { // second round row is always after first, so retrieve the created row and just update the second starting time
       if (existingSession != null) {

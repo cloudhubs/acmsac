@@ -2,19 +2,21 @@ import React from "react";
 import {
   Grid,
   Typography,
-  ExpansionPanel as Accordion,
-  ExpansionPanelSummary as AccordionSummary,
-  ExpansionPanelDetails as AccordionDetails,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   IconButton,
 } from "@material-ui/core";
 
 import DescriptionIcon from "@material-ui/icons/Description";
 import VideocamIcon from "@material-ui/icons/Videocam";
+import ChatIcon from "@material-ui/icons/Chat";
 
 import { AcademicArticle } from "../../model/AcademicArticle";
-import { dateTimePair, stopEvent } from "./SessionViewUtils";
+import { dateTimePair } from "./SessionViewUtils";
 import { Person } from "../../model/Person";
 import { useGlobalState } from "../../state";
+import AccordionSafeAnchor from "./AccordionSafeAnchor";
 
 type PresentationEntryProps = {
   paper: AcademicArticle;
@@ -29,18 +31,27 @@ const actions = (paper: AcademicArticle) => {
   return (
     <>
       {paper.doiUrl && (
-        <a href={paper.doiUrl} onClick={stopEvent} onFocus={stopEvent}>
+        <AccordionSafeAnchor href={paper.doiUrl}>
           <IconButton>
             <DescriptionIcon />
           </IconButton>
-        </a>
+        </AccordionSafeAnchor>
       )}
       {paper.videoEmbed && (
-        <a href={paper.videoEmbed} onClick={stopEvent} onFocus={stopEvent}>
+        <AccordionSafeAnchor href={paper.videoEmbed}>
           <IconButton>
             <VideocamIcon />
           </IconButton>
-        </a>
+        </AccordionSafeAnchor>
+      )}
+      {paper.trackCode && paper.id && (
+        <AccordionSafeAnchor
+          href={`app/track/${paper.trackCode}/${paper.id}`}
+        >
+          <IconButton>
+            <ChatIcon />
+          </IconButton>
+        </AccordionSafeAnchor>
       )}
     </>
   );
@@ -55,11 +66,17 @@ const PresentationEntry = (props: PresentationEntryProps) => {
         <Grid container direction="row" spacing={2}>
           <Grid item>
             <Typography variant="body1">
-              {selectedDay && dateTimePair(paper.primaryStart, paper.primaryEnd, selectedDay)}
+              {selectedDay &&
+                dateTimePair(paper.primaryStart, paper.primaryEnd, selectedDay)}
               {paper.secondaryStart && paper.secondaryEnd && (
                 <>
                   <br />&<br />
-                  {selectedDay && dateTimePair(paper.secondaryStart, paper.secondaryEnd, selectedDay)}
+                  {selectedDay &&
+                    dateTimePair(
+                      paper.secondaryStart,
+                      paper.secondaryEnd,
+                      selectedDay
+                    )}
                 </>
               )}
             </Typography>

@@ -24,6 +24,7 @@ import javax.annotation.PostConstruct;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -82,19 +83,21 @@ public class DtoConverterService {
 
   public SessionDto getSessionDto(Session s) {
     SessionDto dto = new SessionDto();
-    Track track = s.getTrack();
-    if (track != null)
-      dto.setTrackCode(track.getCode());
+    Set<Track> tracks = s.getTracks();
+    if (tracks != null)
+      dto.setTrackCodes(tracks.stream().map(t -> t.getCode()).collect(Collectors.toSet()));
     dto.setSessionName(s.getSessionName());
     dto.setSessionCode(s.getSessionCode());
     dto.setPresentations(s.getPresentations());
 
-    dto.setPrimarySessionChair(s.getPrimarySessionChair());
+    dto.setPrimaryChair1(s.getPrimaryChair1());
+    dto.setPrimaryChair2(s.getPrimaryChair2());
     dto.setPrimaryMeetingLink(s.getPrimaryMeetingLink());
     dto.setPrimaryStart(s.getPrimaryStart());
     dto.setPrimaryEnd(s.getPrimaryEnd());
 
-    dto.setSecondarySessionChair(s.getSecondarySessionChair());
+    dto.setSecondaryChair1(s.getSecondaryChair1());
+    dto.setSecondaryChair2(s.getSecondaryChair2());
     dto.setSecondaryMeetingLink(s.getSecondaryMeetingLink());
     dto.setSecondaryStart(s.getSecondaryStart());
     dto.setSecondaryEnd(s.getSecondaryEnd());

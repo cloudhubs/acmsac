@@ -5,15 +5,17 @@ import {
 
 export class Session {
     sessionName: string;
-    trackCode: string;
+    trackCodes: string[];
     sessionCode: string;
 
-    primarySessionChair: string;
+    primaryChair1: string;
+    primaryChair2: string;
     primaryMeetingLink: string;
     primaryStart: Date;
     primaryEnd: Date;
 
-    secondarySessionChair: string | null;
+    secondaryChair1: string | null;
+    secondaryChair2: string | null;
     secondaryMeetingLink: string | null;
     secondaryStart: Date | null;
     secondaryEnd: Date | null;
