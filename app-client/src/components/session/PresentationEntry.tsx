@@ -7,16 +7,16 @@ import {
   AccordionDetails,
   IconButton,
 } from "@material-ui/core";
-import { useHistory } from "react-router-dom";
 
 import DescriptionIcon from "@material-ui/icons/Description";
 import VideocamIcon from "@material-ui/icons/Videocam";
 import ChatIcon from "@material-ui/icons/Chat";
 
 import { AcademicArticle } from "../../model/AcademicArticle";
-import { dateTimePair, stopEvent } from "./SessionViewUtils";
+import { dateTimePair } from "./SessionViewUtils";
 import { Person } from "../../model/Person";
 import { useGlobalState } from "../../state";
+import AccordionSafeAnchor from "./AccordionSafeAnchor";
 
 type PresentationEntryProps = {
   paper: AcademicArticle;
@@ -31,29 +31,27 @@ const actions = (paper: AcademicArticle) => {
   return (
     <>
       {paper.doiUrl && (
-        <a href={paper.doiUrl} onClick={stopEvent} onFocus={stopEvent}>
+        <AccordionSafeAnchor href={paper.doiUrl}>
           <IconButton>
             <DescriptionIcon />
           </IconButton>
-        </a>
+        </AccordionSafeAnchor>
       )}
       {paper.videoEmbed && (
-        <a href={paper.videoEmbed} onClick={stopEvent} onFocus={stopEvent}>
+        <AccordionSafeAnchor href={paper.videoEmbed}>
           <IconButton>
             <VideocamIcon />
           </IconButton>
-        </a>
+        </AccordionSafeAnchor>
       )}
       {paper.trackCode && paper.id && (
-        <a
+        <AccordionSafeAnchor
           href={`app/track/${paper.trackCode}/${paper.id}`}
-          onClick={stopEvent}
-          onFocus={stopEvent}
         >
           <IconButton>
             <ChatIcon />
           </IconButton>
-        </a>
+        </AccordionSafeAnchor>
       )}
     </>
   );

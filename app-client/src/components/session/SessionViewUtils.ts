@@ -27,8 +27,6 @@ export const getTimeZone = () => formatter.resolvedOptions().timeZone;
 
 export const NOP = () => {};
 
-export const stopEvent = (event) => event.stopPropagation();
-
 export const sameDay = (dateA: Date, dateB: Date) =>
   dateA.getDate() === dateB.getDate() &&
   dateA.getMonth() === dateB.getMonth() &&

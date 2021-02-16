@@ -2,6 +2,7 @@ package com.example.polls.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,13 +54,13 @@ public class SessionController {
     // TODO: security lol
 
     // Get the track
-    String code = newSess.getTrackCode();
-    Optional<Track> t = code != null ? trackRepository.findByCodeIgnoreCase(code) : null;
+    Set<String> codes = newSess.getTrackCodes();
+    Optional<Set<Track>> t = codes != null ? trackRepository.findAllByCodeIn(codes) : null;
     if (t != null && !t.isPresent())
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No track found");
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid track provided");
 
     // Create the session
-    Session s = new Session(newSess.getSessionName(), t != null ? t.get() : null, newSess.getSessionCode(),
+    Session s = new Session(newSess.getSessionName(), newSess.getSessionCode(), t.get(),
         newSess.getPrimaryChair1(), newSess.getPrimaryChair2(), newSess.getPrimaryMeetingLink(),
         newSess.getPrimaryStart(), newSess.getPrimaryEnd(), newSess.getSecondaryChair1(), newSess.getSecondaryChair2(),
         newSess.getSecondaryMeetingLink(), newSess.getSecondaryStart(), newSess.getSecondaryEnd());

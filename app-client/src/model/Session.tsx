@@ -5,7 +5,7 @@ import {
 
 export class Session {
     sessionName: string;
-    trackCode: string;
+    trackCodes: string[];
     sessionCode: string;
 
     primaryChair1: string;

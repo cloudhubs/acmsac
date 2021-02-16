@@ -15,7 +15,7 @@ public class SessionDto {
   
   String sessionName;
 
-  String trackCode;
+  Set<String> trackCodes;
 
   Long sessionID;
 

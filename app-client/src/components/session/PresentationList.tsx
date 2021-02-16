@@ -4,18 +4,16 @@ import {
   AccordionSummary,
   AccordionDetails,
   Typography,
-  Link,
 } from "@material-ui/core";
 import React, { useState } from "react";
 import { Session } from "../../model/Session";
 import { useGlobalState } from "../../state";
+import AccordionSafeAnchor from "./AccordionSafeAnchor";
 import PresentationEntry from "./PresentationEntry";
-import { dateTimePair, stopEvent } from "./SessionViewUtils";
+import { dateTimePair } from "./SessionViewUtils";
 
 const meetingLink = (url: string) => (
-  <Link href={url} onClick={stopEvent} onFocus={stopEvent}>
-    Go to meeting room
-  </Link>
+  <AccordionSafeAnchor href={url}>Go to meeting room</AccordionSafeAnchor>
 );
 
 function PresentationList(props: { session: Session }) {
@@ -70,6 +68,15 @@ function PresentationList(props: { session: Session }) {
             {session.secondaryChair1 &&
               session.secondaryChair2 &&
               `Secondary Chairs: ${session.secondaryChair1}, ${session.secondaryChair2}`}
+            Tracks:{" "}
+            {session.trackCodes.map((code, i) => (
+              <>
+                {i !== 0 ? ", " : ""}
+                <AccordionSafeAnchor href={`app/track/${code}`}>
+                  {code}
+                </AccordionSafeAnchor>
+              </>
+            ))}
           </Grid>
         </Grid>
       </AccordionSummary>

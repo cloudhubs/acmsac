@@ -23,9 +23,9 @@ public class Session {
   @Lob
   private String sessionName;
 
-  @ManyToOne(fetch = FetchType.EAGER)
+  @ManyToMany(fetch = FetchType.EAGER)
   @JoinColumn
-  private Track track;
+  private Set<Track> tracks = new HashSet<>();
 
   private String sessionCode;
 
@@ -51,13 +51,13 @@ public class Session {
   @EqualsAndHashCode.Exclude
   private Set<Presentation> presentations = new HashSet<>();
 
-  public Session(String sessionName, Track track, String sessionCode, String primaryChair1, String primaryChair2,
+  public Session(String sessionName, String sessionCode, Set<Track> tracks, String primaryChair1, String primaryChair2,
       String primaryMeetingURL, Instant primaryStart, Instant primaryEnd, String secondaryChair1,
       String secondaryChair2, String secondaryMeetingURL, Instant secondaryStart, Instant secondaryEnd) {
     super();
     this.sessionName = sessionName;
-    this.track = track;
     this.sessionCode = sessionCode;
+    this.tracks = tracks;
     this.primaryChair1 = primaryChair1;
     this.primaryChair2 = primaryChair2;
     this.primaryMeetingLink = primaryMeetingURL;
