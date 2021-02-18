@@ -155,7 +155,7 @@ public class ImportService {
     Optional<Track> track = trackRepository.findByCodeIgnoreCase(trackCode);
     if (track.isPresent()) {
       Track realTrack = track.get();
-      if (!realTrack.getChairs().contains(chair)) {
+      if (!realTrack.getChairs().stream().anyMatch(c -> c.getId().equals(chair.getId()))) {
         realTrack.getChairs().add(chair);
         try {
           trackRepository.save(realTrack);
@@ -314,6 +314,10 @@ public class ImportService {
     // loop through 5 papers
     for (int i = 0; i < 5; i++) {
       // paper ID starts at column 8, and happens every 4 columns for 5 papers
+      String paperIdVal = row.getCell(8 + i*4, Row.CREATE_NULL_AS_BLANK).toString();
+      if (paperIdVal.trim().equals("")) {
+        continue;
+      }
       int paperId = (int) row.getCell(8 + i*4, Row.CREATE_NULL_AS_BLANK).getNumericCellValue();
       if (paperId == 0) {
         continue;
