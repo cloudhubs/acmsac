@@ -281,6 +281,18 @@ public class ImportService {
       newSession.setPrimaryEnd(end);
       newSession.setPrimaryChair1(sessionChair);
       newSession.setSecondaryChair1(secondarySessionChair);
+
+      // parse track code
+      String[] trackCodes = trackCode.split("-");
+      Set<Track> tracks = new HashSet<>();
+      for (String code : trackCodes) {
+        Track track = trackRepository.findByCodeIgnoreCase(code).orElse(null);
+        if (track == null) {
+          continue;
+        }
+        tracks.add(track);
+      }
+      newSession.setTracks(tracks);
       return sessionRepository.save(newSession);
     } else { // second round row is always after first, so retrieve the created row and just update the second starting time
       if (existingSession != null) {
