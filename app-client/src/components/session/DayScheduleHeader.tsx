@@ -1,4 +1,4 @@
-import { Button, Grid, Paper, Typography } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import React from "react";
 import { Session } from "../../model/Session";
 import { useGlobalState } from "../../state";

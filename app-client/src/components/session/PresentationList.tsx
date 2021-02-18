@@ -1,21 +1,19 @@
 import {
   Grid,
-  ExpansionPanel as Accordion,
-  ExpansionPanelSummary as AccordionSummary,
-  ExpansionPanelDetails as AccordionDetails,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   Typography,
-  Link,
 } from "@material-ui/core";
 import React, { useState } from "react";
 import { Session } from "../../model/Session";
 import { useGlobalState } from "../../state";
+import AccordionSafeAnchor from "./AccordionSafeAnchor";
 import PresentationEntry from "./PresentationEntry";
-import { dateTimePair, stopEvent } from "./SessionViewUtils";
+import { dateTimePair } from "./SessionViewUtils";
 
 const meetingLink = (url: string) => (
-  <Link href={url} onClick={stopEvent} onFocus={stopEvent}>
-    Go to meeting room
-  </Link>
+  <AccordionSafeAnchor href={url}>Go to meeting room</AccordionSafeAnchor>
 );
 
 function PresentationList(props: { session: Session }) {
@@ -36,8 +34,13 @@ function PresentationList(props: { session: Session }) {
           <Grid container item xs direction="column">
             <Grid item xs>
               <Typography variant="h6">
-                {selectedDay && dateTimePair(session.primaryStart, session.primaryEnd, selectedDay)} (
-                {meetingLink(session.primaryMeetingLink)})
+                {selectedDay &&
+                  dateTimePair(
+                    session.primaryStart,
+                    session.primaryEnd,
+                    selectedDay
+                  )}{" "}
+                ({meetingLink(session.primaryMeetingLink)})
               </Typography>
             </Grid>
             {session.secondaryStart &&
@@ -45,7 +48,12 @@ function PresentationList(props: { session: Session }) {
               session.secondaryMeetingLink && (
                 <Grid item xs>
                   <Typography variant="h6">
-                    {selectedDay && dateTimePair(session.secondaryStart, session.secondaryEnd, selectedDay)}{" "}
+                    {selectedDay &&
+                      dateTimePair(
+                        session.secondaryStart,
+                        session.secondaryEnd,
+                        selectedDay
+                      )}{" "}
                     ({meetingLink(session.secondaryMeetingLink)})
                   </Typography>
                 </Grid>
@@ -55,7 +63,25 @@ function PresentationList(props: { session: Session }) {
             <Typography variant="h6">{session.sessionName}</Typography>
           </Grid>
           <Grid item xs>
+            Primary Chairs: {session.primaryChair1}, {session.primaryChair2}
             <br />
+            {session.secondaryChair1 &&
+              session.secondaryChair2 &&
+              `Secondary Chairs: ${session.secondaryChair1}, ${session.secondaryChair2}`}
+            {session.trackCodes && session.trackCodes.length > 0 && (
+              <>
+                <br />
+                Tracks:{" "}
+                {session.trackCodes.map((code, i) => (
+                  <>
+                    {i !== 0 ? ", " : ""}
+                    <AccordionSafeAnchor href={`app/track/${code}`}>
+                      {code}
+                    </AccordionSafeAnchor>
+                  </>
+                ))}
+              </>
+            )}
           </Grid>
         </Grid>
       </AccordionSummary>

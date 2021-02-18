@@ -212,12 +212,12 @@ main .MuiPaper-root .chatRow .chatReply {
   margin: 5px 0;
 }
 
-.chatRow .MuiExpansionPanelSummary-content.Mui-expanded {
+.chatRow .MuiAccordionSummary-content.Mui-expanded {
   margin-top: 10px; 
   margin-bottom: 10px; 
 }
 
-.chatContainer .MuiExpansionPanelDetails-root {
+.chatContainer .MuiAccordionDetails-root {
   padding: 8px 24px 14px;
 }
 .chatContainer .replies {
@@ -229,7 +229,7 @@ main .MuiPaper-root .chatRow .chatReply {
     clear: both;
 }
 .highlightButton, 
-.chatRow .MuiButtonBase-root.MuiIconButton-root.MuiExpansionPanelSummary-expandIcon.MuiIconButton-edgeEnd {
+.chatRow .MuiButtonBase-root.MuiIconButton-root.MuiAccordionSummary-expandIcon.MuiIconButton-edgeEnd {
       background: #fbd294 !important;
     border: 1px solid orange !important;
 }
@@ -355,7 +355,7 @@ a.hoverMe:hover + div.hideAbstract {
   position: relative;
 }
 
-.chatRow .MuiExpansionPanelSummary-root {
+.chatRow .MuiAccordionSummary-root {
   padding-left: 10px;
 }
  
