@@ -44,7 +44,7 @@ const PublicRouter = () => {
                 <div>
                     <Switch>
                         <Route exact path="/" component={Index} />
-                        <Route exact path="/app" component={BetaRouter} />
+                        <Route exact path="/app" component={Index} />
                         <Route exact path="/app/track" component={BetaRouter} />
                         <Route exact path="/app/currentuser" component={BetaRouter} />
                         <Route exact path="/search" component={Search} />

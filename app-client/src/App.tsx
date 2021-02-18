@@ -21,7 +21,7 @@ const App = () => {
             <div>
                 <Switch>
                     <Route exact path="/" component={PublicRouter} />
-                    <Route exact path="/app" component={BetaRouter} />
+                    <Route exact path="/app" component={PublicRouter} />
                     <Route exact path="/search" component={PublicRouter} />
                     <Route exact path="/reminder" component={PublicRouter} />
                     <Route exact path="/api/check/:email" component={PublicRouter} />

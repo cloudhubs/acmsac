@@ -77,7 +77,7 @@ const BetaRouter = () => {
                 <div>
                     <Switch>
                         <Route exact path="/" component={Index} />
-                        <Route exact path="/app" component={Login} />
+                        <Route exact path="/app" component={Index} />
                         <Route exact path="/app/register" component={Signup} />
                         <Route exact path="/search" component={PublicRouter} />
                         <Route exact path="/reminder" component={PublicRouter} />

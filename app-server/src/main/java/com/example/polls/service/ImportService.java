@@ -276,7 +276,7 @@ public class ImportService {
       String secondarySessionChair = row.getCell(12, Row.CREATE_NULL_AS_BLANK).toString();
       Session newSession = new Session();
       newSession.setSessionCode(sessionCode);
-      newSession.setSessionName("Placeholder for session " + sessionCode);
+      newSession.setSessionName("Placeholder for session " + sessionCode); // TODO: actual title
       newSession.setPrimaryStart(start);
       newSession.setPrimaryEnd(end);
       newSession.setPrimarySessionChair(sessionChair);

@@ -42,9 +42,9 @@ public class Session {
 
   private String secondaryMeetingLink;
 
-  private Instant secondaryStart = Instant.now();;
+  private Instant secondaryStart = Instant.now();
 
-  private Instant secondaryEnd = Instant.now();;
+  private Instant secondaryEnd = Instant.now();
 
   /** Presentations occurring within any room in this session */
   @OneToMany(fetch = FetchType.EAGER, mappedBy = "session", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
