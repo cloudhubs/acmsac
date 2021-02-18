@@ -38,7 +38,7 @@ export default function TransitionsModal<TransitionProps> ({givenOpen}) {
     const handleClose = () => {
         setOpen(false);
     };
-
+    /* TODO: update this probably */
     return (
         <div>
             <Button className="highlightButton" variant="outlined" onClick={handleOpen}>
@@ -56,7 +56,6 @@ export default function TransitionsModal<TransitionProps> ({givenOpen}) {
                     timeout: 500,
                 }}
             >
-                {/* TODO: update this probably */}
                 <Fade in={open}>
                     <div className={classes.paper}>
                         <h2 id="transition-modal-title">Conference Chair Message</h2>

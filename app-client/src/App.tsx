@@ -6,6 +6,7 @@ import PublicRouter from './router/PublicRouter';
 // import ReactGA from 'react-ga';
 import { createBrowserHistory } from 'history';
 import { withRoot } from './withRoot';
+import PublicFooter from './shared/footer/PublicFooter';
 
 const App = () => {
     // const trackingId: string = "UA-162125692-1"
@@ -37,6 +38,7 @@ const App = () => {
                     </Route>
                 </Switch>
             </div>
+            <PublicFooter />
         </Router>
     );
 }

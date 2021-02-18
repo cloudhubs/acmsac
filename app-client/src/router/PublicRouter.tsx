@@ -13,6 +13,7 @@ import ScheduleView from '../pages/beta/private/ScheduleView';
 import GATracker from '../shared/GATracker';
 import { useGlobalState } from '../state';
 import PrivateHeader from '../shared/header/PrivateHeader';
+import Login from '../pages/beta/public/Login';
 
 const PublicRouter = () => {
     const [auth] = useGlobalState('authenticated');
@@ -44,7 +45,7 @@ const PublicRouter = () => {
                 <div>
                     <Switch>
                         <Route exact path="/" component={Index} />
-                        <Route exact path="/app" component={Index} />
+                        <Route exact path="/app" component={Login} />
                         <Route exact path="/app/track" component={BetaRouter} />
                         <Route exact path="/app/currentuser" component={BetaRouter} />
                         <Route exact path="/search" component={Search} />
@@ -57,7 +58,6 @@ const PublicRouter = () => {
                         </Route>
                     </Switch>
                 </div>
-                <PublicFooter />
                 <Route render={GATracker} />
             </Router>
         </div>
