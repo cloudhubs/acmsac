@@ -21,6 +21,7 @@ function Copyright() {
 
               Developed by: <a color="inherit" target="_blank" href="https://github.com/vinbush" style={{padding: "3px"}}> Vincent Bushong,</a>
               <a color="inherit" target="_blank" href="https://github.com/diptadas" style={{padding: "3px"}}>Dipta Das, </a>
+                  <a color="inherit" target="_blank" href="https://www.linkedin.com/in/micah-schiewe/" style={{padding: "3px"}}>Micah Schiewe,</a>
                   <a color="inherit" target="_blank" href="https://github.com/svacina" style={{padding: "3px"}}>Jan Svačina,</a>
                       <a color="inherit" target="_blank" href="https://github.com/walker76" style={{padding: "3px"}}>Andrew Walker,</a>
                           <a color="inherit" target="_blank" href={"https://www.linkedin.com/in/tomascerny/"} style={{padding: "3px"}}>Tomáš Černý</a>
