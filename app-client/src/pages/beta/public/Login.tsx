@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -61,6 +61,12 @@ const Login = () => {
     const classes = useStyles();
     const [signInUser, uSignInUser] = useGlobalState('signInUser');
     const [token] = useGlobalState('serverToken');
+    const [auth] = useGlobalState('authenticated');
+    useEffect(() => {
+      if (auth) {
+        history.push("/");
+      }
+    }, []);
     return (
         <div>
           {/*<ApplicationBar />*/}
