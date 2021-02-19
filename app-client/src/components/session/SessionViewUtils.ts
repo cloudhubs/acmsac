@@ -8,7 +8,7 @@ const formatter = new Intl.DateTimeFormat();
 export const toTimeString = (date: Date, assumedDay?: Date) => {
   let result: string = date.toLocaleTimeString([], { hour: "2-digit", minute:"2-digit" });
   if (assumedDay && !sameDay(date, assumedDay)) {
-    result = `${result} ${compareDates(assumedDay, date) < 0? "(+1)" : "(-1)"}`
+    result = `${result} (${compareDates(assumedDay, date) < 0? "+1" : "-1"} day)`
   }
   return result;
 }
