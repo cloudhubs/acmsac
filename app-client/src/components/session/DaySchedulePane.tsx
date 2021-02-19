@@ -36,7 +36,7 @@ const makeSlots = (sessions: Session[], date: Date) => {
 
   // Find sessions for today
   for (let session of todaysSessions) {
-    let offset = session.primaryStart.getTime() % MILLIS_IN_DAY;
+    let offset = 31 * (session.primaryStart.getHours() + 31 * (session.primaryStart.getMinutes() + 1));
     if (!slots.has(offset)) {
       slots.set(offset, {
         time: session.primaryStart,

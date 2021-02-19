@@ -45,8 +45,9 @@ const SchedulePane: () => JSX.Element = () => {
 
 function registerDate(date: Date, map: Map<number, Date>) {
   // Simple hash of date only
-  let iso =
-    31 * (31 * (31 * date.getFullYear() + date.getMonth()) + date.getDay());
+  let iso = 31 * date.getDay() + 1;
+  iso = 31 * iso + date.getMonth();
+  iso = 31 * iso + date.getFullYear();
   if (!map.has(iso)) {
     map.set(iso, date);
   }
@@ -72,9 +73,9 @@ function createDaySchedules(sessions: Session[]) {
   }
   return result
     .sort((a, b) => compareDates(a, b))
-    .map((session) => (
+    .map((date) => (
       <Grid item xs>
-        <DaySchedulePane date={session} />
+        <DaySchedulePane date={date} />
       </Grid>
     ));
 }
