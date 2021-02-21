@@ -27,11 +27,7 @@ const makeSlots = (sessions: Session[], date: Date) => {
   let slots: Map<number, TimeSlot> = new Map<number, TimeSlot>();
 
   // Filter to only the slots occurring today
-  let todaysSessions = sessions.filter(
-    (s) =>
-      sameDay(s.primaryStart, date) ||
-      (s.secondaryEnd && sameDay(s.secondaryEnd, date))
-  );
+  let todaysSessions = sessions.filter((s) => sameDay(s.primaryStart, date));
 
   // Find sessions for today
   for (let session of todaysSessions) {

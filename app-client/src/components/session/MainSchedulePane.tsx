@@ -58,9 +58,6 @@ function createDaySchedules(sessions: Session[]) {
   let days: Map<number, Date> = new Map<number, Date>();
   for (let session of sessions) {
     registerDate(session.primaryStart, days);
-    if (session.secondaryEnd) {
-      registerDate(session.secondaryEnd, days);
-    }
   }
 
   // Create one pane per day
