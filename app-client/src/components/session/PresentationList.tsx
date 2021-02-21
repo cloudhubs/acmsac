@@ -1,11 +1,11 @@
 import {
   Grid,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
   Typography,
+  Divider,
+  Card,
+  CardContent,
 } from "@material-ui/core";
-import React, { useState } from "react";
+import React from "react";
 import { Session } from "../../model/Session";
 import { useGlobalState } from "../../state";
 import AccordionSafeAnchor from "./AccordionSafeAnchor";
@@ -20,7 +20,6 @@ function PresentationList(props: { session: Session }) {
   const [selectedDay] = useGlobalState("selectedDay");
   const session = props.session;
   const papers = session.presentations;
-  let [open, setOpen] = useState(false);
 
   const summary = React.useMemo(
     () => (
@@ -91,26 +90,20 @@ function PresentationList(props: { session: Session }) {
   );
 
   return (
-    <Accordion
-      expanded={open}
-      onChange={(_, open) => {
-        if (papers.length !== 0) setOpen(open);
-      }}
-      TransitionProps={{ unmountOnExit: true }}
-    >
-      <AccordionSummary>
-        {summary}
-      </AccordionSummary>
-      <AccordionDetails>
-        <Grid container direction="column">
+    <>
+      <Divider />
+      <Card elevation={2}>
+        <CardContent>{summary}</CardContent>
+      </Card>
+      <Divider />
+      {papers.length > 0 && (
+        <>
           {papers.map((paper) => (
-            <Grid item xs key={paper.title}>
-              <PresentationEntry paper={paper} />
-            </Grid>
+            <PresentationEntry paper={paper} />
           ))}
-        </Grid>
-      </AccordionDetails>
-    </Accordion>
+        </>
+      )}
+    </>
   );
 }
 
