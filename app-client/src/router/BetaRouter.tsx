@@ -99,7 +99,6 @@ const BetaRouter = () => {
                         </Route>
                     </Switch>
                 </div>
-                <PublicFooter />
                 <Route render={GATracker} />
             </Router>
         </div>

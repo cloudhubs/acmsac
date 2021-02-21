@@ -155,7 +155,7 @@ public class ImportService {
     Optional<Track> track = trackRepository.findByCodeIgnoreCase(trackCode);
     if (track.isPresent()) {
       Track realTrack = track.get();
-      if (!realTrack.getChairs().contains(chair)) {
+      if (!realTrack.getChairs().stream().anyMatch(c -> c.getId().equals(chair.getId()))) {
         realTrack.getChairs().add(chair);
         try {
           trackRepository.save(realTrack);
@@ -276,11 +276,23 @@ public class ImportService {
       String secondarySessionChair = row.getCell(12, Row.CREATE_NULL_AS_BLANK).toString();
       Session newSession = new Session();
       newSession.setSessionCode(sessionCode);
-      newSession.setSessionName("Placeholder for session " + sessionCode);
+      newSession.setSessionName("Placeholder for session " + sessionCode); // TODO: actual title
       newSession.setPrimaryStart(start);
       newSession.setPrimaryEnd(end);
       newSession.setPrimaryChair1(sessionChair);
       newSession.setSecondaryChair1(secondarySessionChair);
+
+      // parse track code
+      String[] trackCodes = trackCode.split("-");
+      Set<Track> tracks = new HashSet<>();
+      for (String code : trackCodes) {
+        Track track = trackRepository.findByCodeIgnoreCase(code).orElse(null);
+        if (track == null) {
+          continue;
+        }
+        tracks.add(track);
+      }
+      newSession.setTracks(tracks);
       return sessionRepository.save(newSession);
     } else { // second round row is always after first, so retrieve the created row and just update the second starting time
       if (existingSession != null) {
@@ -314,6 +326,10 @@ public class ImportService {
     // loop through 5 papers
     for (int i = 0; i < 5; i++) {
       // paper ID starts at column 8, and happens every 4 columns for 5 papers
+      String paperIdVal = row.getCell(8 + i*4, Row.CREATE_NULL_AS_BLANK).toString();
+      if (paperIdVal.trim().equals("")) {
+        continue;
+      }
       int paperId = (int) row.getCell(8 + i*4, Row.CREATE_NULL_AS_BLANK).getNumericCellValue();
       if (paperId == 0) {
         continue;

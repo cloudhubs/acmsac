@@ -6,6 +6,7 @@ import PublicRouter from './router/PublicRouter';
 // import ReactGA from 'react-ga';
 import { createBrowserHistory } from 'history';
 import { withRoot } from './withRoot';
+import PublicFooter from './shared/footer/PublicFooter';
 
 const App = () => {
     // const trackingId: string = "UA-162125692-1"
@@ -21,7 +22,7 @@ const App = () => {
             <div>
                 <Switch>
                     <Route exact path="/" component={PublicRouter} />
-                    <Route exact path="/app" component={BetaRouter} />
+                    <Route exact path="/app" component={PublicRouter} />
                     <Route exact path="/search" component={PublicRouter} />
                     <Route exact path="/reminder" component={PublicRouter} />
                     <Route exact path="/api/check/:email" component={PublicRouter} />
@@ -37,6 +38,7 @@ const App = () => {
                     </Route>
                 </Switch>
             </div>
+            <PublicFooter />
         </Router>
     );
 }

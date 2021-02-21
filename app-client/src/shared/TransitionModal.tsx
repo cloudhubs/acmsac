@@ -38,7 +38,7 @@ export default function TransitionsModal<TransitionProps> ({givenOpen}) {
     const handleClose = () => {
         setOpen(false);
     };
-
+    /* TODO: update this probably */
     return (
         <div>
             <Button className="highlightButton" variant="outlined" onClick={handleOpen}>
