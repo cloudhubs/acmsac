@@ -12,7 +12,6 @@ import { useGlobalState } from "../../state";
 import {
   compareByTime,
   compareDates,
-  MILLIS_IN_DAY,
   sameDay,
   setSelectedDay,
 } from "./SessionViewUtils";
@@ -79,6 +78,7 @@ function DaySchedulePane(props: { date: Date }) {
       <Accordion
         expanded={selectedDay !== null && sameDay(selectedDay, props.date)}
         onChange={(_, expanded) => setSelectedDay(expanded ? props.date : null)}
+        TransitionProps={{ unmountOnExit: true }}
       >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant="h6">

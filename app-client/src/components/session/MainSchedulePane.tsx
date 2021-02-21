@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Grid, Paper, Typography } from "@material-ui/core";
 import FetchSession from "../../http/FetchSession";
 import { useGlobalState } from "../../state";
@@ -74,7 +74,7 @@ function createDaySchedules(sessions: Session[]) {
   return result
     .sort((a, b) => compareDates(a, b))
     .map((date) => (
-      <Grid item xs>
+      <Grid item xs key={date.getTime()}>
         <DaySchedulePane date={date} />
       </Grid>
     ));

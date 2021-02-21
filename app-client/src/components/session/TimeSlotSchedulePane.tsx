@@ -15,8 +15,7 @@ import PresentationList from "./PresentationList";
 import {
   getTimeZone,
   sameTime,
-  setSelectedSession,
-  setSelectedTime,
+  setSelectedSlot,
   toTimeString,
 } from "./SessionViewUtils";
 
@@ -35,25 +34,13 @@ function TimeSlotSchedulePane(props: TimeSlotScheduleProps) {
   const [selectedTime] = useGlobalState("selectedTime");
   const date = props.date;
 
-  useEffect(() => {
-    if (
-      !selected.primaryStart ||
-      (selectedTime &&
-        sameTime(selectedTime, date) &&
-        !sameTime(selected.primaryStart, date) &&
-        !(selected.secondaryEnd && sameTime(selected.secondaryEnd, date)) &&
-        props.sessions.length > 0)
-    )
-      setSelectedSession(props.sessions[0]);
-  }, [selectedDay, selectedTime, selected]);
-
   // Create UI
   return (
     <Grid container direction="column">
       <Accordion
         expanded={selectedTime !== null && sameTime(selectedTime, date)}
-        onChange={(_, expanded) =>
-          setSelectedTime(
+        onChange={(_, expanded) => {
+          setSelectedSlot(
             selectedDay && expanded
               ? new Date(
                   selectedDay.getFullYear(),
@@ -62,9 +49,11 @@ function TimeSlotSchedulePane(props: TimeSlotScheduleProps) {
                   date.getHours(),
                   date.getMinutes()
                 )
-              : null
-          )
-        }
+              : null,
+              props.sessions[0]
+          );
+        }}
+        TransitionProps={{ unmountOnExit: true }}
       >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           {selectedDay && (
@@ -86,13 +75,13 @@ function TimeSlotSchedulePane(props: TimeSlotScheduleProps) {
         </AccordionSummary>
         <AccordionDetails>
           <Grid container direction="column">
-            <Grid item xs>
+            <Grid item xs key={-1}>
               <SessionHeader sessions={props.sessions} />
             </Grid>
             {props.sessions
               .filter((s) => s.sessionCode === selected.sessionCode)
               .map((s) => (
-                <Grid item xs>
+                <Grid item xs key={s.primaryStart.getTime()}>
                   <PresentationList session={s} />
                 </Grid>
               ))}

@@ -153,12 +153,14 @@ export const reducer = (state = initialState, action: Action) => {
     case "setSelectedDay":
       return {
         ...state,
-        selectedDay: action.selectedDay
+        selectedDay: action.selectedDay,
+        selectedTime: null
       }
-      case "setSelectedTime":
+      case "setSelectedSlot":
         return {
           ...state,
-          selectedTime: action.selectedTime
+          selectedTime: action.selectedTime,
+          selectedSession: action.selectedSession
         }
     case "setReminderMessage":
       return {

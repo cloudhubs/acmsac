@@ -77,10 +77,11 @@ export const setSelectedDay = (selectedDay: Date | null) => {
   });
 };
 
-export const setSelectedTime = (selectedTime: Date | null) => {
+export const setSelectedSlot = (selectedTime: Date | null, session: Session) => {
   dispatch({
     selectedTime: selectedTime,
-    type: "setSelectedTime",
+    selectedSession: session,
+    type: "setSelectedSlot",
   });
 };
 
