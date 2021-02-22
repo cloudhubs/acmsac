@@ -9,9 +9,8 @@ import {
 import React from "react";
 import { Session } from "../../model/Session";
 import { useGlobalState } from "../../state";
-import AccordionSafeAnchor from "./AccordionSafeAnchor";
+import { AccordionSafeAnchor, DateTimePair } from "./UtilityComponents";
 import PresentationEntry from "./PresentationEntry";
-import { dateTimePair } from "./SessionViewUtils";
 
 const meetingLink = (url: string) => (
   <AccordionSafeAnchor href={url}>Go to meeting room</AccordionSafeAnchor>
@@ -28,12 +27,13 @@ function PresentationList(props: { session: Session }) {
         <Grid container item xs direction="column">
           <Grid item xs>
             <Typography variant="h6">
-              {selectedDay &&
-                dateTimePair(
-                  session.primaryStart,
-                  session.primaryEnd,
-                  selectedDay
-                )}{" "}
+              {selectedDay && (
+                <DateTimePair
+                  start={session.primaryStart}
+                  end={session.primaryEnd}
+                  assumedDate={selectedDay}
+                />
+              )}{" "}
               (
               {session.primaryMeetingLink
                 ? meetingLink(session.primaryMeetingLink)
@@ -44,12 +44,13 @@ function PresentationList(props: { session: Session }) {
           {session.secondaryStart && session.secondaryEnd && (
             <Grid item xs>
               <Typography variant="h6">
-                {selectedDay &&
-                  dateTimePair(
-                    session.secondaryStart,
-                    session.secondaryEnd,
-                    selectedDay
-                  )}{" "}
+                {selectedDay && (
+                  <DateTimePair
+                    start={session.secondaryStart}
+                    end={session.secondaryEnd}
+                    assumedDate={selectedDay}
+                  />
+                )}{" "}
                 (
                 {session.secondaryMeetingLink
                   ? meetingLink(session.secondaryMeetingLink)

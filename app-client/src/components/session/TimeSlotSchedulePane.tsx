@@ -13,11 +13,10 @@ import { useGlobalState } from "../../state";
 import SessionHeader from "./DayScheduleHeader";
 import PresentationList from "./PresentationList";
 import {
-  getTimeZone,
   sameTime,
   setSelectedSlot,
-  toTimeString,
 } from "./SessionViewUtils";
+import { DateTime } from "./UtilityComponents";
 
 type TimeSlotScheduleProps = {
   date: Date;
@@ -25,8 +24,7 @@ type TimeSlotScheduleProps = {
   sessions: Session[];
 };
 
-const showTimeForPanel = (time: Date, today: Date) =>
-  `${toTimeString(time, today)} ${getTimeZone()}`;
+const showTimeForPanel = (time: Date, today: Date) => <DateTime date={time} assumedDate={today} />;
 
 function TimeSlotSchedulePane(props: TimeSlotScheduleProps) {
   const [selected] = useGlobalState("selectedSession");
@@ -57,7 +55,7 @@ function TimeSlotSchedulePane(props: TimeSlotScheduleProps) {
       >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           {selectedDay && (
-            <Grid container direction="row">
+            <Grid container direction="column">
               <Grid item xs>
                 <Typography variant="h6">
                   {showTimeForPanel(props.date, selectedDay)}
