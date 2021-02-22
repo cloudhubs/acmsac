@@ -15,7 +15,7 @@ import ChatIcon from "@material-ui/icons/Chat";
 import { AcademicArticle } from "../../model/AcademicArticle";
 import { Person } from "../../model/Person";
 import { useGlobalState } from "../../state";
-import { AccordionSafeAnchor, DateTimePair } from "./UtilityComponents";
+import { AccordionSafeAnchor, DateTimePair } from "./util/UtilityComponents";
 
 type PresentationEntryProps = {
   paper: AcademicArticle;

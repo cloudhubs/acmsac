@@ -4,7 +4,8 @@ import FetchSession from "../../http/FetchSession";
 import { useGlobalState } from "../../state";
 import DaySchedulePane from "./DaySchedulePane";
 import { Session } from "../../model/Session";
-import { compareDates, dateToNumber, setSelectedDay } from "./SessionViewUtils";
+import { compareDates, dateToNumber, onReferenceDay } from "./util/TimeUtils";
+import { setSelectedDay } from "./util/ReduxUtils";
 
 const LOADED_SS_KEY = "acmsac_loadedtoday";
 
@@ -49,7 +50,7 @@ function registerDate(date: Date, map: Map<number, Date>) {
 
   // The compiler didn't catch that this || will short-circuit if the map doesn't
   // have the key; so I can guarantee the key exists and the time will be non-null.
-  if (!map.has(iso) || (map.get(iso)?.getTime() as number) > date.getTime()) {
+  if (!map.has(iso) || onReferenceDay(date, map.get(iso) as Date)) {
     map.set(iso, date);
   }
 }

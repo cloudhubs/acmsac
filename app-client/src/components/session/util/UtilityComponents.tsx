@@ -1,7 +1,7 @@
 import { Grid, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import React from "react";
-import { getTimeQualifier, toTimeString } from "./SessionViewUtils";
+import { getTimeQualifier, toTimeString } from "./TimeUtils";
 
 /*
  * Accordion Safe Anchor: a link which blocks propogation of events upward when clicked;

@@ -14,9 +14,9 @@ import {
   compareDates,
   getReferenceDay,
   sameDay,
-  setSelectedDay,
-} from "./SessionViewUtils";
+} from "./util/TimeUtils";
 import TimeSlotSchedulePane from "./TimeSlotSchedulePane";
+import { setSelectedDay } from "./util/ReduxUtils";
 
 type TimeSlot = {
   time: Date;

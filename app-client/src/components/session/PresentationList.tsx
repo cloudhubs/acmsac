@@ -9,7 +9,7 @@ import {
 import React from "react";
 import { Session } from "../../model/Session";
 import { useGlobalState } from "../../state";
-import { AccordionSafeAnchor, DateTimePair } from "./UtilityComponents";
+import { AccordionSafeAnchor, DateTimePair } from "./util/UtilityComponents";
 import PresentationEntry from "./PresentationEntry";
 
 const meetingLink = (url: string) => (

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import {
   Grid,
@@ -12,11 +12,9 @@ import { Session } from "../../model/Session";
 import { useGlobalState } from "../../state";
 import SessionHeader from "./DayScheduleHeader";
 import PresentationList from "./PresentationList";
-import {
-  sameTime,
-  setSelectedSlot,
-} from "./SessionViewUtils";
-import { DateTime } from "./UtilityComponents";
+import { sameTime } from "./util/TimeUtils";
+import { DateTime } from "./util/UtilityComponents";
+import { setSelectedSlot } from "./util/ReduxUtils";
 
 type TimeSlotScheduleProps = {
   date: Date;
