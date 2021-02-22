@@ -11,6 +11,7 @@ import { Session } from "../../model/Session";
 import { useGlobalState } from "../../state";
 import { AccordionSafeAnchor, DateTimePair } from "./util/UtilityComponents";
 import PresentationEntry from "./PresentationEntry";
+import { compareDates } from "./util/TimeUtils";
 
 const meetingLink = (url: string) => (
   <AccordionSafeAnchor href={url}>Go to meeting room</AccordionSafeAnchor>
@@ -100,7 +101,7 @@ function PresentationList(props: { session: Session }) {
       <Divider />
       {papers.length > 0 && (
         <Paper>
-          {papers.map((paper) => (
+          {papers.sort((p1, p2) => compareDates(p1.primaryStart, p2.primaryStart)).map((paper) => (
             <PresentationEntry key={paper.paperId} paper={paper} />
           ))}
         </Paper>
