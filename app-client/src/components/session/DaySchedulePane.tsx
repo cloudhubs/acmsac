@@ -12,6 +12,7 @@ import { useGlobalState } from "../../state";
 import {
   compareByTime,
   compareDates,
+  getReferenceDay,
   sameDay,
   setSelectedDay,
 } from "./SessionViewUtils";
@@ -78,11 +79,8 @@ function DaySchedulePane(props: { date: Date }) {
       >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant="h6">
-            {props.date.toLocaleDateString([], {
-              timeZone: "Asia/Seoul",
-              weekday: "long",
-            })}
-            &nbsp;({props.date.toLocaleDateString()})
+            {getReferenceDay(props.date)}
+            &nbsp;(Local start date: {props.date.toLocaleDateString()})
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -98,7 +96,9 @@ function DaySchedulePane(props: { date: Date }) {
                 </Grid>
               ))
             ) : (
-              <Typography variant="body1">NONE FOUND</Typography>
+              <Grid item xs>
+                <Typography variant="body1">NONE FOUND</Typography>
+              </Grid>
             )}
           </Grid>
         </AccordionDetails>

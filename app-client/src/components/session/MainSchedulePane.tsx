@@ -4,7 +4,7 @@ import FetchSession from "../../http/FetchSession";
 import { useGlobalState } from "../../state";
 import DaySchedulePane from "./DaySchedulePane";
 import { Session } from "../../model/Session";
-import { compareDates, setSelectedDay } from "./SessionViewUtils";
+import { compareDates, dateToNumber, setSelectedDay } from "./SessionViewUtils";
 
 const LOADED_SS_KEY = "acmsac_loadedtoday";
 
@@ -45,10 +45,11 @@ const SchedulePane: () => JSX.Element = () => {
 
 function registerDate(date: Date, map: Map<number, Date>) {
   // Simple hash of date only
-  let iso = 31 * date.getDay() + 1;
-  iso = 31 * iso + date.getMonth();
-  iso = 31 * iso + date.getFullYear();
-  if (!map.has(iso)) {
+  let iso = dateToNumber(date);
+
+  // The compiler didn't catch that this || will short-circuit if the map doesn't
+  // have the key; so I can guarantee the key exists and the time will be non-null.
+  if (!map.has(iso) || (map.get(iso)?.getTime() as number) > date.getTime()) {
     map.set(iso, date);
   }
 }

@@ -4,6 +4,7 @@ import {
   Divider,
   Card,
   CardContent,
+  Paper,
 } from "@material-ui/core";
 import React from "react";
 import { Session } from "../../model/Session";
@@ -76,7 +77,7 @@ function PresentationList(props: { session: Session }) {
               {session.trackCodes.map((code, i) => (
                 <>
                   {i !== 0 ? ", " : ""}
-                  <AccordionSafeAnchor href={`app/track/${code}`}>
+                  <AccordionSafeAnchor href={`app/track/${code}`} key={code}>
                     {code}
                   </AccordionSafeAnchor>
                 </>
@@ -97,11 +98,11 @@ function PresentationList(props: { session: Session }) {
       </Card>
       <Divider />
       {papers.length > 0 && (
-        <>
+        <Paper>
           {papers.map((paper) => (
-            <PresentationEntry paper={paper} />
+            <PresentationEntry key={paper.paperId} paper={paper} />
           ))}
-        </>
+        </Paper>
       )}
     </>
   );

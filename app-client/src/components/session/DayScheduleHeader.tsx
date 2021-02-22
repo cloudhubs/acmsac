@@ -14,6 +14,7 @@ function SessionHeader(props: { sessions: Session[] }) {
           session.sessionCode === selectedSession.sessionCode;
         return (
           <Button
+            key={session.sessionCode}
             color={isSelected ? "primary" : "default"}
             variant="contained"
             onClick={isSelected ? NOP : () => setSelectedSession(session)}
