@@ -28,6 +28,7 @@ const personToString = (person: Person, i: number) => {
 };
 
 const actions = (paper: AcademicArticle) => {
+  let paperUrl = `app/track/${paper.trackCode}/${paper.id}`;
   return (
     <>
       {paper.doiUrl && (
@@ -37,21 +38,19 @@ const actions = (paper: AcademicArticle) => {
           </IconButton>
         </AccordionSafeAnchor>
       )}
-      {paper.videoEmbed && (
-        <AccordionSafeAnchor href={paper.videoEmbed}>
-          <IconButton>
-            <VideocamIcon />
-          </IconButton>
-        </AccordionSafeAnchor>
-      )}
       {paper.trackCode && paper.id && (
-        <AccordionSafeAnchor
-          href={`app/track/${paper.trackCode}/${paper.id}`}
-        >
-          <IconButton>
-            <ChatIcon />
-          </IconButton>
-        </AccordionSafeAnchor>
+        <>
+          <AccordionSafeAnchor href={paperUrl}>
+            <IconButton>
+              <VideocamIcon />
+            </IconButton>
+          </AccordionSafeAnchor>
+          <AccordionSafeAnchor href={`${paperUrl}/#chat`}>
+            <IconButton>
+              <ChatIcon />
+            </IconButton>
+          </AccordionSafeAnchor>
+        </>
       )}
     </>
   );

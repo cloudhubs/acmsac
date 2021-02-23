@@ -195,6 +195,7 @@ const PaperDetail = ({classes}) => {
                         </Typography>
                     </>
                 }
+                <div id="chat">&nbsp;</div>
                 <br />
                 <br />
                 <br />
