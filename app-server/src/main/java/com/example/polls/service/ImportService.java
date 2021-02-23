@@ -48,6 +48,7 @@ public class ImportService {
 
   private final String DEFAULT_ORGANIZER_PW = "acmsaccommittee2021";
   private final String DEFAULT_REGISTRANT_PW = "acmsacregistrant2021";
+  private final String DEFAULT_SESSION_CHAIR_PW = "acmsacregistrant2021";
   private final String DEFAULT_CHAIR_PW = "acmsac2021-";
   private final String PRESENTATION_RESOURCE_NAME = "classpath:2021_papers.xlsx";
   private final String USER_RESOURCE_NAME = "classpath:2021_users.xlsx";
@@ -252,47 +253,49 @@ public class ImportService {
 
   public Session createSessionFromImportRow(XSSFRow row) {
     String sessionCode = row.getCell(1, Row.CREATE_NULL_AS_BLANK).toString();
-    String trackCode = row.getCell(7, Row.CREATE_NULL_AS_BLANK).toString();
+    String trackCode = row.getCell(8, Row.CREATE_NULL_AS_BLANK).toString();
     if (trackCode.trim().isEmpty()) {
       // TODO: handle keynotes etc.
       return null; // skip these for now; either empty row or a session we can't deal with right now
     }
 
     // Session date/time stuff!
-    String startString = row.getCell(4, Row.CREATE_NULL_AS_BLANK).toString();
-    ZonedDateTime zonedStart = row.getCell(3).getDateCellValue().toInstant().atZone(ZoneId.of("Asia/Seoul"));
-    String endString = row.getCell(6, Row.CREATE_NULL_AS_BLANK).toString();
-    ZonedDateTime zonedEnd = row.getCell(5).getDateCellValue().toInstant().atZone(ZoneId.of("Asia/Seoul"));
+    String startString = row.getCell(5, Row.CREATE_NULL_AS_BLANK).toString();
+    ZonedDateTime zonedStart = row.getCell(4).getDateCellValue().toInstant().atZone(ZoneId.of("Asia/Seoul"));
+    String endString = row.getCell(7, Row.CREATE_NULL_AS_BLANK).toString();
+    ZonedDateTime zonedEnd = row.getCell(6).getDateCellValue().toInstant().atZone(ZoneId.of("Asia/Seoul"));
 
     Instant start = getInstantFromDateAndTime(zonedStart, startString);
     Instant end = getInstantFromDateAndTime(zonedEnd, endString);
     Session existingSession = sessionRepository.findBySessionCode(sessionCode).orElse(null);
-    int roundNum = (int) row.getCell(2).getNumericCellValue();
+    int roundNum = (int) row.getCell(3).getNumericCellValue();
     if (roundNum == 1) { // first round row is always first, so we have to populate the name/chair/etc.
       if (existingSession != null) {
         return existingSession; // session already exists and we're on the first round, so we shouldn't make another
       }
-      String sessionChair = row.getCell(10, Row.CREATE_NULL_AS_BLANK).toString();
-      String secondarySessionChair = row.getCell(12, Row.CREATE_NULL_AS_BLANK).toString();
+      String sessionChair = row.getCell(11, Row.CREATE_NULL_AS_BLANK).toString();
+      String secondarySessionChair = row.getCell(13, Row.CREATE_NULL_AS_BLANK).toString();
       Session newSession = new Session();
       newSession.setSessionCode(sessionCode);
-      newSession.setSessionName("Placeholder for session " + sessionCode); // TODO: actual title
+      newSession.setSessionName(row.getCell(2, Row.CREATE_NULL_AS_BLANK).toString());
       newSession.setPrimaryStart(start);
       newSession.setPrimaryEnd(end);
       newSession.setPrimaryChair1(sessionChair);
       newSession.setSecondaryChair1(secondarySessionChair);
 
-      // parse track code
-      String[] trackCodes = trackCode.split("-");
-      Set<Track> tracks = new HashSet<>();
-      for (String code : trackCodes) {
-        Track track = trackRepository.findByCodeIgnoreCase(code).orElse(null);
-        if (track == null) {
-          continue;
+      if (!trackCode.toLowerCase().contains("key")) {
+        // parse track code
+        String[] trackCodes = trackCode.split("-");
+        Set<Track> tracks = new HashSet<>();
+        for (String code : trackCodes) {
+          Track track = trackRepository.findByCodeIgnoreCase(code).orElse(null);
+          if (track == null) {
+            continue;
+          }
+          tracks.add(track);
         }
-        tracks.add(track);
+        newSession.setTracks(tracks);
       }
-      newSession.setTracks(tracks);
       return sessionRepository.save(newSession);
     } else { // second round row is always after first, so retrieve the created row and just update the second starting time
       if (existingSession != null) {
