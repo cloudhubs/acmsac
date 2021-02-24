@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import {
   Grid,
@@ -12,13 +12,9 @@ import { Session } from "../../model/Session";
 import { useGlobalState } from "../../state";
 import SessionHeader from "./DayScheduleHeader";
 import PresentationList from "./PresentationList";
-import {
-  getTimeZone,
-  sameTime,
-  setSelectedSession,
-  setSelectedTime,
-  toTimeString,
-} from "./SessionViewUtils";
+import { sameTime } from "./util/TimeUtils";
+import { DateTime } from "./util/UtilityComponents";
+import { setSelectedSlot } from "./util/ReduxUtils";
 
 type TimeSlotScheduleProps = {
   date: Date;
@@ -26,8 +22,7 @@ type TimeSlotScheduleProps = {
   sessions: Session[];
 };
 
-const showTimeForPanel = (time: Date, today: Date) =>
-  `${toTimeString(time, today)} ${getTimeZone()}`;
+const showTimeForPanel = (time: Date, today: Date) => <DateTime date={time} assumedDate={today} />;
 
 function TimeSlotSchedulePane(props: TimeSlotScheduleProps) {
   const [selected] = useGlobalState("selectedSession");
@@ -35,25 +30,13 @@ function TimeSlotSchedulePane(props: TimeSlotScheduleProps) {
   const [selectedTime] = useGlobalState("selectedTime");
   const date = props.date;
 
-  useEffect(() => {
-    if (
-      !selected.primaryStart ||
-      (selectedTime &&
-        sameTime(selectedTime, date) &&
-        !sameTime(selected.primaryStart, date) &&
-        !(selected.secondaryEnd && sameTime(selected.secondaryEnd, date)) &&
-        props.sessions.length > 0)
-    )
-      setSelectedSession(props.sessions[0]);
-  }, [selectedDay, selectedTime, selected]);
-
   // Create UI
   return (
     <Grid container direction="column">
       <Accordion
         expanded={selectedTime !== null && sameTime(selectedTime, date)}
-        onChange={(_, expanded) =>
-          setSelectedTime(
+        onChange={(_, expanded) => {
+          setSelectedSlot(
             selectedDay && expanded
               ? new Date(
                   selectedDay.getFullYear(),
@@ -62,13 +45,15 @@ function TimeSlotSchedulePane(props: TimeSlotScheduleProps) {
                   date.getHours(),
                   date.getMinutes()
                 )
-              : null
-          )
-        }
+              : null,
+              props.sessions[0]
+          );
+        }}
+        TransitionProps={{ unmountOnExit: true }}
       >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           {selectedDay && (
-            <Grid container direction="row">
+            <Grid container direction="column">
               <Grid item xs>
                 <Typography variant="h6">
                   {showTimeForPanel(props.date, selectedDay)}
@@ -86,13 +71,13 @@ function TimeSlotSchedulePane(props: TimeSlotScheduleProps) {
         </AccordionSummary>
         <AccordionDetails>
           <Grid container direction="column">
-            <Grid item xs>
+            <Grid item xs key={-1}>
               <SessionHeader sessions={props.sessions} />
             </Grid>
             {props.sessions
               .filter((s) => s.sessionCode === selected.sessionCode)
               .map((s) => (
-                <Grid item xs>
+                <Grid item xs key={s.primaryStart.getTime()}>
                   <PresentationList session={s} />
                 </Grid>
               ))}
