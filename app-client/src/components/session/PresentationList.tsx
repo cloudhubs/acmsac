@@ -5,6 +5,7 @@ import {
   Card,
   CardContent,
   Paper,
+  IconButton,
 } from "@material-ui/core";
 import React from "react";
 import { Session } from "../../model/Session";
@@ -14,6 +15,7 @@ import PresentationEntry from "./PresentationEntry";
 import { compareDates } from "./util/TimeUtils";
 import { Button } from "@material-ui/core";
 import ics from "../../vendor/ics.js";
+import EventIcon from "@material-ui/icons/Event";
 
 const meetingLink = (url: string) => (
   <AccordionSafeAnchor href={url}>Go to meeting room</AccordionSafeAnchor>
@@ -104,8 +106,10 @@ function PresentationList(props: { session: Session }) {
           )}
         </Grid>
         <Grid item xs>
-          <Button variant="contained" onClick={()=>calExport(true)}>Save first round session to calendar</Button><br/>
-          <Button variant="contained" onClick={()=>calExport(false)}>Save second round session to calendar</Button>
+          <Button variant="contained" onClick={()=>calExport(true)}>First round event <EventIcon /></Button><br/>
+          {session.secondaryStart != null && 
+            <Button variant="contained" onClick={()=>calExport(false)}>Second round event <EventIcon /></Button>
+          }
         </Grid>
       </Grid>
     ),

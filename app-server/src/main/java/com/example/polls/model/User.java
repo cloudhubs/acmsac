@@ -34,7 +34,6 @@ public class User {
 
     @NaturalId
     @NotBlank
-    @Email
     private String email;
 
     @NotBlank

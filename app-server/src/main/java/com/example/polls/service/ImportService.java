@@ -296,11 +296,11 @@ public class ImportService {
       User primaryChair = userRepository.findByEmail(chairEmail).orElse(null);
       User secondaryChair = userRepository.findByEmail(secondaryChairEmail).orElse(null);
 
-      if (primaryChair == null) {
+      if (primaryChair == null && !chairEmail.trim().equals("")) {
         createUser(sessionChair, chairEmail, chairEmail, DEFAULT_SESSION_CHAIR_PW, "",
                 "", "", "", "", "", "", true, Collections.singleton(userRole));
       }
-      if (secondaryChair == null) {
+      if (secondaryChair == null && !secondaryChairEmail.trim().equals("")) {
         createUser(secondarySessionChair, secondaryChairEmail, secondaryChairEmail, DEFAULT_SESSION_CHAIR_PW, "",
                 "", "", "", "", "", "", true, Collections.singleton(userRole));
       }
