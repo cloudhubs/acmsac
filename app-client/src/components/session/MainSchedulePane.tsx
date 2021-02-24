@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
-import { Grid, Paper, Typography } from "@material-ui/core";
+import { Container, Grid, Paper, Typography } from "@material-ui/core";
 import FetchSession from "../../http/FetchSession";
 import { useGlobalState } from "../../state";
 import DaySchedulePane from "./DaySchedulePane";
 import { Session } from "../../model/Session";
 import { compareDates, dateToNumber, onReferenceDay } from "./util/TimeUtils";
 import { setSelectedDay } from "./util/ReduxUtils";
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 
 const LOADED_SS_KEY = "acmsac_loadedtoday";
 
@@ -25,8 +26,18 @@ const SchedulePane: () => JSX.Element = () => {
   // Start by fetching sessions and session names
   useEffect(setUpSchedule, []);
 
+  const useStyles = makeStyles((theme: Theme) =>
+      createStyles({
+          heroContent: {
+              padding: theme.spacing(8, 0, 6),
+          }
+      }),
+  );
+  const classes = useStyles();
+
   return (
-    <Paper>
+    <Container maxWidth="lg" component="main" className={classes.heroContent}>
+      <Paper>
       {/* Header text + description */}
       <Paper>
         <Typography variant="h1">ACM SAC 2021</Typography>
@@ -41,6 +52,7 @@ const SchedulePane: () => JSX.Element = () => {
         {createDaySchedules(sessions)}
       </Grid>
     </Paper>
+    </Container>
   );
 };
 

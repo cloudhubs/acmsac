@@ -12,6 +12,8 @@ import { useGlobalState } from "../../state";
 import { AccordionSafeAnchor, DateTimePair } from "./util/UtilityComponents";
 import PresentationEntry from "./PresentationEntry";
 import { compareDates } from "./util/TimeUtils";
+import { Button } from "@material-ui/core";
+import ics from "../../vendor/ics.js";
 
 const meetingLink = (url: string) => (
   <AccordionSafeAnchor href={url}>Go to meeting room</AccordionSafeAnchor>
@@ -21,6 +23,20 @@ function PresentationList(props: { session: Session }) {
   const [selectedDay] = useGlobalState("selectedDay");
   const session = props.session;
   const papers = session.presentations;
+
+  const calExport = (isPrimary: boolean) => {
+    let cal = ics();
+    let subject = session.sessionName + ", Round " + (isPrimary ? "1" : "2");
+    let desc = isPrimary ? session.primaryMeetingLink : session.secondaryMeetingLink;
+    let start = (isPrimary ? session.primaryStart : session.secondaryStart)?.toString() ?? "";
+    let end = (isPrimary ? session.primaryEnd : session.secondaryEnd)?.toString() ?? "";
+    console.log(subject);
+    console.log(desc);
+
+    cal?.addEvent(subject, desc, "",
+      start, end, null);
+    cal?.download(session.sessionCode + "_" + (isPrimary ? "1" : "2"), ".ics");
+  };
 
   const summary = React.useMemo(
     () => (
@@ -86,6 +102,10 @@ function PresentationList(props: { session: Session }) {
               ))}
             </>
           )}
+        </Grid>
+        <Grid item xs>
+          <Button variant="contained" onClick={()=>calExport(true)}>Save first round session to calendar</Button><br/>
+          <Button variant="contained" onClick={()=>calExport(false)}>Save second round session to calendar</Button>
         </Grid>
       </Grid>
     ),

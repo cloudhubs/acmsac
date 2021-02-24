@@ -123,7 +123,7 @@ public class ImportService {
        */
       log.info("Assigning sessions");
       XSSFSheet sessionPapersSheet = sessionWorkbook.getSheetAt(1);
-      for (int i = 6; i < sessionPapersSheet.getPhysicalNumberOfRows(); i++) {
+      for (int i = 3; i < sessionPapersSheet.getPhysicalNumberOfRows(); i++) {
         XSSFRow row = sessionPapersSheet.getRow(i);
         assignPaperToSession(row);
       }
@@ -259,6 +259,9 @@ public class ImportService {
       return null; // skip these for now; either empty row or a session we can't deal with right now
     }
 
+    // meeting link
+    String link = row.getCell(15, Row.CREATE_NULL_AS_BLANK).toString();
+
     // Session date/time stuff!
     String startString = row.getCell(5, Row.CREATE_NULL_AS_BLANK).toString();
     ZonedDateTime zonedStart = row.getCell(4).getDateCellValue().toInstant().atZone(ZoneId.of("Asia/Seoul"));
@@ -282,6 +285,7 @@ public class ImportService {
       newSession.setPrimaryEnd(end);
       newSession.setPrimaryChair1(sessionChair);
       newSession.setSecondaryChair1(secondarySessionChair);
+      newSession.setPrimaryMeetingLink(link);
 
       if (!trackCode.toLowerCase().contains("key")) {
         // parse track code
@@ -301,6 +305,7 @@ public class ImportService {
       if (existingSession != null) {
         existingSession.setSecondaryStart(start);
         existingSession.setSecondaryEnd(end);
+        existingSession.setSecondaryMeetingLink(link);
         return sessionRepository.save(existingSession);
       }
       return null;
@@ -326,12 +331,8 @@ public class ImportService {
       return;
     }
     int roundNum = 0;
-    try {
-      roundNum = (int) row.getCell(3).getNumericCellValue();
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new ImportException("This is fucking bullshit " + e.getMessage(), e);
-    }
+    roundNum = (int) row.getCell(3).getNumericCellValue();
+
     Presentation[] presArray = new Presentation[5];
     // loop through 5 papers
     for (int i = 0; i < 5; i++) {
