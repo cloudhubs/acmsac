@@ -48,7 +48,7 @@ public class ImportService {
 
   private final String DEFAULT_ORGANIZER_PW = "acmsaccommittee2021";
   private final String DEFAULT_REGISTRANT_PW = "acmsacregistrant2021";
-  private final String DEFAULT_SESSION_CHAIR_PW = "acmsacregistrant2021";
+  private final String DEFAULT_SESSION_CHAIR_PW = "sacsessionchair2021";
   private final String DEFAULT_CHAIR_PW = "acmsac2021-";
   private final String PRESENTATION_RESOURCE_NAME = "classpath:2021_papers.xlsx";
   private final String USER_RESOURCE_NAME = "classpath:2021_users.xlsx";
@@ -114,7 +114,7 @@ public class ImportService {
       XSSFSheet sessionSheet = sessionWorkbook.getSheetAt(0);
       for (int i = 3; i < sessionSheet.getPhysicalNumberOfRows(); i++) {
         XSSFRow row = sessionSheet.getRow(i);
-        createSessionFromImportRow(row);
+        createSessionFromImportRow(row, userRole);
       }
       log.info("Done importing sessions");
 
@@ -251,13 +251,16 @@ public class ImportService {
     }
   }
 
-  public Session createSessionFromImportRow(XSSFRow row) {
+  public Session createSessionFromImportRow(XSSFRow row, Role userRole) {
     String sessionCode = row.getCell(1, Row.CREATE_NULL_AS_BLANK).toString();
     String trackCode = row.getCell(8, Row.CREATE_NULL_AS_BLANK).toString();
     if (trackCode.trim().isEmpty()) {
       // TODO: handle keynotes etc.
       return null; // skip these for now; either empty row or a session we can't deal with right now
     }
+
+    // chairs
+
 
     // meeting link
     String link = row.getCell(15, Row.CREATE_NULL_AS_BLANK).toString();
@@ -271,6 +274,7 @@ public class ImportService {
     Instant start = getInstantFromDateAndTime(zonedStart, startString);
     Instant end = getInstantFromDateAndTime(zonedEnd, endString);
     Session existingSession = sessionRepository.findBySessionCode(sessionCode).orElse(null);
+
     int roundNum = (int) row.getCell(3).getNumericCellValue();
     if (roundNum == 1) { // first round row is always first, so we have to populate the name/chair/etc.
       if (existingSession != null) {
@@ -278,6 +282,8 @@ public class ImportService {
       }
       String sessionChair = row.getCell(11, Row.CREATE_NULL_AS_BLANK).toString();
       String secondarySessionChair = row.getCell(13, Row.CREATE_NULL_AS_BLANK).toString();
+      String chairEmail = row.getCell(12, Row.CREATE_NULL_AS_BLANK).toString();
+      String secondaryChairEmail = row.getCell(14, Row.CREATE_NULL_AS_BLANK).toString();
       Session newSession = new Session();
       newSession.setSessionCode(sessionCode);
       newSession.setSessionName(row.getCell(2, Row.CREATE_NULL_AS_BLANK).toString());
@@ -286,6 +292,18 @@ public class ImportService {
       newSession.setPrimaryChair1(sessionChair);
       newSession.setSecondaryChair1(secondarySessionChair);
       newSession.setPrimaryMeetingLink(link);
+
+      User primaryChair = userRepository.findByEmail(chairEmail).orElse(null);
+      User secondaryChair = userRepository.findByEmail(secondaryChairEmail).orElse(null);
+
+      if (primaryChair == null) {
+        createUser(sessionChair, chairEmail, chairEmail, DEFAULT_SESSION_CHAIR_PW, "",
+                "", "", "", "", "", "", true, Collections.singleton(userRole));
+      }
+      if (secondaryChair == null) {
+        createUser(secondarySessionChair, secondaryChairEmail, secondaryChairEmail, DEFAULT_SESSION_CHAIR_PW, "",
+                "", "", "", "", "", "", true, Collections.singleton(userRole));
+      }
 
       if (!trackCode.toLowerCase().contains("key")) {
         // parse track code
