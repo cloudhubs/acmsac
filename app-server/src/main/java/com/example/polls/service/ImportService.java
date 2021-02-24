@@ -316,6 +316,7 @@ public class ImportService {
   }
 
   public void assignPaperToSession(XSSFRow row) {
+
     String sessionCode = row.getCell(1, Row.CREATE_NULL_AS_BLANK).toString();
     if (sessionCode.trim().isEmpty()) {
       return;
@@ -324,16 +325,22 @@ public class ImportService {
     if (session == null) {
       return;
     }
-    int roundNum = (int) row.getCell(2).getNumericCellValue();
+    int roundNum = 0;
+    try {
+      roundNum = (int) row.getCell(3).getNumericCellValue();
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new ImportException("This is fucking bullshit " + e.getMessage(), e);
+    }
     Presentation[] presArray = new Presentation[5];
     // loop through 5 papers
     for (int i = 0; i < 5; i++) {
       // paper ID starts at column 8, and happens every 4 columns for 5 papers
-      String paperIdVal = row.getCell(8 + i*4, Row.CREATE_NULL_AS_BLANK).toString();
+      String paperIdVal = row.getCell(9 + i*4, Row.CREATE_NULL_AS_BLANK).toString();
       if (paperIdVal.trim().equals("")) {
         continue;
       }
-      int paperId = (int) row.getCell(8 + i*4, Row.CREATE_NULL_AS_BLANK).getNumericCellValue();
+      int paperId = (int) row.getCell(9 + i*4, Row.CREATE_NULL_AS_BLANK).getNumericCellValue();
       if (paperId == 0) {
         continue;
       }
