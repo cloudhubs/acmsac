@@ -21,4 +21,4 @@ export type Action =
 | { type: "setAllSessions"; sessions: Session[] }
 | { type: "setSelectedSession"; session: Session }
 | { type: "setSelectedDay"; selectedDay: Date | null }
-| { type: "setSelectedTime"; selectedTime: Date | null };
+| { type: "setSelectedSlot"; selectedTime: Date | null, selectedSession: Session };

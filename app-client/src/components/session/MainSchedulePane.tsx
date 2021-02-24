@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Grid, Paper, Typography } from "@material-ui/core";
 import FetchSession from "../../http/FetchSession";
 import { useGlobalState } from "../../state";
 import DaySchedulePane from "./DaySchedulePane";
 import { Session } from "../../model/Session";
-import { compareDates, setSelectedDay } from "./SessionViewUtils";
+import { compareDates, dateToNumber, onReferenceDay } from "./util/TimeUtils";
+import { setSelectedDay } from "./util/ReduxUtils";
 
 const LOADED_SS_KEY = "acmsac_loadedtoday";
 
@@ -45,9 +46,11 @@ const SchedulePane: () => JSX.Element = () => {
 
 function registerDate(date: Date, map: Map<number, Date>) {
   // Simple hash of date only
-  let iso =
-    31 * (31 * (31 * date.getFullYear() + date.getMonth()) + date.getDay());
-  if (!map.has(iso)) {
+  let iso = dateToNumber(date);
+
+  // The compiler didn't catch that this || will short-circuit if the map doesn't
+  // have the key; so I can guarantee the key exists and the time will be non-null.
+  if (!map.has(iso) || onReferenceDay(date, map.get(iso) as Date)) {
     map.set(iso, date);
   }
 }
@@ -57,9 +60,6 @@ function createDaySchedules(sessions: Session[]) {
   let days: Map<number, Date> = new Map<number, Date>();
   for (let session of sessions) {
     registerDate(session.primaryStart, days);
-    if (session.secondaryEnd) {
-      registerDate(session.secondaryEnd, days);
-    }
   }
 
   // Create one pane per day
@@ -72,9 +72,9 @@ function createDaySchedules(sessions: Session[]) {
   }
   return result
     .sort((a, b) => compareDates(a, b))
-    .map((session) => (
-      <Grid item xs>
-        <DaySchedulePane date={session} />
+    .map((date) => (
+      <Grid item xs key={date.getTime()}>
+        <DaySchedulePane date={date} />
       </Grid>
     ));
 }

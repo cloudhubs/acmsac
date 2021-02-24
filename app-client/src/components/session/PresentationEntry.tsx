@@ -13,10 +13,9 @@ import VideocamIcon from "@material-ui/icons/Videocam";
 import ChatIcon from "@material-ui/icons/Chat";
 
 import { AcademicArticle } from "../../model/AcademicArticle";
-import { dateTimePair } from "./SessionViewUtils";
 import { Person } from "../../model/Person";
 import { useGlobalState } from "../../state";
-import AccordionSafeAnchor from "./AccordionSafeAnchor";
+import { AccordionSafeAnchor, DateTimePair } from "./util/UtilityComponents";
 
 type PresentationEntryProps = {
   paper: AcademicArticle;
@@ -64,21 +63,27 @@ const PresentationEntry = (props: PresentationEntryProps) => {
       <AccordionSummary>
         <Grid container direction="row" spacing={2}>
           <Grid item>
-            <Typography variant="body1">
-              {selectedDay &&
-                dateTimePair(paper.primaryStart, paper.primaryEnd, selectedDay)}
-              {paper.secondaryStart && paper.secondaryEnd && (
-                <>
-                  <br />&<br />
-                  {selectedDay &&
-                    dateTimePair(
-                      paper.secondaryStart,
-                      paper.secondaryEnd,
-                      selectedDay
+            {selectedDay && (
+              <Typography variant="body1">
+                <DateTimePair
+                  start={paper.primaryStart}
+                  end={paper.primaryEnd}
+                  assumedDate={selectedDay}
+                />
+                {paper.secondaryStart && paper.secondaryEnd && (
+                  <>
+                    <br />&<br />
+                    {paper.secondaryStart && paper.secondaryEnd && (
+                      <DateTimePair
+                        start={paper.secondaryStart}
+                        end={paper.secondaryEnd}
+                        assumedDate={selectedDay}
+                      />
                     )}
-                </>
-              )}
-            </Typography>
+                  </>
+                )}
+              </Typography>
+            )}
           </Grid>
           <Grid item lg>
             <Typography variant="h6">{paper.title}</Typography>

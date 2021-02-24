@@ -12,11 +12,11 @@ import { useGlobalState } from "../../state";
 import {
   compareByTime,
   compareDates,
-  MILLIS_IN_DAY,
+  getReferenceDay,
   sameDay,
-  setSelectedDay,
-} from "./SessionViewUtils";
+} from "./util/TimeUtils";
 import TimeSlotSchedulePane from "./TimeSlotSchedulePane";
+import { setSelectedDay } from "./util/ReduxUtils";
 
 type TimeSlot = {
   time: Date;
@@ -28,15 +28,11 @@ const makeSlots = (sessions: Session[], date: Date) => {
   let slots: Map<number, TimeSlot> = new Map<number, TimeSlot>();
 
   // Filter to only the slots occurring today
-  let todaysSessions = sessions.filter(
-    (s) =>
-      sameDay(s.primaryStart, date) ||
-      (s.secondaryEnd && sameDay(s.secondaryEnd, date))
-  );
+  let todaysSessions = sessions.filter((s) => sameDay(s.primaryStart, date));
 
   // Find sessions for today
   for (let session of todaysSessions) {
-    let offset = session.primaryStart.getTime() % MILLIS_IN_DAY;
+    let offset = 31 * (session.primaryStart.getHours() + 31 * (session.primaryStart.getMinutes() + 1));
     if (!slots.has(offset)) {
       slots.set(offset, {
         time: session.primaryStart,
@@ -79,14 +75,12 @@ function DaySchedulePane(props: { date: Date }) {
       <Accordion
         expanded={selectedDay !== null && sameDay(selectedDay, props.date)}
         onChange={(_, expanded) => setSelectedDay(expanded ? props.date : null)}
+        TransitionProps={{ unmountOnExit: true }}
       >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant="h6">
-            {props.date.toLocaleDateString([], {
-              timeZone: "Asia/Seoul",
-              weekday: "long",
-            })}
-            &nbsp;({props.date.toLocaleDateString()})
+            {getReferenceDay(props.date)}
+            &nbsp;(Local start date: {props.date.toLocaleDateString()})
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -102,7 +96,9 @@ function DaySchedulePane(props: { date: Date }) {
                 </Grid>
               ))
             ) : (
-              <Typography variant="body1">NONE FOUND</Typography>
+              <Grid item xs>
+                <Typography variant="body1">NONE FOUND</Typography>
+              </Grid>
             )}
           </Grid>
         </AccordionDetails>

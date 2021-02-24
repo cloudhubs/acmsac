@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,20 +40,9 @@ public class SessionController {
     return ResponseEntity.ok(sessions.stream().map(converter::getSessionDto).collect(Collectors.toList()));
   }
 
-  @PostMapping("/batch")
-  public ResponseEntity<String> batchSessions(@RequestBody List<SessionDto> sessions) {
-    for (SessionDto s : sessions) {
-      ResponseEntity<String> resp = createSession(s);
-      if (!resp.getStatusCode().is2xxSuccessful())
-        return resp;
-    }
-    return ResponseEntity.ok("");
-  }
-
   @PostMapping("/")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<String> createSession(@RequestBody SessionDto newSess) {
-    // TODO: security lol
-
     // Get the track
     Set<String> codes = newSess.getTrackCodes();
     Optional<Set<Track>> t = codes != null ? trackRepository.findAllByCodeIn(codes) : null;
