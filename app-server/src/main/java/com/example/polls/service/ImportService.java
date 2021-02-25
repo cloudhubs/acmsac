@@ -227,11 +227,10 @@ public class ImportService {
       }
       presentation.setTitle(row.getCell(6, Row.CREATE_NULL_AS_BLANK).toString());
       presentation.setPaperId(paperId);
-      presentation.setAuthorsString(authors.stream().map(User::getName).reduce((a, b) -> a + ", " + b).get());
+      String authorString = authors.size() == 0 ? "" : (authors.size() == 1 ? authors.get(0).getName() :
+              (authors.stream().map(User::getName).reduce((a, b) -> a + ", " + b).get()));
+      presentation.setAuthorsString(authorString);
       presentation.setTrackCode(row.getCell(8, Row.CREATE_NULL_AS_BLANK).toString());
-//      presentation.setSessionCode(""); // TODO: ???
-//      presentation.setSessionChair(""); // TODO: ???
-//      presentation.setDate(row.getCell(13, Row.CREATE_NULL_AS_BLANK).getDateCellValue().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
       presentation.setDate(LocalDate.now()); // TODO: ???
       presentation.setPaperAbstract(row.getCell(33, Row.CREATE_NULL_AS_BLANK).toString());
       int pageStart = (int) row.getCell(2).getNumericCellValue();
