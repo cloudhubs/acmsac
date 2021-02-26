@@ -42,68 +42,70 @@ function PresentationList(props: { session: Session }) {
 
   const summary = React.useMemo(
     () => (
-      <Grid container direction="row">
-        <Grid container item xs direction="column">
-          <Grid item xs>
-            <Typography variant="h6">
-              {selectedDay && (
-                <DateTimePair
-                  start={session.primaryStart}
-                  end={session.primaryEnd}
-                  assumedDate={selectedDay}
-                />
-              )}{" "}
-              (
-              {session.primaryMeetingLink
-                ? meetingLink(session.primaryMeetingLink)
-                : "No room assigned"}
-              )
-            </Typography>
-          </Grid>
-          {session.secondaryStart && session.secondaryEnd && (
-            <Grid item xs>
-              <Typography variant="h6">
-                {selectedDay && (
-                  <DateTimePair
-                    start={session.secondaryStart}
-                    end={session.secondaryEnd}
-                    assumedDate={selectedDay}
-                  />
-                )}{" "}
-                (
-                {session.secondaryMeetingLink
-                  ? meetingLink(session.secondaryMeetingLink)
-                  : "No room assigned"}
-                )
-              </Typography>
-            </Grid>
-          )}
-        </Grid>
+      <Grid container direction="column">
         <Grid item xs>
           <Typography variant="h6">
             {session.sessionCode} {session.sessionName}
           </Typography>
         </Grid>
-        <Grid item xs>
-          Primary Chairs: {session.primaryChair1}, {session.primaryChair2}
-          <br />
-          {session.secondaryChair1 &&
-            session.secondaryChair2 &&
-            `Secondary Chairs: ${session.secondaryChair1}, ${session.secondaryChair2}`}
-          {session.trackCodes && session.trackCodes.length > 0 && (
-            <>
-              <br />
-              Tracks:{" "}
-              {session.trackCodes.map((code, i) => (
-                <>
-                  {i !== 0 ? ", " : ""}
-                  <AccordionSafeAnchor href={`app/track/${code}`} key={code}>
-                    {code}
-                  </AccordionSafeAnchor>
-                </>
-              ))}
-            </>
-          )}
+        <Grid item container direction="row">
+          <Grid container item xs direction="column">
+            <Grid item xs>
+              <Typography variant="h6">
+                {selectedDay && (
+                  <DateTimePair
+                    start={session.primaryStart}
+                    end={session.primaryEnd}
+                    assumedDate={selectedDay}
+                  />
+                )}{" "}
+                (
+                {session.primaryMeetingLink
+                  ? meetingLink(session.primaryMeetingLink)
+                  : "No room assigned"}
+                )
+              </Typography>
+            </Grid>
+            {session.secondaryStart && session.secondaryEnd && (
+              <Grid item xs>
+                <Typography variant="h6">
+                  {selectedDay && (
+                    <DateTimePair
+                      start={session.secondaryStart}
+                      end={session.secondaryEnd}
+                      assumedDate={selectedDay}
+                    />
+                  )}{" "}
+                  (
+                  {session.secondaryMeetingLink
+                    ? meetingLink(session.secondaryMeetingLink)
+                    : "No room assigned"}
+                  )
+                </Typography>
+              </Grid>
+            )}
+          </Grid>
+          <Grid item xs>
+            Primary Chairs: {session.primaryChair1}, {session.primaryChair2}
+            <br />
+            {session.secondaryChair1 &&
+              session.secondaryChair2 &&
+              `Secondary Chairs: ${session.secondaryChair1}, ${session.secondaryChair2}`}
+            {session.trackCodes && session.trackCodes.length > 0 && (
+              <>
+                <br />
+                Tracks:{" "}
+                {session.trackCodes.map((code, i) => (
+                  <>
+                    {i !== 0 ? ", " : ""}
+                    <AccordionSafeAnchor href={`app/track/${code}`} key={code}>
+                      {code}
+                    </AccordionSafeAnchor>
+                  </>
+                ))}
+              </>
+            )}
+          </Grid>
         </Grid>
         <Grid item xs>
           <Button variant="contained" onClick={()=>calExport(true)}>First round event <EventIcon /></Button><br/>
@@ -125,9 +127,11 @@ function PresentationList(props: { session: Session }) {
       <Divider />
       {papers.length > 0 && (
         <Paper>
-          {papers.sort((p1, p2) => compareDates(p1.primaryStart, p2.primaryStart)).map((paper) => (
-            <PresentationEntry key={paper.paperId} paper={paper} />
-          ))}
+          {papers
+            .sort((p1, p2) => compareDates(p1.primaryStart, p2.primaryStart))
+            .map((paper) => (
+              <PresentationEntry key={paper.paperId} paper={paper} />
+            ))}
         </Paper>
       )}
     </>
