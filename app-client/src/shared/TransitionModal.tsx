@@ -41,9 +41,9 @@ export default function TransitionsModal<TransitionProps> ({givenOpen}) {
     /* TODO: update this probably */
     return (
         <div>
-            <Button className="highlightButton" variant="outlined" onClick={handleOpen}>
+            {/* <Button className="highlightButton" variant="outlined" onClick={handleOpen}>
                  <span className={classes.leftPadding}>{'Chair Conference Message'}</span><MessageIcon />
-            </Button>
+            </Button> */}
             <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
