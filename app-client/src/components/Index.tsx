@@ -77,19 +77,15 @@ export default function Index() {
         </Typography>
 
         <Typography variant="h6" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
-        You should have received your login credentials to the platform by email sent on March 30th.  Alternatively,  please request a password reminder above, but note that we limit email addresses only to these of known paper authors, track chairs and organizers (in case of emergency <a href="mailto:someone@example.com" target="_top">email</a> us).
+        You should have received your login credentials to the platform by email from ACM SAC. Alternatively, please request a password reminder above. Note that we limit email addresses only to known paper authors, track/session chairs, and organizers (in case of emergency, <a href="mailto:tomas_cerny@baylor.edu" target="_top">email</a> us).
         </Typography>
 
         <Typography variant="h6" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
-        Thank you for participating in ACM SAC 2021! All the conference organizers did a fabulous job and hoped to see you all in person in Brno. You did a fabulous job by posting your presentation videos online and we really appreciate such teamwork and allowing us to make this happen remotely.
+        Thank you for participating in ACM SAC 2021, and hoping to see you all in ACM SAC 2022, if possible, in person.
         </Typography>
 
         <Typography variant="h6" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
-        We hope to see you all in ACM SAC 2021, if possible in person.
-        </Typography>
-
-        <Typography variant="h6" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
-        This platform will be open temporarily till mid-April, please make the social connection rather early than late. Also, save your presentation feedback for your personal future work!
+        This platform will be open temporarily till mid-April. Please make the social connection rather early than late. Also, save your presentation feedback for your personal reference!
         </Typography>
 
       </Container>
