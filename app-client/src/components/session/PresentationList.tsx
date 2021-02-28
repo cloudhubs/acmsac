@@ -105,10 +105,11 @@ function PresentationList(props: { session: Session }) {
             </>
           )}
         </Grid>
-        <Grid item xs>
-          <Button variant="contained" onClick={()=>calExport(true)}>First round event <EventIcon /></Button><br/>
-          {session.secondaryStart != null && 
-            <Button variant="contained" onClick={()=>calExport(false)}>Second round event <EventIcon /></Button>
+        <Grid container spacing={1} item xs>
+        <Grid item xs={12}><Typography variant="subtitle1">Click on one of the following buttons to add the event to your calendar.</Typography></Grid>
+          <Grid item xs={12}><Button variant="contained" onClick={()=>calExport(true)}>First round event <EventIcon /></Button></Grid>
+          {session.secondaryStart != null &&
+            <Grid item xs={12}><Button variant="contained" onClick={()=>calExport(false)}>Second round event <EventIcon /></Button></Grid>
           }
         </Grid>
       </Grid>
