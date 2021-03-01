@@ -81,7 +81,7 @@ function PresentationList(props: { session: Session }) {
         </Grid>
         <Grid item xs>
           <Typography variant="h6">
-            {session.sessionCode} {session.sessionName}
+            {session.sessionName}
           </Typography>
         </Grid>
         <Grid item xs>
