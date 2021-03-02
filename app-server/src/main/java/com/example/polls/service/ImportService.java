@@ -379,9 +379,10 @@ public class ImportService {
     }
     Duration sessionDuration = Duration.between(session.getPrimaryStart(), session.getPrimaryEnd());
     int sessionMinutes = Math.round(sessionDuration.abs().toMinutes());
-    int numPres = presArray[4] == null ? 4 : 5;
+    int numPres = presArray[4] == null ? 4 : 5; // haha hardcoded numbers go brr
     int minutesPerPres = sessionMinutes / numPres; // if 4 presentations, divide by 4; else 5
     Instant primaryStart = session.getPrimaryStart();
+    Instant secondaryStart = session.getSecondaryStart();
     Set<Presentation> presSet = new HashSet<>(); // holds updated presentations to be set as session children
     for (int i = 0; i < numPres; i++) {
       Presentation pres = presArray[i];
@@ -390,6 +391,10 @@ public class ImportService {
       }
       pres.setPrimaryStart(primaryStart.plus(i*minutesPerPres, ChronoUnit.MINUTES));
       pres.setPrimaryEnd(pres.getPrimaryStart().plus(minutesPerPres-1, ChronoUnit.MINUTES));
+      if (secondaryStart != null) {
+        pres.setSecondaryStart(secondaryStart.plus(i*minutesPerPres, ChronoUnit.MINUTES));
+        pres.setSecondaryEnd(pres.getSecondaryStart().plus(minutesPerPres-1, ChronoUnit.MINUTES));
+      }
       pres.setSession(session);
 //      pres = presentationRepository.save(pres);
       presSet.add(pres);
