@@ -54,6 +54,7 @@ public class ImportService {
   private final String USER_RESOURCE_NAME = "classpath:2021_users.xlsx";
   private final String TRACK_CHAIR_RESOURCE_NAME = "classpath:2021_track_chairs.xlsx";
   private final String SESSION_RESOURCE_NAME = "classpath:2021_sessions.xlsx";
+  private final String ORGANIZERS_RESOURCE_NAME = "classpath:2021_organizers.xlsx";
 
   public void importUsers() {
     try {
@@ -88,6 +89,19 @@ public class ImportService {
         User user = createUserFromImportRow(row, Collections.singleton(userRole)); // create user objects
       }
       log.info("Done importing authors");
+
+      /**
+       * Create organizer users
+       */
+      log.info("Importing organizers");
+      Resource organizerResource = resourceLoader.getResource(ORGANIZERS_RESOURCE_NAME);
+      XSSFWorkbook organizerWorkbook = new XSSFWorkbook(organizerResource.getInputStream());
+      XSSFSheet organizerSheet = organizerWorkbook.getSheetAt(0);
+      for (int i = 1; i < organizerSheet.getPhysicalNumberOfRows(); i++) {
+        XSSFRow row = organizerSheet.getRow(i);
+        User user = createOrganizerFromImportRow(row, Collections.singleton(userRole));
+      }
+      log.info("Done importing organizers");
 
       /**
        * Create presentations
@@ -168,12 +182,32 @@ public class ImportService {
     return chair;
   }
 
-  /**
-   * Creates user from row of user import file, or retrieves them if they exist
-   * @param row
-   * @param userRoles
-   * @return created/retrieved user
-   */
+  private User createOrganizerFromImportRow(XSSFRow row, Set<Role> userRoles) {
+    String email = row.getCell(2).toString().trim();
+    if (userRepository.existsByEmail(email)) {
+      return userRepository.findByEmail(email).get();
+    }
+    String username = email;
+    String password = DEFAULT_ORGANIZER_PW;
+    String fullName = row.getCell(0).toString().trim() + " " + row.getCell(1).toString().trim();
+    String affiliation = row.getCell(3, Row.CREATE_NULL_AS_BLANK).toString().trim();
+    String country = row.getCell(4, Row.CREATE_NULL_AS_BLANK).toString().trim();
+    String orcid = "";
+    String linkedIn = "";
+    String googleScholar = "";
+    String bio = "";
+    String picUrl = "";
+
+    return createUser(fullName, username, email, password, affiliation, country,
+            orcid, linkedIn, googleScholar, bio, picUrl, false, userRoles);
+  }
+
+    /**
+     * Creates user from row of user import file, or retrieves them if they exist
+     * @param row
+     * @param userRoles
+     * @return created/retrieved user
+     */
   private User createUserFromImportRow(XSSFRow row, Set<Role> userRoles) {
     String email = row.getCell(2).toString().trim();
     if (userRepository.existsByEmail(email)) {
@@ -388,6 +422,15 @@ public class ImportService {
       Presentation pres = presArray[i];
       if (pres == null) {
         continue;
+      }
+      if (sessionCode.toLowerCase().contains("key")) {
+        if (roundNum == 1) {
+          pres.setPrimaryStart(session.getPrimaryStart());
+          pres.setPrimaryEnd(session.getPrimaryEnd());
+        } else {
+          pres.setSecondaryStart(session.getSecondaryStart());
+          pres.setSecondaryEnd(session.getSecondaryEnd());
+        }
       }
       pres.setPrimaryStart(primaryStart.plus(i*minutesPerPres, ChronoUnit.MINUTES));
       pres.setPrimaryEnd(pres.getPrimaryStart().plus(minutesPerPres-1, ChronoUnit.MINUTES));
