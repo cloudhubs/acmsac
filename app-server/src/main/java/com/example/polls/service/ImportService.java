@@ -21,6 +21,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @Slf4j
@@ -411,10 +413,17 @@ public class ImportService {
       presentation = presentationRepository.save(presentation);
       presArray[i] = presentation;
     }
+    Pattern pattern = Pattern.compile("P\\d-[A-Z]");
+    Matcher matcher = pattern.matcher(sessionCode);
+    boolean isPoster = matcher.find();
+
     Duration sessionDuration = Duration.between(session.getPrimaryStart(), session.getPrimaryEnd());
     int sessionMinutes = Math.round(sessionDuration.abs().toMinutes());
     int numPres = presArray[4] == null ? 4 : 5; // haha hardcoded numbers go brr
     int minutesPerPres = sessionMinutes / numPres; // if 4 presentations, divide by 4; else 5
+    if (isPoster) {
+      minutesPerPres = 10;
+    }
     Instant primaryStart = session.getPrimaryStart();
     Instant secondaryStart = session.getSecondaryStart();
     Set<Presentation> presSet = new HashSet<>(); // holds updated presentations to be set as session children
@@ -433,10 +442,10 @@ public class ImportService {
         }
       }
       pres.setPrimaryStart(primaryStart.plus(i*minutesPerPres, ChronoUnit.MINUTES));
-      pres.setPrimaryEnd(pres.getPrimaryStart().plus(minutesPerPres-1, ChronoUnit.MINUTES));
+      pres.setPrimaryEnd(pres.getPrimaryStart().plus(minutesPerPres, ChronoUnit.MINUTES));
       if (secondaryStart != null) {
         pres.setSecondaryStart(secondaryStart.plus(i*minutesPerPres, ChronoUnit.MINUTES));
-        pres.setSecondaryEnd(pres.getSecondaryStart().plus(minutesPerPres-1, ChronoUnit.MINUTES));
+        pres.setSecondaryEnd(pres.getSecondaryStart().plus(minutesPerPres, ChronoUnit.MINUTES));
       }
       pres.setSession(session);
 //      pres = presentationRepository.save(pres);
