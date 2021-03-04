@@ -41,7 +41,7 @@ const PaperTable = () => {
     let history = useHistory();
     let {code} = useParams();
     let isEditable: boolean = currentUser.roles.includes("ROLE_ADMIN") ||
-        trackDetail.chairs.filter(chair => chair.email === currentUser.email).length > 0;
+        (trackDetail.chairs && trackDetail.chairs.filter(chair => chair.email === currentUser.email).length > 0);
 
     const saveMessage = async () => {
         const newTrack = await TrackMessagePut.doSend(token, trackDetail.code, trackDetail.message);
