@@ -64,25 +64,27 @@ const PresentationEntry = (props: PresentationEntryProps) => {
         <Grid container direction="row" spacing={2}>
           <Grid item>
             {selectedDay && (
-              <Typography variant="body1">
-                <DateTimePair
-                  start={paper.primaryStart}
-                  end={paper.primaryEnd}
-                  assumedDate={selectedDay}
-                />
+              <>
+                <Typography variant="body1">
+                  <DateTimePair
+                    start={paper.primaryStart}
+                    end={paper.primaryEnd}
+                    assumedDate={selectedDay}
+                  />
+                </Typography>
                 {paper.secondaryStart && paper.secondaryEnd && (
                   <>
                     <br />&<br />
-                    {paper.secondaryStart && paper.secondaryEnd && (
+                    <Typography variant="body1">
                       <DateTimePair
                         start={paper.secondaryStart}
                         end={paper.secondaryEnd}
                         assumedDate={selectedDay}
                       />
-                    )}
+                    </Typography>
                   </>
                 )}
-              </Typography>
+              </>
             )}
           </Grid>
           <Grid item lg>

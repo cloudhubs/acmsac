@@ -21,6 +21,17 @@ const meetingLink = (url: string) => (
   <AccordionSafeAnchor href={url}>Go to meeting room</AccordionSafeAnchor>
 );
 
+const sessionChairs = (name1: string, name2: string) => {
+  if (!name && !name2) {
+    return "";
+  }
+  if (!name1 && name2) {
+    name1 = name2;
+  }
+
+  return `Session Chair: ${name1} ${name2 && `, ${name2}`}`;
+};
+
 function PresentationList(props: { session: Session }) {
   const [selectedDay] = useGlobalState("selectedDay");
   const session = props.session;
@@ -29,14 +40,18 @@ function PresentationList(props: { session: Session }) {
   const calExport = (isPrimary: boolean) => {
     let cal = ics();
     let subject = session.sessionName + ", Round " + (isPrimary ? "1" : "2");
-    let desc = isPrimary ? session.primaryMeetingLink : session.secondaryMeetingLink;
-    let start = (isPrimary ? session.primaryStart : session.secondaryStart)?.toString() ?? "";
-    let end = (isPrimary ? session.primaryEnd : session.secondaryEnd)?.toString() ?? "";
+    let desc = isPrimary
+      ? session.primaryMeetingLink
+      : session.secondaryMeetingLink;
+    let start =
+      (isPrimary ? session.primaryStart : session.secondaryStart)?.toString() ??
+      "";
+    let end =
+      (isPrimary ? session.primaryEnd : session.secondaryEnd)?.toString() ?? "";
     console.log(subject);
     console.log(desc);
 
-    cal?.addEvent(subject, desc, "",
-      start, end, null);
+    cal?.addEvent(subject, desc, "", start, end, null);
     cal?.download(session.sessionCode + "_" + (isPrimary ? "1" : "2"), ".ics");
   };
 
@@ -86,11 +101,9 @@ function PresentationList(props: { session: Session }) {
             )}
           </Grid>
           <Grid item xs>
-            Primary Chairs: {session.primaryChair1}, {session.primaryChair2}
+            {sessionChairs(session.primaryChair1, session.primaryChair2)}
             <br />
-            {session.secondaryChair1 &&
-              session.secondaryChair2 &&
-              `Secondary Chairs: ${session.secondaryChair1}, ${session.secondaryChair2}`}
+            {sessionChairs(session.secondaryChair1, session.secondaryChair2)}
             {session.trackCodes && session.trackCodes.length > 0 && (
               <>
                 <br />
@@ -108,11 +121,24 @@ function PresentationList(props: { session: Session }) {
           </Grid>
         </Grid>
         <Grid container spacing={1} item xs>
-        <Grid item xs={12}><Typography variant="subtitle1">Click on one of the following buttons to add the event to your calendar.</Typography></Grid>
-          <Grid item xs={12}><Button variant="contained" onClick={()=>calExport(true)}>First round event <EventIcon /></Button></Grid>
-          {session.secondaryStart != null &&
-            <Grid item xs={12}><Button variant="contained" onClick={()=>calExport(false)}>Second round event <EventIcon /></Button></Grid>
-          }
+          <Grid item xs={12}>
+            <Typography variant="subtitle1">
+              Click on one of the following buttons to add the event to your
+              calendar.
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Button variant="contained" onClick={() => calExport(true)}>
+              First round event <EventIcon />
+            </Button>
+          </Grid>
+          {session.secondaryStart != null && (
+            <Grid item xs={12}>
+              <Button variant="contained" onClick={() => calExport(false)}>
+                Second round event <EventIcon />
+              </Button>
+            </Grid>
+          )}
         </Grid>
       </Grid>
     ),
