@@ -21,15 +21,14 @@ const meetingLink = (url: string) => (
   <AccordionSafeAnchor href={url}>Go to meeting room</AccordionSafeAnchor>
 );
 
-const sessionChairs = (name1: string, name2: string) => {
-  if (!name && !name2) {
+const sessionChairs = (name1: string | null, name2: string | null, first: boolean) => {
+  if (!name1 && !name2) {
     return "";
-  }
-  if (!name1 && name2) {
+  } else if (!name1 && name2) {
     name1 = name2;
   }
 
-  return `Session Chair: ${name1} ${name2 && `, ${name2}`}`;
+  return `${first? "First" : "Second"} Round Session Chair: ${name1} ${name2 && `, ${name2}`}`;
 };
 
 function PresentationList(props: { session: Session }) {
@@ -101,9 +100,9 @@ function PresentationList(props: { session: Session }) {
             )}
           </Grid>
           <Grid item xs>
-            {sessionChairs(session.primaryChair1, session.primaryChair2)}
+            {sessionChairs(session.primaryChair1, session.primaryChair2, true)}
             <br />
-            {sessionChairs(session.secondaryChair1, session.secondaryChair2)}
+            {sessionChairs(session.secondaryChair1, session.secondaryChair2, false)}
             {session.trackCodes && session.trackCodes.length > 0 && (
               <>
                 <br />
