@@ -294,8 +294,23 @@ public class ImportService {
       return null; // skip these for now; either empty row or a session we can't deal with right now
     }
 
-    // chairs
+    // chair stuff
+    String chairInfo1 = row.getCell(11, Row.CREATE_NULL_AS_BLANK).toString();
+    String chairInfo2 = row.getCell(13, Row.CREATE_NULL_AS_BLANK).toString();
+    String chairEmail1 = row.getCell(12, Row.CREATE_NULL_AS_BLANK).toString();
+    String chairEmail2 = row.getCell(14, Row.CREATE_NULL_AS_BLANK).toString();
 
+    // create chair users if needed
+    User chair1 = userRepository.findByEmail(chairEmail1).orElse(null);
+    User chair2 = userRepository.findByEmail(chairEmail2).orElse(null);
+    if (chair1 == null && !chairEmail1.trim().equals("")) {
+      createUser(chairInfo1, chairEmail1, chairEmail1, DEFAULT_SESSION_CHAIR_PW, "",
+              "", "", "", "", "", "", true, Collections.singleton(userRole));
+    }
+    if (chair2 == null && !chairEmail2.trim().equals("")) {
+      createUser(chairInfo2, chairEmail2, chairEmail2, DEFAULT_SESSION_CHAIR_PW, "",
+              "", "", "", "", "", "", true, Collections.singleton(userRole));
+    }
 
     // meeting link
     String link = row.getCell(15, Row.CREATE_NULL_AS_BLANK).toString();
@@ -308,39 +323,23 @@ public class ImportService {
 
     Instant start = getInstantFromDateAndTime(zonedStart, startString);
     Instant end = getInstantFromDateAndTime(zonedEnd, endString);
-    Session existingSession = sessionRepository.findBySessionCode(sessionCode).orElse(null);
+
+    // find session to edit or create a new one
+    Session session = sessionRepository.findBySessionCode(sessionCode).orElse(null);
+    session = session != null ? session : new Session();
+
+    session.setSessionCode(sessionCode);
+    session.setSessionName(row.getCell(2, Row.CREATE_NULL_AS_BLANK).toString());
 
     int roundNum = (int) row.getCell(3).getNumericCellValue();
-    if (roundNum == 1) { // first round row is always first, so we have to populate the name/chair/etc.
-      if (existingSession != null) {
-        return existingSession; // session already exists and we're on the first round, so we shouldn't make another
-      }
-      String sessionChair = row.getCell(11, Row.CREATE_NULL_AS_BLANK).toString();
-      String secondarySessionChair = row.getCell(13, Row.CREATE_NULL_AS_BLANK).toString();
-      String chairEmail = row.getCell(12, Row.CREATE_NULL_AS_BLANK).toString();
-      String secondaryChairEmail = row.getCell(14, Row.CREATE_NULL_AS_BLANK).toString();
-      Session newSession = new Session();
-      newSession.setSessionCode(sessionCode);
-      newSession.setSessionName(row.getCell(2, Row.CREATE_NULL_AS_BLANK).toString());
-      newSession.setPrimaryStart(start);
-      newSession.setPrimaryEnd(end);
-      newSession.setPrimaryChair1(sessionChair);
-      newSession.setSecondaryChair1(secondarySessionChair);
-      newSession.setPrimaryMeetingLink(link);
 
-      User primaryChair = userRepository.findByEmail(chairEmail).orElse(null);
-      User secondaryChair = userRepository.findByEmail(secondaryChairEmail).orElse(null);
-
-      if (primaryChair == null && !chairEmail.trim().equals("")) {
-        createUser(sessionChair, chairEmail, chairEmail, DEFAULT_SESSION_CHAIR_PW, "",
-                "", "", "", "", "", "", true, Collections.singleton(userRole));
-      }
-      if (secondaryChair == null && !secondaryChairEmail.trim().equals("")) {
-        createUser(secondarySessionChair, secondaryChairEmail, secondaryChairEmail, DEFAULT_SESSION_CHAIR_PW, "",
-                "", "", "", "", "", "", true, Collections.singleton(userRole));
-      }
-
-      if (!trackCode.toLowerCase().contains("key")) {
+    if (roundNum == 1) {
+      session.setPrimaryStart(start);
+      session.setPrimaryEnd(end);
+      session.setPrimaryChair1(chairInfo1);
+      session.setPrimaryChair2(chairInfo2);
+      session.setPrimaryMeetingLink(link);
+      if (!trackCode.toLowerCase().contains("key") && !trackCode.toLowerCase().equals("")) {
         // parse track code
         String[] trackCodes = trackCode.split("-");
         Set<Track> tracks = new HashSet<>();
@@ -351,18 +350,29 @@ public class ImportService {
           }
           tracks.add(track);
         }
-        newSession.setTracks(tracks);
+        session.setTracks(tracks);
       }
-      return sessionRepository.save(newSession);
-    } else { // second round row is always after first, so retrieve the created row and just update the second starting time
-      if (existingSession != null) {
-        existingSession.setSecondaryStart(start);
-        existingSession.setSecondaryEnd(end);
-        existingSession.setSecondaryMeetingLink(link);
-        return sessionRepository.save(existingSession);
+    } else {
+      session.setSecondaryStart(start);
+      session.setSecondaryEnd(end);
+      session.setSecondaryChair1(chairInfo1);
+      session.setSecondaryChair2(chairInfo2);
+      session.setSecondaryMeetingLink(link);
+      if (!trackCode.toLowerCase().contains("key") && !trackCode.toLowerCase().equals("")) {
+        // parse track code
+        String[] trackCodes = trackCode.split("-");
+        Set<Track> tracks = new HashSet<>();
+        for (String code : trackCodes) {
+          Track track = trackRepository.findByCodeIgnoreCase(code).orElse(null);
+          if (track == null) {
+            continue;
+          }
+          tracks.add(track);
+        }
+        session.setTracks(tracks);
       }
-      return null;
     }
+    return sessionRepository.save(session);
   }
 
   private Instant getInstantFromDateAndTime(ZonedDateTime zonedDate, String timeString) {
@@ -403,6 +413,7 @@ public class ImportService {
         continue; // TODO: handle this better
       }
       presentation.setSessionCode(sessionCode);
+      String email = row.getCell(12, Row.CREATE_NULL_AS_BLANK).toString();
       if (roundNum == 1) {
         presentation.setPrimaryStart(session.getPrimaryStart());
         presentation.setPrimaryEnd(session.getPrimaryEnd());
@@ -416,6 +427,7 @@ public class ImportService {
     Pattern pattern = Pattern.compile("P\\d-[A-Z]");
     Matcher matcher = pattern.matcher(sessionCode);
     boolean isPoster = matcher.find();
+    boolean isKeynote = sessionCode.toLowerCase().contains("key");
 
     Duration sessionDuration = Duration.between(session.getPrimaryStart(), session.getPrimaryEnd());
     int sessionMinutes = Math.round(sessionDuration.abs().toMinutes());
@@ -424,6 +436,9 @@ public class ImportService {
     if (isPoster) {
       minutesPerPres = 10;
     }
+    if (isKeynote) {
+      minutesPerPres = 60;
+    }
     Instant primaryStart = session.getPrimaryStart();
     Instant secondaryStart = session.getSecondaryStart();
     Set<Presentation> presSet = new HashSet<>(); // holds updated presentations to be set as session children
@@ -431,15 +446,6 @@ public class ImportService {
       Presentation pres = presArray[i];
       if (pres == null) {
         continue;
-      }
-      if (sessionCode.toLowerCase().contains("key")) {
-        if (roundNum == 1) {
-          pres.setPrimaryStart(session.getPrimaryStart());
-          pres.setPrimaryEnd(session.getPrimaryEnd());
-        } else {
-          pres.setSecondaryStart(session.getSecondaryStart());
-          pres.setSecondaryEnd(session.getSecondaryEnd());
-        }
       }
       pres.setPrimaryStart(primaryStart.plus(i*minutesPerPres, ChronoUnit.MINUTES));
       pres.setPrimaryEnd(pres.getPrimaryStart().plus(minutesPerPres, ChronoUnit.MINUTES));
