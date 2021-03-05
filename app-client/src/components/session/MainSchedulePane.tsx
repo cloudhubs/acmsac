@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Container, Grid, Paper, Typography } from "@material-ui/core";
+import { CircularProgress, Container, Grid, Paper, Typography } from "@material-ui/core";
 import FetchSession from "../../http/FetchSession";
 import { useGlobalState } from "../../state";
 import DaySchedulePane from "./DaySchedulePane";
@@ -85,6 +85,12 @@ function createDaySchedules(sessions: Session[]) {
     result.push(entry.value);
     entry = iter.next();
   }
+
+  // No results? Please wait...
+  if (result.length === 0) {
+    return (<Grid item justify="center"><br/><Container style={{display:"inline"}}><CircularProgress /></Container></Grid>);
+  }
+
   return result
     .sort((a, b) => compareDates(a, b))
     .map((date) => (

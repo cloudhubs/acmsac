@@ -5,7 +5,6 @@ import {
   Card,
   CardContent,
   Paper,
-  IconButton,
 } from "@material-ui/core";
 import React from "react";
 import { Session } from "../../model/Session";

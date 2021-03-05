@@ -59,7 +59,7 @@ const PresentationEntry = (props: PresentationEntryProps) => {
   const [selectedDay] = useGlobalState("selectedDay");
   let paper = props.paper;
   return (
-    <Accordion>
+    <Accordion variant="outlined">
       <AccordionSummary>
         <Grid container direction="row" spacing={2}>
           <Grid item>
