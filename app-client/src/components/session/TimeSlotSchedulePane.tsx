@@ -22,7 +22,21 @@ type TimeSlotScheduleProps = {
   sessions: Session[];
 };
 
-const showTimeForPanel = (time: Date, today: Date) => <DateTime date={time} assumedDate={today} />;
+const showTimeForPanel = (time: Date, today: Date, first: boolean) => {
+  let color: string = first ? "green" : "orange";
+  return (
+    <Grid container dir="row" spacing={1}>
+      <Grid item>
+        <Typography variant="body1">
+          {first ? "First" : "Second"} round starts at:
+        </Typography>
+      </Grid>
+      <Grid item style={{ color: color }}>
+        <DateTime date={time} assumedDate={today} />
+      </Grid>
+    </Grid>
+  );
+};
 
 function TimeSlotSchedulePane(props: TimeSlotScheduleProps) {
   const [selected] = useGlobalState("selectedSession");
@@ -46,7 +60,7 @@ function TimeSlotSchedulePane(props: TimeSlotScheduleProps) {
                   date.getMinutes()
                 )
               : null,
-              props.sessions[0]
+            props.sessions[0]
           );
         }}
         TransitionProps={{ unmountOnExit: true }}
@@ -56,13 +70,13 @@ function TimeSlotSchedulePane(props: TimeSlotScheduleProps) {
             <Grid container direction="column">
               <Grid item xs>
                 <Typography variant="h6">
-                  {showTimeForPanel(props.date, selectedDay)}
+                  {showTimeForPanel(props.date, selectedDay, true)}
                 </Typography>
               </Grid>
               {props.dateSecondary && (
                 <Grid item xs>
                   <Typography variant="h6">
-                    {showTimeForPanel(props.dateSecondary, selectedDay)}
+                    {showTimeForPanel(props.dateSecondary, selectedDay, false)}
                   </Typography>
                 </Grid>
               )}

@@ -6,7 +6,7 @@ import DaySchedulePane from "./DaySchedulePane";
 import { Session } from "../../model/Session";
 import { compareDates, dateToNumber, onReferenceDay } from "./util/TimeUtils";
 import { setSelectedDay } from "./util/ReduxUtils";
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 
 const LOADED_SS_KEY = "acmsac_loadedtoday";
 
@@ -27,31 +27,34 @@ const SchedulePane: () => JSX.Element = () => {
   useEffect(setUpSchedule, []);
 
   const useStyles = makeStyles((theme: Theme) =>
-      createStyles({
-          heroContent: {
-              padding: theme.spacing(8, 0, 6),
-          }
-      }),
+    createStyles({
+      heroContent: {
+        padding: theme.spacing(8, 0, 6),
+      },
+    })
   );
   const classes = useStyles();
 
   return (
     <Container maxWidth="lg" component="main" className={classes.heroContent}>
       <Paper>
-      {/* Header text + description */}
-      <Paper>
-        <Typography variant="h1">ACM SAC 2021</Typography>
-        {/* <Typography variant="body1">
-          Welcome! Here is some text that gives the warm fuzzies.
-          <br />
-          TODO put in something meaningful :P
-        </Typography> */}
-      </Paper>
+        {/* Header text + description */}
+        <Paper>
+          <Typography variant="h1">ACM SAC 2021</Typography>
+          <Typography variant="body1">
+            The virtual conference will take place on the following days; click
+            on a day to inspect the relative schedule.
+            <br/>
+            Please note that most of
+            the events are repeated in two separate rounds to accommodate the
+            needs of attendees from different time zones around the world.
+          </Typography>
+        </Paper>
 
-      <Grid container direction="column">
-        {createDaySchedules(sessions)}
-      </Grid>
-    </Paper>
+        <Grid container direction="column">
+          {createDaySchedules(sessions)}
+        </Grid>
+      </Paper>
     </Container>
   );
 };

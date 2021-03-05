@@ -35,7 +35,7 @@ export function DateTime(props: { date: Date; assumedDate: Date }) {
   return (
     <Grid container direction="row" spacing={1}>
       <Grid item>
-        <Typography variant={TEXT_STYLE}>{toTimeString(props.date)}</Typography>
+        <Typography color="inherit" variant={TEXT_STYLE}>{toTimeString(props.date)}</Typography>
       </Grid>
       <Grid item>
         <RedTypography variant={TEXT_STYLE}>

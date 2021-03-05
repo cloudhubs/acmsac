@@ -42,7 +42,9 @@ const BetaRouter = () => {
                 flexDirection: 'column',
                 minHeight: '100vh',
               },
-            
+            jss1: {
+                minHeight: "auto !important"
+            }
         }),
     );
 
