@@ -8,6 +8,8 @@ const NOP = () => {};
 
 function SessionHeader(props: { sessions: Session[] }) {
   let [selectedSession] = useGlobalState("selectedSession");
+  const disabled =
+    props.sessions.find((session) => session === selectedSession) === undefined;
 
   return (
     <>
@@ -20,6 +22,7 @@ function SessionHeader(props: { sessions: Session[] }) {
             color={isSelected ? "primary" : "default"}
             variant="contained"
             onClick={isSelected ? NOP : () => setSelectedSession(session)}
+            disabled={disabled}
           >
             {session.sessionCode}
           </Button>

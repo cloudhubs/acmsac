@@ -6,7 +6,7 @@ import {
   Typography,
   Grid,
 } from "@material-ui/core";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ArrowDropDownCircleIcon from "@material-ui/icons/ArrowDropDownCircle";
 import { Session } from "../../model/Session";
 import { useGlobalState } from "../../state";
 import {
@@ -77,7 +77,7 @@ function DaySchedulePane(props: { date: Date }) {
         onChange={(_, expanded) => setSelectedDay(expanded ? props.date : null)}
         TransitionProps={{ unmountOnExit: true }}
       >
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <AccordionSummary expandIcon={<ArrowDropDownCircleIcon />}>
           <Typography variant="h6">
             {getReferenceDay(props.date)}
             &nbsp;(Local start date: {props.date.toLocaleDateString()})

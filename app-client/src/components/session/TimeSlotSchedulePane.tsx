@@ -7,7 +7,7 @@ import {
   AccordionDetails,
   Typography,
 } from "@material-ui/core";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ArrowDropDownCircleIcon from "@material-ui/icons/ArrowDropDownCircle";
 import { Session } from "../../model/Session";
 import { useGlobalState } from "../../state";
 import SessionHeader from "./DayScheduleHeader";
@@ -41,14 +41,15 @@ const showTimeForPanel = (time: Date, today: Date, first: boolean) => {
 function TimeSlotSchedulePane(props: TimeSlotScheduleProps) {
   const [selected] = useGlobalState("selectedSession");
   const [selectedDay] = useGlobalState("selectedDay");
-  const [selectedTime] = useGlobalState("selectedTime");
+  // const [selectedTime] = useGlobalState("selectedTime");
   const date = props.date;
 
   // Create UI
   return (
     <Grid container direction="column">
       <Accordion
-        expanded={selectedTime !== null && sameTime(selectedTime, date)}
+        color="secondary"
+        variant="outlined"
         onChange={(_, expanded) => {
           setSelectedSlot(
             selectedDay && expanded
@@ -65,29 +66,41 @@ function TimeSlotSchedulePane(props: TimeSlotScheduleProps) {
         }}
         TransitionProps={{ unmountOnExit: true }}
       >
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          {selectedDay && (
-            <Grid container direction="column">
-              <Grid item xs>
-                <Typography variant="h6">
-                  {showTimeForPanel(props.date, selectedDay, true)}
-                </Typography>
-              </Grid>
-              {props.dateSecondary && (
+        <AccordionSummary
+          expandIcon={
+            <div style={{ color: "gray" }}>
+              <ArrowDropDownCircleIcon />
+            </div>
+          }
+        >
+          <Grid container direction="column">
+            {selectedDay && (
+              <>
                 <Grid item xs>
                   <Typography variant="h6">
-                    {showTimeForPanel(props.dateSecondary, selectedDay, false)}
+                    {showTimeForPanel(props.date, selectedDay, true)}
                   </Typography>
                 </Grid>
-              )}
-            </Grid>
-          )}
-        </AccordionSummary>
-        <AccordionDetails>
-          <Grid container direction="column">
+                {props.dateSecondary && (
+                  <Grid item xs>
+                    <Typography variant="h6">
+                      {showTimeForPanel(
+                        props.dateSecondary,
+                        selectedDay,
+                        false
+                      )}
+                    </Typography>
+                  </Grid>
+                )}
+              </>
+            )}
             <Grid item xs key={-1}>
               <SessionHeader sessions={props.sessions} />
             </Grid>
+          </Grid>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Grid container direction="column">
             {props.sessions
               .filter((s) => s.sessionCode === selected.sessionCode)
               .map((s) => (
