@@ -8,8 +8,8 @@ const NOP = () => {};
 
 function SessionHeader(props: { sessions: Session[] }) {
   let [selectedSession] = useGlobalState("selectedSession");
-  const disabled =
-    props.sessions.find((session) => session === selectedSession) === undefined;
+  let [selectedTime] = useGlobalState("selectedTime")
+  const disabled = selectedTime === null || props.sessions.find((session) => session === selectedSession) === undefined;
 
   return (
     <>

@@ -41,7 +41,6 @@ const showTimeForPanel = (time: Date, today: Date, first: boolean) => {
 function TimeSlotSchedulePane(props: TimeSlotScheduleProps) {
   const [selected] = useGlobalState("selectedSession");
   const [selectedDay] = useGlobalState("selectedDay");
-  // const [selectedTime] = useGlobalState("selectedTime");
   const date = props.date;
 
   // Create UI
