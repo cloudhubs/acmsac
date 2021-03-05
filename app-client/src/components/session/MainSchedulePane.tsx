@@ -40,7 +40,7 @@ const SchedulePane: () => JSX.Element = () => {
       <Paper>
         {/* Header text + description */}
         <Paper>
-          <Typography variant="h1">ACM SAC 2021</Typography>
+          <Typography variant="h2">Schedule</Typography>
           <Typography variant="body1">
             The virtual conference will take place on the following days; click
             on a day to inspect the relative schedule.
