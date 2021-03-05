@@ -434,7 +434,7 @@ public class ImportService {
     int numPres = presArray[4] == null ? 4 : 5; // haha hardcoded numbers go brr
     int minutesPerPres = sessionMinutes / numPres; // if 4 presentations, divide by 4; else 5
     if (isPoster) {
-      minutesPerPres = 10;
+      minutesPerPres = 15;
     }
     if (isKeynote) {
       minutesPerPres = 60;
