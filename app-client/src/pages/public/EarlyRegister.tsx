@@ -74,7 +74,7 @@ const EarlyRegister = () => {
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        {'Password reminder'}
+                        {'Password reset'}
                     </Typography>
                     <form className={classes.form} noValidate>
                         <Grid container spacing={2}>
@@ -107,7 +107,7 @@ const EarlyRegister = () => {
                                 onClick(event);
                             }}
                         >
-                            Remind
+                            Reset
                         </Button>
                     </form>
                 </div>

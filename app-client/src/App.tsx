@@ -24,7 +24,7 @@ const App = () => {
                     <Route exact path="/" component={PublicRouter} />
                     <Route exact path="/app" component={PublicRouter} />
                     <Route exact path="/search" component={PublicRouter} />
-                    <Route exact path="/reminder" component={PublicRouter} />
+                    <Route exact path="/reset" component={PublicRouter} />
                     <Route exact path="/api/check/:email" component={PublicRouter} />
                     <Route exact path="/api/check/:email/:paperId" component={PublicRouter} />
                     <Route exact path="/app/register" component={BetaRouter} />

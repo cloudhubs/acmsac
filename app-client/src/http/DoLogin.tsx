@@ -39,6 +39,7 @@ const DoLogin = {
             } else {
                 console.log(body.message);
             }
+            return body;
         } else {
             console.log("server error");
         }
