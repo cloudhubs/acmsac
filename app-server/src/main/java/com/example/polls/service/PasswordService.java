@@ -70,7 +70,7 @@ public class PasswordService {
         // don't allow password reset within 30 minutes
         PasswordResetToken oldToken = passwordResetTokenRepository.getFirstByEmailOrderByExpirationDateDesc(email);
         if (oldToken != null && !hasTokenExpired(oldToken)) {
-            return new ResponseEntity(new ApiResponse(false, "Sorry, password reset request made recently!"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new ApiResponse(false, "Sorry, password reset request made recently. Please wait 30 minutes before requesting again."), HttpStatus.BAD_REQUEST);
         }
 
         // generate new PasswordResetToken
@@ -88,7 +88,7 @@ public class PasswordService {
             return new ResponseEntity(new ApiResponse(false, "Failed to send email!"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return new ResponseEntity(new ApiResponse(true, "Password reset link set to email!"), HttpStatus.OK);
+        return new ResponseEntity(new ApiResponse(true, "Password reset link set to email."), HttpStatus.OK);
     }
 
     public ResponseEntity<?> resetPassword(Long id, String token) {

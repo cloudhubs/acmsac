@@ -58,14 +58,14 @@ function PresentationList(props: { session: Session }) {
     () => (
       <Grid container direction="column">
         <Grid item xs>
-          <Typography variant="h6">
-            {session.sessionCode} {session.sessionName}
+          <Typography variant="h5">
+            {session.sessionName}
           </Typography>
         </Grid>
         <Grid item container direction="row">
           <Grid container item xs direction="column">
             <Grid item xs>
-              <Typography variant="h6">
+              <Typography variant="body1">
                 {selectedDay && (
                   <DateTimePair
                     start={session.primaryStart}
@@ -73,11 +73,11 @@ function PresentationList(props: { session: Session }) {
                     assumedDate={selectedDay}
                   />
                 )}{" "}
-                (
-                {session.primaryMeetingLink
-                  ? meetingLink(session.primaryMeetingLink)
-                  : "No room assigned"}
-                )
+                <Typography variant="h6">
+                  {session.primaryMeetingLink
+                    ? meetingLink(session.primaryMeetingLink)
+                    : "No room assigned"}
+                </Typography>
               </Typography>
             </Grid>
             {session.secondaryStart && session.secondaryEnd && (
