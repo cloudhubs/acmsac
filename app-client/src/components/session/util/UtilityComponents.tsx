@@ -25,22 +25,17 @@ export function AccordionSafeAnchor(props: AccordionSafeAnchorProps) {
  * DateTimePair: A component showing the date and time
  */
 const TEXT_STYLE = "body1";
-const RedTypography = withStyles({
-  root: {
-    color: "red",
-  },
-})(Typography);
 
 export function DateTime(props: { date: Date; assumedDate: Date }) {
   return (
     <Grid container direction="row" spacing={1}>
-      <Grid item>
+      <Grid xs item>
         <Typography color="inherit" variant={TEXT_STYLE}>{toTimeString(props.date)}</Typography>
       </Grid>
-      <Grid item>
-        <RedTypography variant={TEXT_STYLE}>
+      <Grid xs item>
+        <Typography style={{color: "red"}} variant={TEXT_STYLE}>
           {getTimeQualifier(props.date, props.assumedDate)}
-        </RedTypography>
+        </Typography>
       </Grid>
     </Grid>
   );
