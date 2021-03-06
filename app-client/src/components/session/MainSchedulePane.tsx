@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Container, Grid, Paper, Typography } from "@material-ui/core";
+import { CircularProgress, Container, Grid, Paper, Typography } from "@material-ui/core";
 import FetchSession from "../../http/FetchSession";
 import { useGlobalState } from "../../state";
 import DaySchedulePane from "./DaySchedulePane";
@@ -40,7 +40,7 @@ const SchedulePane: () => JSX.Element = () => {
       <Paper>
         {/* Header text + description */}
         <Paper>
-          <Typography variant="h1">ACM SAC 2021</Typography>
+          <Typography variant="h2">Schedule</Typography>
           <Typography variant="body1">
             The virtual conference will take place on the following days; click
             on a day to inspect the relative schedule.
@@ -85,6 +85,12 @@ function createDaySchedules(sessions: Session[]) {
     result.push(entry.value);
     entry = iter.next();
   }
+
+  // No results? Please wait...
+  if (result.length === 0) {
+    return (<Grid item justify="center"><br/><Container style={{display:"inline"}}><CircularProgress /></Container></Grid>);
+  }
+
   return result
     .sort((a, b) => compareDates(a, b))
     .map((date) => (

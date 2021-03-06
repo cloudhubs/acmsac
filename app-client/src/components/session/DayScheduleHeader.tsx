@@ -3,11 +3,14 @@ import React from "react";
 import { Session } from "../../model/Session";
 import { useGlobalState } from "../../state";
 import { setSelectedSession } from "./util/ReduxUtils";
+import { stopEvent } from "./util/UtilityComponents";
 
 const NOP = () => {};
 
 function SessionHeader(props: { sessions: Session[] }) {
   let [selectedSession] = useGlobalState("selectedSession");
+  let [selectedTime] = useGlobalState("selectedTime")
+  const disabled = selectedTime === null || props.sessions.find((session) => session === selectedSession) === undefined;
 
   return (
     <>
@@ -19,7 +22,12 @@ function SessionHeader(props: { sessions: Session[] }) {
             key={session.sessionCode}
             color={isSelected ? "primary" : "default"}
             variant="contained"
-            onClick={isSelected ? NOP : () => setSelectedSession(session)}
+            onClick={isSelected ? NOP : event => {
+              setSelectedSession(session);
+              event.stopPropagation();
+            }}
+            onChange={stopEvent}
+            disabled={disabled}
           >
             {session.sessionCode}
           </Button>
