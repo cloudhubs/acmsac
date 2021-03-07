@@ -141,7 +141,7 @@ public class ImportService {
       XSSFSheet sessionPapersSheet = sessionWorkbook.getSheetAt(1);
       for (int i = 3; i < sessionPapersSheet.getPhysicalNumberOfRows(); i++) {
         XSSFRow row = sessionPapersSheet.getRow(i);
-        assignPaperToSession(row);
+        assignPaperToSession(row, userRole);
       }
       log.info("Done assigning sessions");
     } catch (IOException e) {
@@ -258,7 +258,7 @@ public class ImportService {
       authors = userRepository.saveAll(authors);
       String presenterEmail = row.getCell(124, Row.CREATE_NULL_AS_BLANK).toString().trim();
       User presenter = userRepository.findByEmail(presenterEmail).orElse(null);
-      if (presenter == null) {
+      if (presenter == null && authors.size() > 0) {
         presenter = authors.get(0);
       }
       presentation.setTitle(row.getCell(6, Row.CREATE_NULL_AS_BLANK).toString());
@@ -302,11 +302,12 @@ public class ImportService {
 
     // create chair users if needed
     User chair1 = userRepository.findByEmail(chairEmail1).orElse(null);
-    User chair2 = userRepository.findByEmail(chairEmail2).orElse(null);
     if (chair1 == null && !chairEmail1.trim().equals("")) {
       createUser(chairInfo1, chairEmail1, chairEmail1, DEFAULT_SESSION_CHAIR_PW, "",
               "", "", "", "", "", "", true, Collections.singleton(userRole));
     }
+
+    User chair2 = userRepository.findByEmail(chairEmail2).orElse(null);
     if (chair2 == null && !chairEmail2.trim().equals("")) {
       createUser(chairInfo2, chairEmail2, chairEmail2, DEFAULT_SESSION_CHAIR_PW, "",
               "", "", "", "", "", "", true, Collections.singleton(userRole));
@@ -383,82 +384,100 @@ public class ImportService {
     return zonedDate.toInstant();
   }
 
-  public void assignPaperToSession(XSSFRow row) {
+  public void assignPaperToSession(XSSFRow row, Role userRole) {
+    try {
+      String sessionCode = row.getCell(1, Row.CREATE_NULL_AS_BLANK).toString();
+      if (sessionCode.trim().isEmpty()) {
+        return;
+      }
+      Session session = sessionRepository.findBySessionCode(sessionCode).orElse(null);
+      if (session == null) {
+        return;
+      }
+      int roundNum = 0;
+      roundNum = (int) row.getCell(3).getNumericCellValue();
 
-    String sessionCode = row.getCell(1, Row.CREATE_NULL_AS_BLANK).toString();
-    if (sessionCode.trim().isEmpty()) {
-      return;
-    }
-    Session session = sessionRepository.findBySessionCode(sessionCode).orElse(null);
-    if (session == null) {
-      return;
-    }
-    int roundNum = 0;
-    roundNum = (int) row.getCell(3).getNumericCellValue();
+      Presentation[] presArray = new Presentation[5];
+      // loop through 5 papers
+      for (int i = 0; i < 5; i++) {
+        // paper ID starts at column 8, and happens every 4 columns for 5 papers
+        String paperIdVal = row.getCell(9 + i*4, Row.CREATE_NULL_AS_BLANK).toString();
+        if (paperIdVal.trim().equals("")) { // empty paper ID slot = no pres
+          continue;
+        }
+        int paperId = (int) row.getCell(9 + i*4, Row.CREATE_NULL_AS_BLANK).getNumericCellValue();
+        if (paperId == 0) { // bad paper ID
+          continue;
+        }
+        if (Arrays.stream(presArray).anyMatch(p -> p != null && p.getPaperId() == paperId)) { // ignore dupes
+          continue;
+        }
+        Presentation presentation = presentationRepository.findByPaperId(paperId).orElse(null);
+        if (presentation == null) {
+          continue; // TODO: handle this better
+        }
+        presentation.setSessionCode(sessionCode);
+        String name = row.getCell(10 + i*4, Row.CREATE_NULL_AS_BLANK).toString();
+        String affiliation = row.getCell(11 + i*4, Row.CREATE_NULL_AS_BLANK).toString();
+        String email = row.getCell(12 + i*4, Row.CREATE_NULL_AS_BLANK).toString();
+        User presenter = userRepository.findByEmail(email).orElse(null);
+        if (presenter != null) {
+          presentation.setPresenter(presenter);
+        } else if (email != null && email.trim() != "") {
+          presenter = createUser(name, email, email, Integer.toString(paperId), affiliation, "",
+                  "", "", "", "", "", true, Collections.singleton(userRole));
+          presentation.setPresenter(presenter);
+        }
+        if (roundNum == 1) {
+          presentation.setPrimaryStart(session.getPrimaryStart());
+          presentation.setPrimaryEnd(session.getPrimaryEnd());
+        } else {
+          presentation.setSecondaryStart(session.getSecondaryStart());
+          presentation.setSecondaryEnd(session.getSecondaryEnd());
+        }
+        presentation = presentationRepository.save(presentation);
+        presArray[i] = presentation;
+      }
+      Pattern pattern = Pattern.compile("P\\d-[A-Z]");
+      Matcher matcher = pattern.matcher(sessionCode);
+      boolean isPoster = matcher.find();
+      boolean isKeynote = sessionCode.toLowerCase().contains("key");
 
-    Presentation[] presArray = new Presentation[5];
-    // loop through 5 papers
-    for (int i = 0; i < 5; i++) {
-      // paper ID starts at column 8, and happens every 4 columns for 5 papers
-      String paperIdVal = row.getCell(9 + i*4, Row.CREATE_NULL_AS_BLANK).toString();
-      if (paperIdVal.trim().equals("")) {
-        continue;
+      Duration sessionDuration = Duration.between(session.getPrimaryStart(), session.getPrimaryEnd());
+      int sessionMinutes = Math.round(sessionDuration.abs().toMinutes());
+      int numPres = presArray[4] == null ? 4 : 5; // haha hardcoded numbers go brr
+      int minutesPerPres = sessionMinutes / numPres; // if 4 presentations, divide by 4; else 5
+      if (isPoster) {
+        minutesPerPres = 15;
       }
-      int paperId = (int) row.getCell(9 + i*4, Row.CREATE_NULL_AS_BLANK).getNumericCellValue();
-      if (paperId == 0) {
-        continue;
+      if (isKeynote) {
+        minutesPerPres = 60;
       }
-      Presentation presentation = presentationRepository.findByPaperId(paperId).orElse(null);
-      if (presentation == null) {
-        continue; // TODO: handle this better
-      }
-      presentation.setSessionCode(sessionCode);
-      String email = row.getCell(12, Row.CREATE_NULL_AS_BLANK).toString();
-      if (roundNum == 1) {
-        presentation.setPrimaryStart(session.getPrimaryStart());
-        presentation.setPrimaryEnd(session.getPrimaryEnd());
-      } else {
-        presentation.setSecondaryStart(session.getSecondaryStart());
-        presentation.setSecondaryEnd(session.getSecondaryEnd());
-      }
-      presentation = presentationRepository.save(presentation);
-      presArray[i] = presentation;
-    }
-    Pattern pattern = Pattern.compile("P\\d-[A-Z]");
-    Matcher matcher = pattern.matcher(sessionCode);
-    boolean isPoster = matcher.find();
-    boolean isKeynote = sessionCode.toLowerCase().contains("key");
-
-    Duration sessionDuration = Duration.between(session.getPrimaryStart(), session.getPrimaryEnd());
-    int sessionMinutes = Math.round(sessionDuration.abs().toMinutes());
-    int numPres = presArray[4] == null ? 4 : 5; // haha hardcoded numbers go brr
-    int minutesPerPres = sessionMinutes / numPres; // if 4 presentations, divide by 4; else 5
-    if (isPoster) {
-      minutesPerPres = 15;
-    }
-    if (isKeynote) {
-      minutesPerPres = 60;
-    }
-    Instant primaryStart = session.getPrimaryStart();
-    Instant secondaryStart = session.getSecondaryStart();
-    Set<Presentation> presSet = new HashSet<>(); // holds updated presentations to be set as session children
-    for (int i = 0; i < numPres; i++) {
-      Presentation pres = presArray[i];
-      if (pres == null) {
-        continue;
-      }
-      pres.setPrimaryStart(primaryStart.plus(i*minutesPerPres, ChronoUnit.MINUTES));
-      pres.setPrimaryEnd(pres.getPrimaryStart().plus(minutesPerPres, ChronoUnit.MINUTES));
-      if (secondaryStart != null) {
-        pres.setSecondaryStart(secondaryStart.plus(i*minutesPerPres, ChronoUnit.MINUTES));
-        pres.setSecondaryEnd(pres.getSecondaryStart().plus(minutesPerPres, ChronoUnit.MINUTES));
-      }
-      pres.setSession(session);
+      Instant primaryStart = session.getPrimaryStart();
+      Instant secondaryStart = session.getSecondaryStart();
+      Set<Presentation> presSet = new HashSet<>(); // holds updated presentations to be set as session children
+      for (int i = 0; i < numPres; i++) {
+        Presentation pres = presArray[i];
+        if (pres == null) {
+          continue;
+        }
+        pres.setPrimaryStart(primaryStart.plus(i*minutesPerPres, ChronoUnit.MINUTES));
+        pres.setPrimaryEnd(pres.getPrimaryStart().plus(minutesPerPres, ChronoUnit.MINUTES));
+        if (secondaryStart != null) {
+          pres.setSecondaryStart(secondaryStart.plus(i*minutesPerPres, ChronoUnit.MINUTES));
+          pres.setSecondaryEnd(pres.getSecondaryStart().plus(minutesPerPres, ChronoUnit.MINUTES));
+        }
+        pres.setSession(session);
 //      pres = presentationRepository.save(pres);
-      presSet.add(pres);
+        presSet.add(pres);
+      }
+      session.setPresentations(presSet);
+      sessionRepository.save(session);
+    } catch (Exception e) {
+      // fml
+      e.printStackTrace();
+      throw new ImportException("Failed to populate session! " + e.getMessage(), e);
     }
-    session.setPresentations(presSet);
-    sessionRepository.save(session);
   }
 
   /**

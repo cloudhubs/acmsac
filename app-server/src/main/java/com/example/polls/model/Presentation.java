@@ -85,15 +85,18 @@ public class Presentation {
 
   @ManyToOne
   @JoinColumn(name = "user_id")
+  @EqualsAndHashCode.Exclude
   private User presenter;
 
   private String type;
 
   @ManyToMany
+  @EqualsAndHashCode.Exclude
   private List<User> authors = new ArrayList<>();
 
   // don't use Set, order matters
   @OneToMany
+  @EqualsAndHashCode.Exclude
   List<Comment> comments = new ArrayList<>();
 
   public Presentation() {
