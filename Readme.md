@@ -69,7 +69,9 @@ $ docker-compose up --no-build --detach
 ### Configure `firewalld`:
 
 ```
-$ sudo docker network inspect acmsac_app-internal # note the subnet address (172.28.0.0/16) and inet (172.28.0.1)
+$ sudo docker network inspect acmsac_app-internal 
+# note the subnet Subnet (172.28.0.0/16) and Gateway (172.28.0.1)
+
 $ sudo firewall-cmd --zone=public --add-masquerade --permanent
 $ sudo firewall-cmd --permanent --zone=public --change-interface=docker0
 $ sudo firewall-cmd --permanent --zone=public --add-rich-rule='rule family=ipv4 source address=172.28.0.0/16 accept'
@@ -85,7 +87,7 @@ inet_interfaces = localhost,172.28.0.1
 
 relayhost = {hidden}.ecs.baylor.edu
 myhostname = acmsac.ecs.baylor.edu
-mynetworks = 127.0.0.1/32 172.17.0.0/16 172.28.0.0/16 [::1]/128
+mynetworks = 127.0.0.1/32 172.28.0.0/16 [::1]/128
 
 $ sudo systemctl restart postfix
 $ sudo postfix status
