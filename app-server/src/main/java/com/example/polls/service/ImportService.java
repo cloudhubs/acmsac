@@ -248,6 +248,12 @@ public class ImportService {
         int cellNum = 40 + i * 7; // first email is at col 40, then every 7 cols after that
         emails.add(row.getCell(cellNum, Row.CREATE_NULL_AS_BLANK).toString().trim());
       }
+      Map<String, Integer> emailOrder = new HashMap<String, Integer>();
+      for (int i = 0; i < emails.size(); i++)
+      {
+        String email = emails.get(i);
+        emailOrder.put(email.toLowerCase(), i);
+      }
       List<User> authors = userRepository.findAllByEmailIn(emails);
       for (User author : authors) {
         if (!author.isHasPassword()) {
@@ -256,6 +262,7 @@ public class ImportService {
         }
       }
       authors = userRepository.saveAll(authors);
+      authors.sort(new AuthorEmailComparator(emailOrder));
       String presenterEmail = row.getCell(124, Row.CREATE_NULL_AS_BLANK).toString().trim();
       User presenter = userRepository.findByEmail(presenterEmail).orElse(null);
       if (presenter == null && authors.size() > 0) {
@@ -283,6 +290,34 @@ public class ImportService {
     } catch (Exception e) {
       e.printStackTrace();
       throw new ImportException("Could not create presentation! " + e.getMessage(), e);
+    }
+  }
+
+  private static class AuthorEmailComparator implements Comparator<User>
+  {
+    private Map<String, Integer> sortOrder;
+
+    public AuthorEmailComparator(Map<String, Integer> sortOrder)
+    {
+      this.sortOrder = sortOrder;
+    }
+
+    @Override
+    public int compare(User i1, User i2)
+    {
+      Integer emailPos1 = sortOrder.get(i1.getEmail().toLowerCase());
+      if (emailPos1 == null)
+      {
+        System.out.println("Bad email in comparison " + i1.getEmail() + ", skipping");
+        return 0;
+      }
+      Integer emailPos2 = sortOrder.get(i2.getEmail().toLowerCase());
+      if (emailPos2 == null)
+      {
+        System.out.println("Bad email in comparison " + i2.getEmail() + ", skipping");
+        return 0;
+      }
+      return emailPos1.compareTo(emailPos2);
     }
   }
 
