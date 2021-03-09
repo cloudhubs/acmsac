@@ -50,18 +50,26 @@ const PrivateHeader = () => {
                     <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
                         ACM SAC 2021
                     </Typography>
-                    <Button color="primary" variant="outlined" className={classes.link}>
-                        <Link to="/">Home</Link>
-                    </Button>
-                    <Button color="primary" variant="outlined" className={classes.link}>
-                        <Link to="/sessions">Schedule</Link>
-                    </Button>
-                    <Button color="primary" variant="outlined" className={classes.link}>
-                        <Link to="/app/track">Tracks</Link>
-                    </Button>
-                    <Button color="primary" variant="outlined" className={classes.link}>
-                        <Link to="/app/currentuser">Me</Link>
-                    </Button>
+                    <Link to="/">
+                        <Button color="primary" variant="outlined" className={classes.link}>
+                            Home
+                        </Button>
+                    </Link>
+                    <Link to="/sessions">
+                        <Button color="primary" variant="outlined" className={classes.link}>
+                            Schedule
+                        </Button>
+                    </Link>
+                    <Link to="/app/track">
+                        <Button color="primary" variant="outlined" className={classes.link}>
+                            Tracks
+                        </Button>
+                    </Link>
+                    <Link to="/app/currentuser">
+                        <Button color="primary" variant="outlined" className={classes.link}>
+                            Me
+                        </Button>
+                    </Link>
                     <Button color="primary" variant="outlined" className={classes.link} onClick={(event: React.MouseEvent<HTMLElement>) => {
                         onLogout(event)
                     }}>

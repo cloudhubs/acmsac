@@ -41,13 +41,16 @@ const showTimeForPanel = (time: Date, today: Date, first: boolean) => {
 function TimeSlotSchedulePane(props: TimeSlotScheduleProps) {
   const [selected] = useGlobalState("selectedSession");
   const [selectedDay] = useGlobalState("selectedDay");
+  const [selectedTime] = useGlobalState("selectedTime");
   const date = props.date;
+  const expanded = selectedTime !== null && sameTime(selectedTime, date);
 
   // Create UI
   return (
     <Accordion
       color="secondary"
       variant="outlined"
+      expanded={expanded}
       onChange={(_, expanded) => {
         setSelectedSlot(
           selectedDay && expanded
@@ -69,21 +72,17 @@ function TimeSlotSchedulePane(props: TimeSlotScheduleProps) {
           {selectedDay && (
             <>
               <Grid item xs>
-                <Typography variant="h6">
-                  {showTimeForPanel(props.date, selectedDay, true)}
-                </Typography>
+                {showTimeForPanel(props.date, selectedDay, true)}
               </Grid>
               {props.dateSecondary && (
                 <Grid item xs>
-                  <Typography variant="h6">
-                    {showTimeForPanel(props.dateSecondary, selectedDay, false)}
-                  </Typography>
+                  {showTimeForPanel(props.dateSecondary, selectedDay, false)}
                 </Grid>
               )}
             </>
           )}
           <Grid item xs key={-1}>
-            <SessionHeader sessions={props.sessions} />
+            <SessionHeader sessions={props.sessions} disabled={!expanded} />
           </Grid>
         </Grid>
       </AccordionSummary>

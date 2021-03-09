@@ -13,6 +13,7 @@ import {
   compareByTime,
   compareDates,
   getReferenceDay,
+  getTimeZone,
   sameDay,
 } from "./util/TimeUtils";
 import TimeSlotSchedulePane from "./TimeSlotSchedulePane";
@@ -80,7 +81,7 @@ function DaySchedulePane(props: { date: Date }) {
         <AccordionSummary expandIcon={<ArrowDropDownCircleIcon />}>
           <Typography variant="h6">
             {getReferenceDay(props.date)}
-            &nbsp;(Local start date: {props.date.toLocaleDateString()})
+            &nbsp;(Local start date: {`${props.date.toLocaleDateString()} [${getTimeZone()}]`})
           </Typography>
         </AccordionSummary>
         <AccordionDetails>

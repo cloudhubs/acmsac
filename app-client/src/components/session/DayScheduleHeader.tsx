@@ -7,10 +7,9 @@ import { stopEvent } from "./util/UtilityComponents";
 
 const NOP = () => {};
 
-function SessionHeader(props: { sessions: Session[] }) {
+function SessionHeader(props: { sessions: Session[], disabled: boolean }) {
   let [selectedSession] = useGlobalState("selectedSession");
-  let [selectedTime] = useGlobalState("selectedTime")
-  const disabled = selectedTime === null || props.sessions.find((session) => session === selectedSession) === undefined;
+  let disabled = props.disabled;
 
   return (
     <>

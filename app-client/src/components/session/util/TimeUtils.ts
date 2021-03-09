@@ -109,7 +109,7 @@ export const sameDay = (dateA: Date, dateB: Date, local?: boolean) => {
  * @param dateB The second time
  */
 export const sameTime = (dateA: Date, dateB: Date) => {
-  return dateA.getTime() % MILLIS_IN_DAY === dateB.getTime() % MILLIS_IN_DAY;
+  return dateA.getHours() === dateB.getHours() && dateA.getMinutes() === dateB.getMinutes();
 };
 
 /**
