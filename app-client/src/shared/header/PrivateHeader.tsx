@@ -42,6 +42,7 @@ const PrivateHeader = () => {
     }
 
     const classes = useStyles();
+    const routeTo = (url) => () => history.push(url)
 
     return (
         <>
@@ -50,26 +51,18 @@ const PrivateHeader = () => {
                     <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
                         ACM SAC 2021
                     </Typography>
-                    <Link to="/">
-                        <Button color="primary" variant="outlined" className={classes.link}>
-                            Home
-                        </Button>
-                    </Link>
-                    <Link to="/sessions">
-                        <Button color="primary" variant="outlined" className={classes.link}>
-                            Schedule
-                        </Button>
-                    </Link>
-                    <Link to="/app/track">
-                        <Button color="primary" variant="outlined" className={classes.link}>
-                            Tracks
-                        </Button>
-                    </Link>
-                    <Link to="/app/currentuser">
-                        <Button color="primary" variant="outlined" className={classes.link}>
-                            Me
-                        </Button>
-                    </Link>
+                    <Button color="primary" variant="outlined" className={classes.link} onClick={routeTo("/")}>
+                        Home
+                    </Button>
+                    <Button color="primary" variant="outlined" className={classes.link} onClick={routeTo("/sessions")}>
+                        Schedule
+                    </Button>
+                    <Button color="primary" variant="outlined" className={classes.link} onClick={routeTo("/app/track")}>
+                        Tracks
+                    </Button>
+                    <Button color="primary" variant="outlined" className={classes.link} onClick={routeTo("/app/currentuser")}>
+                        Me
+                    </Button>
                     <Button color="primary" variant="outlined" className={classes.link} onClick={(event: React.MouseEvent<HTMLElement>) => {
                         onLogout(event)
                     }}>
