@@ -134,11 +134,33 @@ const PaperDetail = ({classes}) => {
                                     
                                     {isEditMode &&
                                         <>
+                                        <Typography variant="body1" style={{ textAlign: "left"}}>
+                                            There are two options for video upload: You can upload a video through YouTube or through Google Drive.
+                                            <ul>
+                                                <li>
+                                                    For YouTube videos, paste in the URL in this format: https://www.youtube.com/watch?v=4vd2rCBjHp8
+                                                    <ul>
+                                                        <li>The URL must follow the above format (i.e. there cannot be anything extra after the video ID).</li>
+                                                        <li>The video must not be private.</li>
+                                                    </ul>
+                                                </li>
+                                                <li>
+                                                    For videos on Google Drive, paste in the URL in this format: https://drive.google.com/file/d/yourfileidhere/preview
+                                                    <ul>
+                                                        <li><b>IMPORTANT!</b> You MUST include /preview at the end of a Google Drive URL. If the URL pasted has anything else at the end of it (e.g. /view, /edit, etc.), change it to /preview.</li>
+                                                        <li>The file must be made publicly available (set the sharing settings so anyone with the link can view).</li>
+                                                    </ul>
+                                                </li>
+                                                <li>
+                                                    In either case, the URL must use the HTTPS protocol (URL must begin with https://).
+                                                </li>
+                                            </ul>
+                                        </Typography>
                                         <TextField
                                             fullWidth
-                                            label="Add new YouTube URL"
+                                            label="Add new YouTube/Google Drive URL"
                                             value = {paperUpdate.videoUrl}
-                                            helperText="Paste in a YouTube URL in the format https://www.youtube.com/watch?v=4vd2rCBjHp8"
+                                            helperText="Important! View the instructions above before adding your video."
                                             onChange={(event) => {
                                                 const videoUrl = event.target.value;
                                                 setPaperUpdate((p) => ({...p,videoUrl}));

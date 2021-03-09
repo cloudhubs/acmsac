@@ -80,7 +80,7 @@ public class PostprocessingHelpers {
     }
   }
 
-  public static String getYoutubeEmbed(String url) {
+  public static String getVideoEmbed(String url) {
     Pattern pattern = Pattern.compile(".*(?:youtu.be\\/|v\\/|u\\/\\w\\/|embed\\/|watch\\?v=)([^#\\&\\?]*).*", Pattern.CASE_INSENSITIVE);
     Matcher matcher = pattern.matcher(url);
     if (matcher.matches()) {
@@ -89,7 +89,8 @@ public class PostprocessingHelpers {
               + id + "' frameborder='0' allowfullscreen></iframe>";
       return iframeMarkup;
     } else {
-      return "";
+      String iframeMarkup = "<iframe width='560' height='315' src='" + url + "' frameborder='0' allowfullscreen></iframe>";
+      return iframeMarkup;
     }
   }
 

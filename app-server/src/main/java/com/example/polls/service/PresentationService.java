@@ -3,7 +3,6 @@ package com.example.polls.service;
 import com.example.polls.dto.PresentationUpdateDto;
 import com.example.polls.model.Presentation;
 import com.example.polls.repository.PresentationRepository;
-import com.example.polls.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -29,9 +28,9 @@ public class PresentationService {
       oldPres.setSlidesUrl(newPres.getSlidesUrl());
     }
     oldPres.setDoiUrl(newPres.getDoiUrl());
-    String youtubeEmbed = PostprocessingHelpers.getYoutubeEmbed(newPres.getVideoUrl());
-    if (!youtubeEmbed.trim().equals("")) { // only change embed if valid youtube URL was given
-      oldPres.setVideoEmbed(youtubeEmbed);
+    String videoEmbed = PostprocessingHelpers.getVideoEmbed(newPres.getVideoUrl());
+    if (!videoEmbed.trim().equals("")) { // if not valid embed,
+      oldPres.setVideoEmbed(videoEmbed);
     }
     return presentationRepository.save(oldPres);
   }
