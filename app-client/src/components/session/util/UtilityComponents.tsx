@@ -1,5 +1,4 @@
 import { Grid, Typography } from "@material-ui/core";
-import { withStyles } from "@material-ui/styles";
 import React from "react";
 import { getTimeQualifier, toTimeString } from "./TimeUtils";
 
