@@ -73,6 +73,11 @@ const PaperDetail = ({classes}) => {
         setEditMode(false);
     }
 
+    const beginEditing = async () => {
+        setPaperUpdate(new AcademicArticleUpdate(selectedPaper));
+        setEditMode(true);
+    }
+
     useEffect(() => {
         setPaperUpdate(new AcademicArticleUpdate(selectedPaper));
     }, []);
@@ -106,11 +111,11 @@ const PaperDetail = ({classes}) => {
                                     <>
                                     {(hasVideo() && hasSlides()) ?
                                         <Typography variant="body1" align="center" color="textPrimary">
-                                            <i>This is your presentation, or you are authorized to modify it. To update your presentation, click the edit button.</i> <Button color="primary" variant="outlined" onClick={()=>setEditMode(true)}>Edit</Button>
+                                            <i>This is your presentation, or you are authorized to modify it. To update your presentation, click the edit button.</i> <Button color="primary" variant="outlined" onClick={beginEditing}>Edit</Button>
                                         </Typography>
                                         :
                                         <Typography variant="body1" align="center" color="textPrimary" component="p">
-                                            <i>NOTE: You are missing {!hasVideo() ? "a video" + (!hasSlides() ? " and slides" : "") : "slides"}. Click the edit button to fix this now!</i> <Button color="primary" variant="outlined" onClick={()=>setEditMode(true)}>Edit</Button>
+                                            <i>NOTE: You are missing {!hasVideo() ? "a video" + (!hasSlides() ? " and slides" : "") : "slides"}. Click the edit button to fix this now!</i> <Button color="primary" variant="outlined" onClick={beginEditing}>Edit</Button>
                                         </Typography>
                                     }
                                     
