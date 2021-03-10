@@ -14,36 +14,39 @@ import DoLogin from "../../../http/DoLogin";
 import FetchCurrentUser from "../../../http/FetchCurrentUser";
 import Alert from "@material-ui/lab/Alert";
 import { Link } from "@material-ui/core";
+import DoPasswordChange from "../../../http/DoPasswordChange";
 
-// const setServerToken = (serverToken: ServerToken) => dispatch({
-//   serverToken: serverToken,
-//   type: 'setServerToken',
-// });
-//
-// const setAuthenticated = () => dispatch({
-//   type: 'setAuthenticated',
-// });
+const logout = () => dispatch({
+  type: 'logout',
+});
 
-
-
-
-
-
-const Login = () => {
-    const [badLogin, setBadLogin] = React.useState<boolean>(false);
-    const onSubmit = async (event: React.MouseEvent<HTMLElement>, signInUser, history, token) => {
+const ResetPasswordLoggedIn = () => {
+  const history = useHistory();
+    const [badPassword, setBadPassword] = React.useState<boolean>(false);
+    const onSubmit = async (event: React.MouseEvent<HTMLElement>) => {
         event.preventDefault();
-        setBadLogin(false);
-        console.log(signInUser);
-        let res = await DoLogin.doSend(history, signInUser);
-        if (res && res.error) {
-          setBadLogin(true);
+        setBadPassword(false);
+        if (newPassword !== newPasswordConfirm) {
+          setBadPassword(true);
+          setPasswordMessage("Passwords do not match!")
+          return;
         }
-        setTimeout(function(){ }, 1000);
-        // await FetchCurrentUser.doFetch(token);
+        if (newPassword.length < 8) {
+          setBadPassword(true);
+          setPasswordMessage("Password must be at least 8 characters long!")
+          return;
+        }
+        let res = await DoPasswordChange.doSend(token, newPassword, newPasswordConfirm, history);
+        if (!res) {
+          setBadPassword(true);
+          setPasswordMessage("An error occurred, please contact the site administrator.");
+          return;
+        }
+        localStorage.removeItem("MY_LOCAL_STORAGE_KEY");
+        logout();
+        history.push("/app");
     }
 
-    const history = useHistory();
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({
             paper: {
@@ -66,11 +69,13 @@ const Login = () => {
         }),
     );
     const classes = useStyles();
-    const [signInUser, uSignInUser] = useGlobalState('signInUser');
+    const [newPassword, setNewPassword] = React.useState<string>("");
+    const [newPasswordConfirm, setNewPasswordConfirm] = React.useState<string>("");
+    const [passwordMessage, setPasswordMessage] = React.useState<string>("");
     const [token] = useGlobalState('serverToken');
     const [auth] = useGlobalState('authenticated');
     useEffect(() => {
-      if (auth) {
+      if (!auth) {
         history.push("/");
       }
     }, []);
@@ -84,7 +89,7 @@ const Login = () => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Change password
         </Typography>
         <form className={classes.form} noValidate>
           <TextField
@@ -92,15 +97,14 @@ const Login = () => {
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Username or Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            value={signInUser.usernameOrEmail}
+            name="newPassword"
+            label="New Password"
+            type="password"
+            id="newPassword"
+            value={newPassword}
             onChange={(event) => {
-              const usernameOrEmail = event.target.value;
-              uSignInUser((p) => ({ ...p, usernameOrEmail }));
+              const password = event.target.value;
+              setNewPassword(password);
             }}
           />
           <TextField
@@ -108,14 +112,14 @@ const Login = () => {
             margin="normal"
             required
             fullWidth
-            name="password"
-            label="Password"
+            name="newPasswordConfirm"
+            label="Confirm New Password"
             type="password"
-            id="password"
-            value={signInUser.password}
+            id="newPasswordConfirm"
+            value={newPasswordConfirm}
             onChange={(event) => {
               const password = event.target.value;
-              uSignInUser((p) => ({ ...p, password }));
+              setNewPasswordConfirm(password);
             }}
           />
           <Button
@@ -125,13 +129,12 @@ const Login = () => {
             color="primary"
             className={classes.submit}
             onClick={(event: React.MouseEvent<HTMLElement>) => {
-              onSubmit(event, signInUser, history, token)
+              onSubmit(event)
              }}>
-            Sign In
+            Change Password
           </Button>
-          <Link href="reset">Reset password</Link>
-          {badLogin && 
-            <Alert severity="error">Incorrect username or password</Alert>
+          {badPassword && 
+            <Alert severity="error">{passwordMessage}</Alert>
           }
         </form>
       </div>
@@ -141,4 +144,4 @@ const Login = () => {
     );
 }
 
-export default Login;
+export default ResetPasswordLoggedIn;

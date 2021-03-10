@@ -19,6 +19,7 @@ import PublicRouter from "./PublicRouter";
 import CurrentUser from '../components/currentUser/CurrentUser';
 import ScheduleView from '../pages/beta/private/ScheduleView';
 import GATracker from '../shared/GATracker';
+import ResetPasswordLoggedIn from '../pages/beta/private/ResetPasswordLoggedIn';
 
 const BetaRouter = () => {
 
@@ -81,6 +82,10 @@ const BetaRouter = () => {
                         <Route exact path="/search" component={PublicRouter} />
                         <Route exact path="/reminder" component={PublicRouter} />
                         <Route exact path="/sessions" component={ScheduleView} />
+                        {/* <Route exact path="/changePassword" component={ResetPasswordLoggedIn} /> */}
+                        <PrivateRoute exact path="/changePassword">
+                            <ResetPasswordLoggedIn/>
+                        </PrivateRoute>
                         <PrivateRoute exact path="/app/currentuser">
                             <CurrentUser/>
                         </PrivateRoute>

@@ -3,9 +3,11 @@ package com.example.polls.service;
 import com.example.polls.model.PasswordResetToken;
 import com.example.polls.model.User;
 import com.example.polls.payload.ApiResponse;
+import com.example.polls.payload.ChangePasswordLoggedInRequest;
 import com.example.polls.payload.ChangePasswordRequest;
 import com.example.polls.repository.PasswordResetTokenRepository;
 import com.example.polls.repository.UserRepository;
+import com.example.polls.security.UserPrincipal;
 import org.apache.commons.lang3.time.DateUtils;
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
@@ -145,7 +147,7 @@ public class PasswordService {
 
         content = content.replaceAll("#link", link);
 
-        emailService.sendEmail("noreply@acmsac.ecs.baylor.edu", email, "ACM SAC 2020: Password Reset", content);
+        emailService.sendEmail("noreply@acmsac.ecs.baylor.edu", email, "ACM SAC 2021: Password Reset", content);
     }
 
     private void sendNewPassword(String email, String password) throws Exception {
@@ -154,6 +156,29 @@ public class PasswordService {
 
         content = content.replace("#password", password);
 
-        emailService.sendEmail("noreply@acmsac.ecs.baylor.edu", email, "ACM SAC 2020: New Password", content);
+        emailService.sendEmail("noreply@acmsac.ecs.baylor.edu", email, "ACM SAC 2021: New Password", content);
+    }
+
+    public ResponseEntity<?> resetPasswordLoggedIn(UserPrincipal currentUser, ChangePasswordLoggedInRequest request) {
+        Optional<User> userOpt = userRepository.findByEmail(currentUser.getEmail());
+
+        if (!userOpt.isPresent()) {
+            return new ResponseEntity(new ApiResponse(false, "Bad user!"), HttpStatus.BAD_REQUEST);
+        }
+
+        if (!request.getNewPassword().equals(request.getNewPasswordConfirm())) {
+            return new ResponseEntity(new ApiResponse(false, "Passwords do not match!"), HttpStatus.BAD_REQUEST);
+        }
+
+        if (request.getNewPassword().length() < 8) {
+            return new ResponseEntity(new ApiResponse(false, "Password too short!"), HttpStatus.BAD_REQUEST);
+        }
+
+        User user = userOpt.get();
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        User result = userRepository.save(user);
+
+        return ResponseEntity.ok().body(new ApiResponse(true, "User password changed successfully"));
+
     }
 }
