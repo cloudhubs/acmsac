@@ -12,8 +12,8 @@ import {Track} from "./model/Track";
 import {ServerMessage} from "./model/ServerMessage";
 import {AcademicArticle} from "./model/AcademicArticle";
 import {CurrentUser} from "./model/CurrentUser";
-
-
+import { Session } from "./model/Session";
+import { jsonDateParser } from "json-date-parser";
 
 // {
 //   id: 0,
@@ -57,6 +57,10 @@ const defaultState: State = {
   },
   trackDetail: new Track(),
   tracks: [],
+  sessions: [],
+  selectedSession: new Session(),
+  selectedDay: null,
+  selectedTime: null,
   selectedPaper: new AcademicArticle(),
   academicPapers: [],
   serverError: new ServerError(),
@@ -70,10 +74,10 @@ const defaultState: State = {
 
 
 
-const LOCAL_STORAGE_KEY = "reallyawesomestoragekey.yeah";
+const LOCAL_STORAGE_KEY = "reallyawesomestoragekey.something";
 const parseState = (str: string | null): State | null => {
   try {
-    const state = JSON.parse(str || "");
+    const state = JSON.parse(str || "", jsonDateParser);
     // if (typeof state.count !== "number") throw new Error();
     // if (typeof state.person.age !== "number") throw new Error();
     // if (typeof state.person.firstName !== "string") throw new Error();
@@ -113,6 +117,10 @@ export const reducer = (state = initialState, action: Action) => {
         serverToken: new ServerToken(),
         authenticated: false,
         selectedPaper: new AcademicArticle(),
+        selectedSession: new Session(),
+        selectedDay: null,
+        selectedTime: null,
+        sessions: [],
         academicPapers: [],
         currentUser: new CurrentUser()
       }
@@ -132,6 +140,28 @@ export const reducer = (state = initialState, action: Action) => {
         ...state,
         trackDetail: action.trackDetail
       }
+    case "setAllSessions":
+      return {
+        ...state,
+        sessions: action.sessions
+      }
+    case "setSelectedSession":
+      return {
+        ...state,
+        selectedSession: action.session
+      }
+    case "setSelectedDay":
+      return {
+        ...state,
+        selectedDay: action.selectedDay,
+        selectedTime: null
+      }
+      case "setSelectedSlot":
+        return {
+          ...state,
+          selectedTime: action.selectedTime,
+          selectedSession: action.selectedSession
+        }
     case "setReminderMessage":
       return {
         ...state,

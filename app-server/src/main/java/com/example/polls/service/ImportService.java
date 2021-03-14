@@ -3,10 +3,8 @@ package com.example.polls.service;
 import com.example.polls.exception.AppException;
 import com.example.polls.exception.ImportException;
 import com.example.polls.model.*;
-import com.example.polls.repository.PresentationRepository;
-import com.example.polls.repository.RoleRepository;
-import com.example.polls.repository.TrackRepository;
-import com.example.polls.repository.UserRepository;
+import com.example.polls.repository.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -18,11 +16,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.time.ZoneId;
-import java.util.Collections;
-import java.util.Optional;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
+@Slf4j
 public class ImportService {
   @Autowired
   private PresentationRepository presentationRepository;
@@ -34,6 +37,9 @@ public class ImportService {
   private TrackRepository trackRepository;
 
   @Autowired
+  private SessionRepository sessionRepository;
+
+  @Autowired
   private PasswordEncoder passwordEncoder;
 
   @Autowired
@@ -42,104 +48,186 @@ public class ImportService {
   @Autowired
   private ResourceLoader resourceLoader;
 
-  private final String DEFAULT_ORGANIZER_PW = "acmsaccommittee2020";
-  private final String DEFAULT_REGISTRANT_PW = "acmsacregistrant2020";
+  private final String DEFAULT_ORGANIZER_PW = "acmsaccommittee2021";
+  private final String DEFAULT_REGISTRANT_PW = "acmsacregistrant2021";
+  private final String DEFAULT_SESSION_CHAIR_PW = "sacsessionchair2021";
+  private final String DEFAULT_CHAIR_PW = "acmsac2021-";
+  private final String PRESENTATION_RESOURCE_NAME = "classpath:2021_papers.xlsx";
+  private final String USER_RESOURCE_NAME = "classpath:2021_users.xlsx";
+  private final String TRACK_CHAIR_RESOURCE_NAME = "classpath:2021_track_chairs.xlsx";
+  private final String SESSION_RESOURCE_NAME = "classpath:2021_sessions.xlsx";
+  private final String ORGANIZERS_RESOURCE_NAME = "classpath:2021_organizers.xlsx";
 
   public void importUsers() {
     try {
-      // create presentations and presenters from the Google form responses
-      Resource presentationResource = resourceLoader.getResource("classpath:presentations_responses.xlsx");
-      XSSFWorkbook presentationWorkbook = new XSSFWorkbook(presentationResource.getInputStream());
-      XSSFSheet presentationSheet = presentationWorkbook.getSheetAt(0);
+      Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
+              .orElseThrow(() -> new AppException("User Role not set."));
+      Role trackRole = roleRepository.findByName(RoleName.ROLE_CHAIR)
+              .orElseThrow(() -> new AppException("Track Chair Role not set."));
 
-      for (int i = 1; i < presentationSheet.getPhysicalNumberOfRows(); i++) {
-        XSSFRow row = presentationSheet.getRow(i);
-        User presenter = createOrRetrievePresenterFromImportRow(row);
-        createPresentationFromImportRow(row, presenter);
+      /**
+       * Create track chair users
+       */
+      log.info("Importing track chairs");
+      Resource trackResource = resourceLoader.getResource(TRACK_CHAIR_RESOURCE_NAME);
+      XSSFWorkbook trackWorkbook = new XSSFWorkbook(trackResource.getInputStream());
+      XSSFSheet trackSheet = trackWorkbook.getSheetAt(0);
+      Set<Role> trackRoles = new HashSet<>(Arrays.asList(userRole, trackRole));
+      for (int i = 1; i < trackSheet.getPhysicalNumberOfRows(); i++) {
+        XSSFRow row = trackSheet.getRow(i);
+        User user = createTrackChairFromImportRow(row, trackRoles); // create user objects
       }
+      log.info("Done importing track chairs");
 
-      // create chairs and update tracks from the Google form responses
-      Resource chairResponseResource = resourceLoader.getResource("classpath:chairs_responses.xlsx");
-      XSSFWorkbook chairResponseWorkbook = new XSSFWorkbook(chairResponseResource.getInputStream());
-      XSSFSheet chairResponseSheet = chairResponseWorkbook.getSheetAt(0);
-
-      for (int i = 1; i < chairResponseSheet.getPhysicalNumberOfRows(); i++) {
-        XSSFRow row = chairResponseSheet.getRow(i);
-        User chair = createOrRetrieveChairFromImportRow(row);
-        updateTrackFromImportRow(row, chair);
+      /**
+       * Create author users
+       */
+      log.info("Importing authors");
+      Resource userResource = resourceLoader.getResource(USER_RESOURCE_NAME);
+      XSSFWorkbook userWorkbook = new XSSFWorkbook(userResource.getInputStream());
+      XSSFSheet userSheet = userWorkbook.getSheetAt(0);
+      for (int i = 1; i < userSheet.getPhysicalNumberOfRows(); i++) {
+        XSSFRow row = userSheet.getRow(i);
+        User user = createUserFromImportRow(row, Collections.singleton(userRole)); // create user objects
       }
+      log.info("Done importing authors");
 
-      // create other chairs who didn't respond
-      Resource chairResource = resourceLoader.getResource("classpath:chairs.xlsx");
-      XSSFWorkbook chairWorkbook = new XSSFWorkbook(chairResource.getInputStream());
-      XSSFSheet chairSheet = chairWorkbook.getSheetAt(0);
-
-      for (int i = 1; i < chairSheet.getPhysicalNumberOfRows(); i++) {
-        XSSFRow row = chairSheet.getRow(i);
-        addNonRespondingChairFromImportRow(row);
-      }
-
-      // add authors to their associated presentations
-      Resource authorResource = resourceLoader.getResource("classpath:authors.xlsx");
-      XSSFWorkbook authorWorkbook = new XSSFWorkbook(authorResource.getInputStream());
-      XSSFSheet authorSheet = authorWorkbook.getSheetAt(0);
-
-      for (int i = 1; i < authorSheet.getPhysicalNumberOfRows(); i++) {
-        XSSFRow row = authorSheet.getRow(i);
-        addAuthorFromImportRow(row);
-      }
-
-      // add organizers
-      Resource organizerResource = resourceLoader.getResource("classpath:organizers.xlsx");
+      /**
+       * Create organizer users
+       */
+      log.info("Importing organizers");
+      Resource organizerResource = resourceLoader.getResource(ORGANIZERS_RESOURCE_NAME);
       XSSFWorkbook organizerWorkbook = new XSSFWorkbook(organizerResource.getInputStream());
       XSSFSheet organizerSheet = organizerWorkbook.getSheetAt(0);
-
       for (int i = 1; i < organizerSheet.getPhysicalNumberOfRows(); i++) {
         XSSFRow row = organizerSheet.getRow(i);
-        addOrganizerFromImportRow(row);
+        User user = createOrganizerFromImportRow(row, Collections.singleton(userRole));
       }
+      log.info("Done importing organizers");
 
-      // add other registrants
-      Resource registrantResource = resourceLoader.getResource("classpath:registrants.xlsx");
-      XSSFWorkbook registrantWorkbook = new XSSFWorkbook(registrantResource.getInputStream());
-      XSSFSheet registrantSheet = registrantWorkbook.getSheetAt(0);
-
-      for (int i = 1; i < registrantSheet.getPhysicalNumberOfRows(); i++) {
-        XSSFRow row = registrantSheet.getRow(i);
-        addRegistrantFromImportRow(row);
+      /**
+       * Create presentations
+       */
+      log.info("Importing presentations");
+      Resource presentationResource = resourceLoader.getResource(PRESENTATION_RESOURCE_NAME);
+      XSSFWorkbook presentationWorkbook = new XSSFWorkbook(presentationResource.getInputStream());
+      XSSFSheet presentationSheet = presentationWorkbook.getSheetAt(0);
+      for (int i = 1; i < presentationSheet.getPhysicalNumberOfRows(); i++) {
+        XSSFRow row = presentationSheet.getRow(i);
+        String paperId = row.getCell(1, Row.CREATE_NULL_AS_BLANK).toString().trim(); // make sure ID exists
+        if (!paperId.equals("")) {
+          createPresentationFromImportRow(row);
+        }
       }
+      log.info("Done importing presentations");
 
+      /**
+       * Create sessions
+       */
+      log.info("Importing sessions");
+      Resource sessionResource = resourceLoader.getResource(SESSION_RESOURCE_NAME);
+      XSSFWorkbook sessionWorkbook = new XSSFWorkbook(sessionResource.getInputStream());
+      XSSFSheet sessionSheet = sessionWorkbook.getSheetAt(0);
+      for (int i = 3; i < sessionSheet.getPhysicalNumberOfRows(); i++) {
+        XSSFRow row = sessionSheet.getRow(i);
+        createSessionFromImportRow(row, userRole);
+      }
+      log.info("Done importing sessions");
+
+      /**
+       * assign papers to sessions
+       */
+      log.info("Assigning sessions");
+      XSSFSheet sessionPapersSheet = sessionWorkbook.getSheetAt(1);
+      for (int i = 3; i < sessionPapersSheet.getPhysicalNumberOfRows(); i++) {
+        XSSFRow row = sessionPapersSheet.getRow(i);
+        assignPaperToSession(row, userRole);
+      }
+      log.info("Done assigning sessions");
     } catch (IOException e) {
       throw new ImportException("Could not open one of the excel files!", e);
     }
   }
 
-  /**
-   * Creates a user from a row of the presentation form excel file, or retrieves them if they exist
-   * @param row
-   * @return Created or retrieved user
-   */
-  private User createOrRetrievePresenterFromImportRow(XSSFRow row) {
-    String email = row.getCell(6).toString().trim();
-    String fullName = row.getCell(5).toString().trim();
-    String username = email;
-    int paperId = (int) row.getCell(2).getNumericCellValue();
-    String password = Integer.toString(paperId);
-    String affiliation = row.getCell(7, Row.CREATE_NULL_AS_BLANK).toString();
-    String country = row.getCell(8, Row.CREATE_NULL_AS_BLANK).toString();
-    String orcid = row.getCell(19, Row.CREATE_NULL_AS_BLANK).toString();
-    String linkedIn = row.getCell(20, Row.CREATE_NULL_AS_BLANK).toString();
-    String googleScholar = row.getCell(21, Row.CREATE_NULL_AS_BLANK).toString();
-    String bio = row.getCell(22, Row.CREATE_NULL_AS_BLANK).toString();
-    String picUrl = row.getCell(23, Row.CREATE_NULL_AS_BLANK).toString();
 
-    // if this presenter has already had an account made for them, just retrieve it
+
+  /**
+   * Creates new user for track chair and adds them to the list of chairs for the track
+   * @param row
+   * @param trackRoles
+   * @return
+   */
+  private User createTrackChairFromImportRow(XSSFRow row, Set<Role> trackRoles) {
+    String email = row.getCell(1).toString().trim();
+    String fullName = row.getCell(2).toString().trim() + " " + row.getCell(3).toString().trim();
+    String trackCode = row.getCell(4, Row.CREATE_NULL_AS_BLANK).toString().trim();
+    User chair;
     if (userRepository.existsByEmail(email)) {
-        return userRepository.findByEmail(email).get();
+      chair = userRepository.findByEmail(email).get();
+    } else {
+      String pw = DEFAULT_CHAIR_PW + trackCode.toLowerCase();
+      chair = createUser(fullName, email, email, pw, "", "",
+              "", "", "", "", "", true, trackRoles);
     }
+    Optional<Track> track = trackRepository.findByCodeIgnoreCase(trackCode);
+    if (track.isPresent()) {
+      Track realTrack = track.get();
+      if (!realTrack.getChairs().stream().anyMatch(c -> c.getId().equals(chair.getId()))) {
+        realTrack.getChairs().add(chair);
+        try {
+          trackRepository.save(realTrack);
+        } catch (Exception e) {
+          throw new ImportException("Could not update track!", e);
+        }
+      }
+    }
+    return chair;
+  }
+
+  private User createOrganizerFromImportRow(XSSFRow row, Set<Role> userRoles) {
+    String email = row.getCell(2).toString().trim();
+    if (userRepository.existsByEmail(email)) {
+      return userRepository.findByEmail(email).get();
+    }
+    String username = email;
+    String password = DEFAULT_ORGANIZER_PW;
+    String fullName = row.getCell(0).toString().trim() + " " + row.getCell(1).toString().trim();
+    String affiliation = row.getCell(3, Row.CREATE_NULL_AS_BLANK).toString().trim();
+    String country = row.getCell(4, Row.CREATE_NULL_AS_BLANK).toString().trim();
+    String orcid = "";
+    String linkedIn = "";
+    String googleScholar = "";
+    String bio = "";
+    String picUrl = "";
 
     return createUser(fullName, username, email, password, affiliation, country,
-            orcid, linkedIn, googleScholar, bio, picUrl);
+            orcid, linkedIn, googleScholar, bio, picUrl, false, userRoles);
+  }
+
+    /**
+     * Creates user from row of user import file, or retrieves them if they exist
+     * @param row
+     * @param userRoles
+     * @return created/retrieved user
+     */
+  private User createUserFromImportRow(XSSFRow row, Set<Role> userRoles) {
+    String email = row.getCell(2).toString().trim();
+    if (userRepository.existsByEmail(email)) {
+      return userRepository.findByEmail(email).get();
+    }
+    String username = email;
+    String password = "";
+    String fullName = row.getCell(0).toString().trim() + " " + row.getCell(1).toString().trim();
+    String affiliation = row.getCell(3, Row.CREATE_NULL_AS_BLANK).toString().trim();
+    String country = row.getCell(4, Row.CREATE_NULL_AS_BLANK).toString().trim();
+    String orcid = "";
+    String linkedIn = "";
+    String googleScholar = "";
+    String bio = "";
+    String picUrl = "";
+
+    return createUser(fullName, username, email, password, affiliation, country,
+            orcid, linkedIn, googleScholar, bio, picUrl, false, userRoles);
   }
 
   /**
@@ -147,220 +235,317 @@ public class ImportService {
    * @param row
    * @return The created presentation
    */
-  private Presentation createPresentationFromImportRow(XSSFRow row, User presenter) {
+  private Presentation createPresentationFromImportRow(XSSFRow row) {
     try {
       Presentation presentation = new Presentation();
-      int paperId = (int) row.getCell(2).getNumericCellValue();
+      int paperId = (int) row.getCell(1).getNumericCellValue();
       if (presentationRepository.existsByPaperId(paperId)) {
-        presentation = presentationRepository.findByPaperId(paperId).get();
+        presentation = presentationRepository.findByPaperId(paperId).orElse(new Presentation());
       }
-      presentation.setTitle(row.getCell(4, Row.CREATE_NULL_AS_BLANK).toString());
+      // get author emails (11 possible authors)
+      List<String> emails = new ArrayList<>();
+      for (int i = 0; i < 11; i++) {
+        int cellNum = 40 + i * 7; // first email is at col 40, then every 7 cols after that
+        emails.add(row.getCell(cellNum, Row.CREATE_NULL_AS_BLANK).toString().trim());
+      }
+      Map<String, Integer> emailOrder = new HashMap<String, Integer>();
+      for (int i = 0; i < emails.size(); i++)
+      {
+        String email = emails.get(i);
+        emailOrder.put(email.toLowerCase(), i);
+      }
+      List<User> authors = userRepository.findAllByEmailIn(emails);
+      for (User author : authors) {
+        if (!author.isHasPassword()) {
+          author.setPassword(passwordEncoder.encode(Integer.toString(paperId)));
+          author.setHasPassword(true);
+        }
+      }
+      authors = userRepository.saveAll(authors);
+      authors.sort(new AuthorEmailComparator(emailOrder));
+      String presenterEmail = row.getCell(124, Row.CREATE_NULL_AS_BLANK).toString().trim();
+      User presenter = userRepository.findByEmail(presenterEmail).orElse(null);
+      if (presenter == null && authors.size() > 0) {
+        presenter = authors.get(0);
+      }
+      presentation.setTitle(row.getCell(6, Row.CREATE_NULL_AS_BLANK).toString());
       presentation.setPaperId(paperId);
-      presentation.setAuthorsString(row.getCell(9, Row.CREATE_NULL_AS_BLANK).toString());
-      presentation.setTrackCode(row.getCell(10, Row.CREATE_NULL_AS_BLANK).toString());
-      presentation.setSessionCode(row.getCell(11, Row.CREATE_NULL_AS_BLANK).toString());
-      presentation.setSessionChair(row.getCell(12, Row.CREATE_NULL_AS_BLANK).toString());
-      presentation.setDate(row.getCell(13, Row.CREATE_NULL_AS_BLANK).getDateCellValue().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-      presentation.setPaperAbstract(row.getCell(14, Row.CREATE_NULL_AS_BLANK).toString());
-      presentation.setPageNumbers(row.getCell(15, Row.CREATE_NULL_AS_BLANK).toString());
-      presentation.setAcknowledgements(row.getCell(16, Row.CREATE_NULL_AS_BLANK).toString());
-      presentation.setVideoEmbed(row.getCell(17, Row.CREATE_NULL_AS_BLANK).toString());
-      presentation.setSlidesUrl(row.getCell(18, Row.CREATE_NULL_AS_BLANK).toString());
+      String authorString = authors.size() == 0 ? "" : (authors.size() == 1 ? authors.get(0).getName() :
+              (authors.stream().map(User::getName).reduce((a, b) -> a + ", " + b).get()));
+      presentation.setAuthorsString(authorString);
+      presentation.setTrackCode(row.getCell(8, Row.CREATE_NULL_AS_BLANK).toString());
+      presentation.setDate(LocalDate.now()); // TODO: ???
+      presentation.setPaperAbstract(row.getCell(33, Row.CREATE_NULL_AS_BLANK).toString());
+      int pageStart = (int) row.getCell(2).getNumericCellValue();
+      int pageEnd = pageStart + (int) row.getCell(3).getNumericCellValue() - 1;
+      String pageNumbers = pageStart + "-" + pageEnd;
+      presentation.setPageNumbers(pageNumbers);
+      presentation.setAcknowledgements(""); // TODO: ???
+      presentation.setVideoEmbed(""); // TODO: get video embeds/slides, somehow
+      presentation.setSlidesUrl("");
       presentation.setPresenter(presenter);
-      presentation.setType(row.getCell(3, Row.CREATE_NULL_AS_BLANK).toString());
+      presentation.setType(row.getCell(30, Row.CREATE_NULL_AS_BLANK).toString());
+      presentation.setAuthors(authors);
       return presentationRepository.save(presentation);
     } catch (Exception e) {
+      e.printStackTrace();
       throw new ImportException("Could not create presentation! " + e.getMessage(), e);
     }
   }
 
-  /**
-   * Creates a user from a row of the chair form excel file, or retrieves them if they exist
-   * @param row
-   * @return
-   */
-  private User createOrRetrieveChairFromImportRow(XSSFRow row) {
-    String trackCode = row.getCell(3, Row.CREATE_NULL_AS_BLANK).toString().trim();
-    String email = row.getCell(1, Row.CREATE_NULL_AS_BLANK).toString().trim();
-    String[] nameAndAffiliation = row.getCell(6, Row.CREATE_NULL_AS_BLANK).toString().split(",", 2);
-    String fullName = nameAndAffiliation.length > 0 ? nameAndAffiliation[0] : "";
-    String username = email;
-    String password = trackCode.toLowerCase();
-    String affiliation = nameAndAffiliation.length > 1 ? nameAndAffiliation[1] : "";
-    String orcid = row.getCell(12, Row.CREATE_NULL_AS_BLANK).toString();
-    String linkedIn = row.getCell(13, Row.CREATE_NULL_AS_BLANK).toString();
-    String googleScholar = row.getCell(14, Row.CREATE_NULL_AS_BLANK).toString();
-    String bio = row.getCell(15, Row.CREATE_NULL_AS_BLANK).toString();
-    String picUrl = row.getCell(16, Row.CREATE_NULL_AS_BLANK).toString();
+  private static class AuthorEmailComparator implements Comparator<User>
+  {
+    private Map<String, Integer> sortOrder;
 
-    User user = null;
+    public AuthorEmailComparator(Map<String, Integer> sortOrder)
+    {
+      this.sortOrder = sortOrder;
+    }
 
-    // if this chair has already had an account made for them, just retrieve it
-    if (userRepository.existsByEmail(email)) {
-      return userRepository.findByEmail(email).get();
-    } else {
-      return createUser(fullName, username, email, password, affiliation, "", orcid, linkedIn,
-              googleScholar, bio, picUrl);
+    @Override
+    public int compare(User i1, User i2)
+    {
+      Integer emailPos1 = sortOrder.get(i1.getEmail().toLowerCase());
+      if (emailPos1 == null)
+      {
+        System.out.println("Bad email in comparison " + i1.getEmail() + ", skipping");
+        return 0;
+      }
+      Integer emailPos2 = sortOrder.get(i2.getEmail().toLowerCase());
+      if (emailPos2 == null)
+      {
+        System.out.println("Bad email in comparison " + i2.getEmail() + ", skipping");
+        return 0;
+      }
+      return emailPos1.compareTo(emailPos2);
     }
   }
 
-  /**
-   * Updates a track with the given chair and info from  a row of the chair form excel file
-   * @param row
-   * @param chair
-   */
-  private void updateTrackFromImportRow(XSSFRow row, User chair) {
-    String trackCode = row.getCell(3, Row.CREATE_NULL_AS_BLANK).toString().trim();
-    boolean isMainChair = !row.getCell(4).toString().contains("Co-chair");
+  public Session createSessionFromImportRow(XSSFRow row, Role userRole) {
+    String sessionCode = row.getCell(1, Row.CREATE_NULL_AS_BLANK).toString();
+    String trackCode = row.getCell(8, Row.CREATE_NULL_AS_BLANK).toString();
+    if (trackCode.trim().isEmpty()) {
+      // TODO: handle keynotes etc.
+      return null; // skip these for now; either empty row or a session we can't deal with right now
+    }
 
-    if (isMainChair) {
-      Track track = trackRepository.findByCodeIgnoreCase(trackCode).get();
-      track.setTrackUrl(row.getCell(5, Row.CREATE_NULL_AS_BLANK).toString());
-      track.setVideoEmbed(row.getCell(10, Row.CREATE_NULL_AS_BLANK).toString());
-      track.setMessage(row.getCell(11, Row.CREATE_NULL_AS_BLANK).toString());
-      track.setAcknowledgement(row.getCell(9, Row.CREATE_NULL_AS_BLANK).toString());
-      track.setAffiliations(row.getCell(8, Row.CREATE_NULL_AS_BLANK).toString());
+    // chair stuff
+    String chairInfo1 = row.getCell(11, Row.CREATE_NULL_AS_BLANK).toString();
+    String chairInfo2 = row.getCell(13, Row.CREATE_NULL_AS_BLANK).toString();
+    String chairEmail1 = row.getCell(12, Row.CREATE_NULL_AS_BLANK).toString();
+    String chairEmail2 = row.getCell(14, Row.CREATE_NULL_AS_BLANK).toString();
 
-      if (!track.getChairs().contains(chair)) {
-        track.getChairs().add(chair);
+    // create chair users if needed
+    User chair1 = userRepository.findByEmail(chairEmail1).orElse(null);
+    if (chair1 == null && !chairEmail1.trim().equals("")) {
+      createUser(chairInfo1, chairEmail1, chairEmail1, DEFAULT_SESSION_CHAIR_PW, "",
+              "", "", "", "", "", "", true, Collections.singleton(userRole));
+    }
+
+    User chair2 = userRepository.findByEmail(chairEmail2).orElse(null);
+    if (chair2 == null && !chairEmail2.trim().equals("")) {
+      createUser(chairInfo2, chairEmail2, chairEmail2, DEFAULT_SESSION_CHAIR_PW, "",
+              "", "", "", "", "", "", true, Collections.singleton(userRole));
+    }
+
+    // meeting link
+    String link = row.getCell(15, Row.CREATE_NULL_AS_BLANK).toString();
+
+    // Session date/time stuff!
+    String startString = row.getCell(5, Row.CREATE_NULL_AS_BLANK).toString();
+    ZonedDateTime zonedStart = row.getCell(4).getDateCellValue().toInstant().atZone(ZoneId.of("Asia/Seoul"));
+    String endString = row.getCell(7, Row.CREATE_NULL_AS_BLANK).toString();
+    ZonedDateTime zonedEnd = row.getCell(6).getDateCellValue().toInstant().atZone(ZoneId.of("Asia/Seoul"));
+
+    Instant start = getInstantFromDateAndTime(zonedStart, startString);
+    Instant end = getInstantFromDateAndTime(zonedEnd, endString);
+
+    // find session to edit or create a new one
+    Session session = sessionRepository.findBySessionCode(sessionCode).orElse(null);
+    session = session != null ? session : new Session();
+
+    session.setSessionCode(sessionCode);
+    session.setSessionName(row.getCell(2, Row.CREATE_NULL_AS_BLANK).toString());
+
+    int roundNum = (int) row.getCell(3).getNumericCellValue();
+
+    if (roundNum == 1) {
+      session.setPrimaryStart(start);
+      session.setPrimaryEnd(end);
+      session.setPrimaryChair1(chairInfo1);
+      session.setPrimaryChair2(chairInfo2);
+      session.setPrimaryMeetingLink(link);
+      if (!trackCode.toLowerCase().contains("key") && !trackCode.toLowerCase().equals("")) {
+        // parse track code
+        String[] trackCodes = trackCode.split("-");
+        Set<Track> tracks = new HashSet<>();
+        for (String code : trackCodes) {
+          Track track = trackRepository.findByCodeIgnoreCase(code).orElse(null);
+          if (track == null) {
+            continue;
+          }
+          tracks.add(track);
+        }
+        session.setTracks(tracks);
       }
-
-      try {
-        trackRepository.save(track);
-      } catch (Exception e) {
-        throw new ImportException("Could not update track!", e);
+    } else {
+      session.setSecondaryStart(start);
+      session.setSecondaryEnd(end);
+      session.setSecondaryChair1(chairInfo1);
+      session.setSecondaryChair2(chairInfo2);
+      session.setSecondaryMeetingLink(link);
+      if (!trackCode.toLowerCase().contains("key") && !trackCode.toLowerCase().equals("")) {
+        // parse track code
+        String[] trackCodes = trackCode.split("-");
+        Set<Track> tracks = new HashSet<>();
+        for (String code : trackCodes) {
+          Track track = trackRepository.findByCodeIgnoreCase(code).orElse(null);
+          if (track == null) {
+            continue;
+          }
+          tracks.add(track);
+        }
+        session.setTracks(tracks);
       }
     }
+    return sessionRepository.save(session);
   }
 
-  /**
-   * Create chair if they didn't respond to the form
-   * @param row
-   * @return
-   */
-  private void addNonRespondingChairFromImportRow(XSSFRow row) {
-    String email = row.getCell(0, Row.CREATE_NULL_AS_BLANK).toString().trim();
-    String fullName = row.getCell(2, Row.CREATE_NULL_AS_BLANK).toString().trim();
-    String username = email;
-    String trackCode = row.getCell(1, Row.CREATE_NULL_AS_BLANK).toString().trim();
-    String password = trackCode.toLowerCase();
+  private Instant getInstantFromDateAndTime(ZonedDateTime zonedDate, String timeString) {
+    // string should be in form "5:00am"
+    timeString = timeString.replace("am", "AM").replace("pm","PM");
+    LocalTime time = LocalTime.parse(timeString, DateTimeFormatter.ofPattern("h:mma"));
+    zonedDate = zonedDate.withHour(time.getHour()).withMinute(time.getMinute());
+    return zonedDate.toInstant();
+  }
 
-    User user = null;
-
-    // if this chair has already had an account made for them, just retrieve it
-    if (userRepository.existsByEmail(email)) {
-      user = userRepository.findByEmail(email).get();
-    } else {
-      user = createUser(fullName, username, email, password, "", "", "", "",
-              "", "", "");
-    }
-
-    Track track = trackRepository.findByCodeIgnoreCase(trackCode).get();
+  public void assignPaperToSession(XSSFRow row, Role userRole) {
     try {
-      if (!track.getChairs().contains(user)) {
-        track.getChairs().add(user);
-        trackRepository.save(track);
+      String sessionCode = row.getCell(1, Row.CREATE_NULL_AS_BLANK).toString();
+      if (sessionCode.trim().isEmpty()) {
+        return;
       }
+      Session session = sessionRepository.findBySessionCode(sessionCode).orElse(null);
+      if (session == null) {
+        return;
+      }
+      int roundNum = 0;
+      roundNum = (int) row.getCell(3).getNumericCellValue();
+
+      Presentation[] presArray = new Presentation[5];
+      // loop through 5 papers
+      for (int i = 0; i < 5; i++) {
+        // paper ID starts at column 8, and happens every 4 columns for 5 papers
+        String paperIdVal = row.getCell(9 + i*4, Row.CREATE_NULL_AS_BLANK).toString();
+        if (paperIdVal.trim().equals("")) { // empty paper ID slot = no pres
+          continue;
+        }
+        int paperId = (int) row.getCell(9 + i*4, Row.CREATE_NULL_AS_BLANK).getNumericCellValue();
+        if (paperId == 0) { // bad paper ID
+          continue;
+        }
+        if (Arrays.stream(presArray).anyMatch(p -> p != null && p.getPaperId() == paperId)) { // ignore dupes
+          continue;
+        }
+        Presentation presentation = presentationRepository.findByPaperId(paperId).orElse(null);
+        if (presentation == null) {
+          continue; // TODO: handle this better
+        }
+        presentation.setSessionCode(sessionCode);
+        String name = row.getCell(10 + i*4, Row.CREATE_NULL_AS_BLANK).toString();
+        String affiliation = row.getCell(11 + i*4, Row.CREATE_NULL_AS_BLANK).toString();
+        String email = row.getCell(12 + i*4, Row.CREATE_NULL_AS_BLANK).toString();
+        User presenter = userRepository.findByEmail(email).orElse(null);
+        if (presenter != null) {
+          presentation.setPresenter(presenter);
+        } else if (email != null && email.trim() != "") {
+          presenter = createUser(name, email, email, Integer.toString(paperId), affiliation, "",
+                  "", "", "", "", "", true, Collections.singleton(userRole));
+          presentation.setPresenter(presenter);
+        }
+        if (roundNum == 1) {
+          presentation.setPrimaryStart(session.getPrimaryStart());
+          presentation.setPrimaryEnd(session.getPrimaryEnd());
+        } else {
+          presentation.setSecondaryStart(session.getSecondaryStart());
+          presentation.setSecondaryEnd(session.getSecondaryEnd());
+        }
+        presentation = presentationRepository.save(presentation);
+        presArray[i] = presentation;
+      }
+      Pattern pattern = Pattern.compile("P\\d-[A-Z]");
+      Matcher matcher = pattern.matcher(sessionCode);
+      boolean isPoster = matcher.find();
+      boolean isKeynote = sessionCode.toLowerCase().contains("key");
+
+      Duration sessionDuration = Duration.between(session.getPrimaryStart(), session.getPrimaryEnd());
+      int sessionMinutes = Math.round(sessionDuration.abs().toMinutes());
+      int numPres = presArray[4] == null ? 4 : 5; // haha hardcoded numbers go brr
+      int minutesPerPres = sessionMinutes / numPres; // if 4 presentations, divide by 4; else 5
+      if (isPoster) {
+        minutesPerPres = 15;
+      }
+      if (isKeynote) {
+        minutesPerPres = 60;
+      }
+      Instant primaryStart = session.getPrimaryStart();
+      Instant secondaryStart = session.getSecondaryStart();
+      Set<Presentation> presSet = new HashSet<>(); // holds updated presentations to be set as session children
+      for (int i = 0; i < numPres; i++) {
+        Presentation pres = presArray[i];
+        if (pres == null) {
+          continue;
+        }
+        pres.setPrimaryStart(primaryStart.plus(i*minutesPerPres, ChronoUnit.MINUTES));
+        pres.setPrimaryEnd(pres.getPrimaryStart().plus(minutesPerPres, ChronoUnit.MINUTES));
+        if (secondaryStart != null) {
+          pres.setSecondaryStart(secondaryStart.plus(i*minutesPerPres, ChronoUnit.MINUTES));
+          pres.setSecondaryEnd(pres.getSecondaryStart().plus(minutesPerPres, ChronoUnit.MINUTES));
+        }
+        pres.setSession(session);
+//      pres = presentationRepository.save(pres);
+        presSet.add(pres);
+      }
+      session.setPresentations(presSet);
+      sessionRepository.save(session);
     } catch (Exception e) {
-      throw new ImportException("Could not update track!", e);
+      // fml
+      e.printStackTrace();
+      throw new ImportException("Failed to populate session! " + e.getMessage(), e);
     }
   }
 
   /**
-   * Creates a user from a row of the author excel file, or retrieves them if they exist,
-   * and assigns them to their given presentation
-   * @param row
+   * Create a new user from extracted info
+   * @param name
+   * @param username
+   * @param email
+   * @param password
+   * @param affiliation
+   * @param country
+   * @param orcid
+   * @param linkedIn
+   * @param googleScholar
+   * @param bio
+   * @param picUrl
+   * @param hasPassword
    * @return
    */
-  private void addAuthorFromImportRow(XSSFRow row) {
-    String status = row.getCell(6).toString();
-
-    // skip authors of rejected papers
-    if (!status.contains("Accept")) {
-      return;
-    }
-    int paperId = (int) row.getCell(0).getNumericCellValue();
-
-    String email = row.getCell(11, Row.CREATE_NULL_AS_BLANK).toString().trim();
-    String fullName = row.getCell(8, Row.CREATE_NULL_AS_BLANK).toString().trim() + " " + row.getCell(9, Row.CREATE_NULL_AS_BLANK).toString().trim();
-    String username = email;
-    String password = Integer.toString(paperId);
-    String affiliation = row.getCell(12, Row.CREATE_NULL_AS_BLANK).toString();
-    String bio = row.getCell(15, Row.CREATE_NULL_AS_BLANK).toString();
-    User user;
-
-    // if this author has already had an account made for them, just retrieve it
-    if (userRepository.existsByEmail(email)) {
-      user = userRepository.findByEmail(email).get();
-    } else {
-      user = createUser(fullName, username, email, password, affiliation, "", "", "",
-              "", bio, "");
-    }
-
-    Optional<Presentation> presentationOpt = presentationRepository.findByPaperId(paperId);
-    if (presentationOpt.isPresent()) {
-      Presentation pres = presentationOpt.get();
-      if (pres.getAuthors().stream().filter(a -> a.getId().equals(user.getId())).count() == 0) {
-        pres.getAuthors().add(user);
-        presentationRepository.save(pres);
-      }
-      try {
-      } catch (Exception e) {
-        throw new ImportException("Could not update presentation!", e);
-      }
-    }
-  }
-
-  private void addOrganizerFromImportRow(XSSFRow row) {
-    String email = row.getCell(0).toString().trim();
-    String name = row.getCell(1).toString().trim();
-    String affiliation = row.getCell(2, Row.CREATE_NULL_AS_BLANK).toString();
-    String password = DEFAULT_ORGANIZER_PW;
-    if (!userRepository.existsByEmail(email)) {
-      createUser(name, email, email, password, affiliation, "", "", "",
-              "", "", "");
-    }
-  }
-
-  private void addRegistrantFromImportRow(XSSFRow row) {
-    String email = row.getCell(1, Row.CREATE_NULL_AS_BLANK).toString().trim();
-    String fullName = row.getCell(0, Row.CREATE_NULL_AS_BLANK).toString().trim();
-    String username = email;
-    String password = DEFAULT_REGISTRANT_PW;
-    String affiliation = row.getCell(2, Row.CREATE_NULL_AS_BLANK).toString();
-    String admissionItem = row.getCell(8, Row.CREATE_NULL_AS_BLANK).toString().trim();
-
-    // if this registrant is an author/presenter, skip
-    if (admissionItem.equals("Main Conference")) {
-      // if this registrant has been created for any reason, skip
-      if (userRepository.existsByEmail(email)) {
-        userRepository.findByEmail(email).get();
-      } else {
-        createUser(fullName, username, email, password, affiliation, "", "", "",
-                "", "", "");
-      }
-    }
-  }
-
   private User createUser(String name, String username, String email, String password,
                           String affiliation, String country, String orcid, String linkedIn,
-                          String googleScholar, String bio, String picUrl) {
-    if (email != null) {
-      email = email.toLowerCase();
-    }
-
-    // Creating user's account
-    User user = new User(name, username, email, password, affiliation, country, orcid, linkedIn,
-            googleScholar, bio, picUrl);
-
-    user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-    Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
-            .orElseThrow(() -> new AppException("User Role not set."));
-
-    user.setRoles(Collections.singleton(userRole));
-
+                          String googleScholar, String bio, String picUrl, boolean hasPassword, Set<Role> roles) {
     try {
+      if (email != null) {
+        email = email.toLowerCase();
+      }
+
+      // Creating user's account
+      User user = new User(name, username, email, password, affiliation, country, orcid, linkedIn,
+              googleScholar, bio, picUrl, hasPassword);
+
+      user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+      user.setRoles(roles);
       return userRepository.save(user);
     } catch (Exception e) {
       throw new ImportException("Could not create user! " + e.getMessage(), e);

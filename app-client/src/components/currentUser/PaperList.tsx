@@ -50,7 +50,7 @@ const PaperList = (props: PaperListProps) => {
                     <TableRow>
                         <TableCell align="left">Session</TableCell>
                         <TableCell>Title</TableCell>
-                        <TableCell align="right">Presenter</TableCell>
+                        <TableCell align="right">Corresponding Author</TableCell>
                         {/**<TableCell align="right">Abstract</TableCell>*/}
                         <TableCell>Detail</TableCell>
                     </TableRow>

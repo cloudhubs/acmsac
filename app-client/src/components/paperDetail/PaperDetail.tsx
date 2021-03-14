@@ -9,13 +9,13 @@ import { useGlobalState } from "../../state";
 import { Author } from "../../pages/public/Author";
 import { Slides } from "./Slides";
 import { Video } from "./Video";
-import Chat from "../chat/Chat";
 import TextField from "@material-ui/core/TextField";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import { AcademicArticleUpdate } from "../../model/AcademicArticleUpdate";
 import PaperDetailPut from "../../http/PaperDetailPut";
 import FetchPresentationById from "../../http/FetchPresentationById";
+import { DiscussionEmbed } from 'disqus-react';
 
 const styles = {
   input: {
@@ -29,8 +29,11 @@ const PaperDetail = ({classes}) => {
     const [currentUser] = useGlobalState('currentUser');
 
     // console.log(selectedPaper);
-    const isAuthor = selectedPaper.authors?selectedPaper.authors.filter(author => author.email == currentUser.email).length > 0: false;
-    const [isEditable, setEditable] = React.useState<boolean>(false);
+    // this is all calculated on the backend now
+    // const isAuthorOrAdmin = currentUser.roles.includes("ROLE_ADMIN") || currentUser.roles.includes("ROLE_CHAIR") || 
+    //     (selectedPaper.authors ? selectedPaper.authors.filter(author => author.email == currentUser.email).length > 0: false);
+    const isEditable = selectedPaper.userCanEdit;
+    const [isEditMode, setEditMode] = React.useState<boolean>(false);
     const [token] = useGlobalState('serverToken');
     const [paperUpdate, setPaperUpdate] = React.useState<AcademicArticleUpdate>(new AcademicArticleUpdate(selectedPaper));
 
@@ -52,6 +55,14 @@ const PaperDetail = ({classes}) => {
         });
     }
 
+    const hasVideo = (): boolean => {
+        return selectedPaper.videoEmbed != null && selectedPaper.videoEmbed.trim() != "";
+    }
+
+    const hasSlides = (): boolean => {
+        return selectedPaper.presentation != null && selectedPaper.presentation.embed != "";
+    }
+
     const onSave = async () => {
         const updatedPres = await PaperDetailPut.doSend(token, selectedPaper.id, paperUpdate);
         if (updatedPres === null) {
@@ -59,7 +70,12 @@ const PaperDetail = ({classes}) => {
             // give notification here
         }
         FetchPresentationById.getById(token, selectedPaper.id);
-        setEditable(false);
+        setEditMode(false);
+    }
+
+    const beginEditing = async () => {
+        setPaperUpdate(new AcademicArticleUpdate(selectedPaper));
+        setEditMode(true);
     }
 
     useEffect(() => {
@@ -69,19 +85,50 @@ const PaperDetail = ({classes}) => {
     return (
         <>
             <Container maxWidth="xl" component="main" className='paperDetail {classes.heroContent}'>
-                <div className="breadcrumbs"><a href={"/#/app"}>ACM SAC 2021</a>&nbsp;
-                <a href={"/#/app/track"}>TRACKS</a>&nbsp;
-                <a href={"/#/app/track/" + selectedPaper.trackCode}>{selectedPaper.trackCode}</a>&nbsp;
+                <div className="breadcrumbs"><a href={"/app"}>ACM SAC 2021</a>&nbsp;
+                <a href={"/app/track"}>TRACKS</a>&nbsp;
+                <a href={"/app/track/" + selectedPaper.trackCode}>{selectedPaper.trackCode}</a>&nbsp;
                 {selectedPaper.sessionCode}</div>
                 <Typography variant="h4" align="center" color="textPrimary" component="h1">
                     {selectedPaper.title}
                 </Typography>
                 <br />
-                {isAuthor ? (isEditable ? <Button color="primary" variant="outlined" onClick={onSave}>Save</Button> 
-                                : <Button color="primary" variant="outlined" onClick={()=>setEditable(true)}>Edit</Button>)
-                    : <br />
+                {isEditable &&
+                    <>
+                    <Grid
+                        container
+                        direction="row"
+                        justify="center"
+                        alignItems="center"
+                    >
+                        <Grid item xs={8}>
+                            <Paper className={classes.paper}>
+                                {isEditMode ?
+                                    <Typography variant="body1" align="center" color="textPrimary">
+                                        Review your changes and click the Save button to update your presentation. <Button color="primary" variant="outlined" onClick={onSave}>Save</Button> 
+                                    </Typography>
+                                    :
+                                    <>
+                                    {(hasVideo() && hasSlides()) ?
+                                        <Typography variant="body1" align="center" color="textPrimary">
+                                            <i>This is your presentation, or you are authorized to modify it. To update your presentation, click the edit button.</i> <Button color="primary" variant="outlined" onClick={beginEditing}>Edit</Button>
+                                        </Typography>
+                                        :
+                                        <Typography variant="body1" align="center" color="textPrimary" component="p">
+                                            <i>NOTE: You are missing {!hasVideo() ? "a video" + (!hasSlides() ? " and slides" : "") : "slides"}. Click the edit button to fix this now!</i> <Button color="primary" variant="outlined" onClick={beginEditing}>Edit</Button>
+                                        </Typography>
+                                    }
+                                    
+                                    </>
+                                }
+                            </Paper>
+                        </Grid>
+                        
+                    </Grid>
+                    <br />
+                    </>
                 }
-                { !(selectedPaper.hideFromPublic && currentUser.blocked) &&
+                { selectedPaper.userCanView && !currentUser.blocked &&
                     <>
                         <Grid container spacing={2} className='slidesVideo'>
                             <Grid item md={6}>
@@ -89,16 +136,43 @@ const PaperDetail = ({classes}) => {
                                     Video
                                 </Typography>
                                 <Paper className="videoBox" style={{ textAlign: "center", padding: "15px", minHeight: "100%"}}>
-                                    <Video url={selectedPaper.videoEmbed} />
-                                    {isEditable && <TextField
-                                        fullWidth
-                                        label="Add new video URL"
-                                        value = {paperUpdate.videoUrl}
-                                        onChange={(event) => {
-                                            const videoUrl = event.target.value;
-                                            setPaperUpdate((p) => ({...p,videoUrl}));
-                                        }}
-                                    />}
+                                    
+                                    {isEditMode &&
+                                        <>
+                                        <Typography variant="body1" style={{ textAlign: "left"}}>
+                                            There are two options for video upload: You can upload a video through YouTube or through Google Drive.
+                                            <ul>
+                                                <li>
+                                                    For YouTube videos, paste in the URL in this format: https://www.youtube.com/watch?v=4vd2rCBjHp8
+                                                    <ul>
+                                                        <li>The URL must follow the above format (i.e. there cannot be anything extra after the video ID).</li>
+                                                        <li>The video must not be private.</li>
+                                                    </ul>
+                                                </li>
+                                                <li>
+                                                    For videos on Google Drive, paste in the URL in this format: https://drive.google.com/file/d/yourfileidhere/preview
+                                                    <ul>
+                                                        <li><b>IMPORTANT!</b> You MUST include /preview at the end of a Google Drive URL. If the URL pasted has anything else at the end of it (e.g. /view, /edit, etc.), change it to /preview.</li>
+                                                        <li>The file must be made publicly available (set the sharing settings so anyone with the link can view).</li>
+                                                    </ul>
+                                                </li>
+                                                <li>
+                                                    In either case, the URL must use the HTTPS protocol (URL must begin with https://).
+                                                </li>
+                                            </ul>
+                                        </Typography>
+                                        <TextField
+                                            fullWidth
+                                            label="Add new YouTube/Google Drive URL"
+                                            value = {paperUpdate.videoUrl}
+                                            helperText="Important! View the instructions above before adding your video."
+                                            onChange={(event) => {
+                                                const videoUrl = event.target.value;
+                                                setPaperUpdate((p) => ({...p,videoUrl}));
+                                            }}
+                                        />
+                                        </>}
+                                    {!isEditMode && <Video url={selectedPaper.videoEmbed} />}
                                 </Paper>
 
                             </Grid>
@@ -108,17 +182,18 @@ const PaperDetail = ({classes}) => {
                                     Slides ({<Link target="_blank" className="exLink" href={selectedPaper && selectedPaper.presentation.download}>author link to PDF - if no preview</Link>})
                                 </Typography>
                                 <Paper className="paperBox" style={{ textAlign: "center", padding: "15px", minHeight: "100%" }}>
-                                    {isEditable && <TextField
+                                    {isEditMode && <TextField
 
                                            fullWidth
                                            label="Add new slides url"
                                            value = {paperUpdate.slidesUrl}
+                                           helperText="Paste in a URL leading to your PDF, e.g. 'https://scholar.harvard.edu/files/mickens/files/thisworldofours.pdf'. If using Google Drive, get a public sharing URL; it should follow the format https://drive.google.com/file/d/0Bze24YskmJNeT1VnNUJHdWpwWDQ/view?usp=sharing"
                                            onChange={(event) => {
                                            const slidesUrl = event.target.value;
                                            setPaperUpdate((p) => ({...p,slidesUrl}));
                                            }}
                                       />}
-                                    <Slides url={selectedPaper && selectedPaper.presentation.embed} />
+                                      {!isEditMode && <Slides url={selectedPaper && selectedPaper.presentation.embed} />}
                                 </Paper>
 
                             </Grid>
@@ -126,23 +201,50 @@ const PaperDetail = ({classes}) => {
                         </Grid>
                     </>
                 }
-                {selectedPaper.hideFromPublic &&
+                {!selectedPaper.userCanView && selectedPaper.hideFromPublic &&
                     <>
                         <Typography variant="h5" align="center" color="textPrimary" component="h1">
                             Author does not wish to open presentation to the public
                         </Typography>
                     </>
                 }
+                {!selectedPaper.isReleased && !selectedPaper.userCanView &&
+                    <>
+                        <Typography variant="body1" align="center" color="textPrimary">
+                            This presentation is not yet released. View its details below and check back after its session to view a recorded presentation and its slides!
+                        </Typography>
+                    </>
+                }
+                {!selectedPaper.isReleased && selectedPaper.userCanView &&
+                    <>
+                        <Typography variant="body1" align="center" color="textPrimary">
+                            Note: This presentation is not yet released. You can view this because you are either a track chair or an author on the paper. Others will not be able to view your video or slides until the track chair makes it public.
+                        </Typography>
+                    </>
+                }
+                <div id="chat">&nbsp;</div>
                 <br />
                 <br />
                 <br />
-                <Container maxWidth="xl" component="main" className="chatContainer">
+                {/* <Container maxWidth="xl" component="main" className="chatContainer">
                     <Grid container spacing={4}>
                         <Grid item md={12}>
                             <Chat/>
                         </Grid>
                     </Grid>
-                </Container>
+                </Container> */}
+                {!isEditMode && <Container maxWidth="xl" component="main" className="disqusContainer">
+                    <DiscussionEmbed
+                        shortname='acmsac2021'
+                        config={
+                            {
+                                url: `https://acmsac.ecs.baylor.edu/app/track/${selectedPaper.trackCode}/${selectedPaper.id}`,
+                                identifier: `${selectedPaper.trackCode}/${selectedPaper.id}`,
+                                title: `${selectedPaper.trackCode}/${selectedPaper.id}`
+                            }
+                        }
+                    />
+                </Container>}
                 <Grid container spacing={2} className='authorMeta'>
                     <Grid item md={6}>
                         <Typography variant="h6" align="center" color="textSecondary" component="p">
@@ -156,7 +258,7 @@ const PaperDetail = ({classes}) => {
                                             Title
                                         </TableCell>
                                         <TableCell align="left" scope="row">
-                                            {isEditable?
+                                            {isEditMode ?
                                                     <TextField InputProps={{className:classes.input}} fullWidth
                                                    value = {paperUpdate.title}
                                                    onChange={(event) => {
@@ -212,7 +314,7 @@ const PaperDetail = ({classes}) => {
                                             Paper Abstract
                                         </TableCell>
                                         <TableCell align="left" scope="row">
-                                            {isEditable?
+                                            {isEditMode?
                                             <TextField InputProps={{className:classes.input}} fullWidth multiline
                                              value = {paperUpdate.paperAbstract}
                                              onChange={(event) => {
@@ -228,7 +330,7 @@ const PaperDetail = ({classes}) => {
                                             ACM URL
                                         </TableCell>
                                         <TableCell  align="left" scope="row">
-                                            {/* {isEditable?
+                                            {/* {isEditMode?
                                             <TextField InputProps={{className:classes.input}} fullWidth
                                              value = {selectedPaper.acmUrl}
                                              onChange={(event) => {
@@ -245,7 +347,7 @@ const PaperDetail = ({classes}) => {
                                             DOI
                                         </TableCell>
                                         <TableCell  align="left" scope="row">
-                                            {isEditable?
+                                            {isEditMode?
                                             <TextField InputProps={{className:classes.input}} fullWidth
                                              value = {paperUpdate.doiUrl}
                                              onChange={(event) => {
@@ -261,7 +363,7 @@ const PaperDetail = ({classes}) => {
                                                 Page Numbers
                                             </TableCell>
                                             <TableCell  align="left" scope="row">
-                                                {isEditable?
+                                                {isEditMode?
                                                 <TextField InputProps={{className:classes.input}} fullWidth
                                                 value = {paperUpdate.pageNumbers}
                                                 onChange={(event) => {
@@ -278,7 +380,7 @@ const PaperDetail = ({classes}) => {
                                                 Acknowledgements
                                             </TableCell>
                                             <TableCell align="left" scope="row">
-                                                {isEditable?
+                                                {isEditMode?
                                                 <TextField InputProps={{className:classes.input}} fullWidth
                                                 value = {paperUpdate.acknowledgements}
                                                 onChange={(event) => {

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Theme, makeStyles, createStyles} from '@material-ui/core/styles';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionActions from '@material-ui/core/AccordionActions';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Divider from '@material-ui/core/Divider';
@@ -97,8 +97,8 @@ const ChatRow = (props) => {
     };
 
     return (
-        <ExpansionPanel className='chatRow' expanded={expanded} onChange={() => setExpanded(!expanded)}>
-            <ExpansionPanelSummary className='chatRowMain' expandIcon={<ExpandMoreIcon />}>
+        <Accordion className='chatRow' expanded={expanded} onChange={() => setExpanded(!expanded)}>
+            <AccordionSummary className='chatRowMain' expandIcon={<ExpandMoreIcon />}>
                 <Typography className="header">
                     <span className="img" >
                         
@@ -106,14 +106,14 @@ const ChatRow = (props) => {
                     <span className="replies">{props.data.replies.length} {props.data.replies.length==1?'reply':'replies'}</span> 
                     </span>
                     <b className={"message-"+props.data.id+" user-"+props.data.user.id}>{props.data.user.name}</b> <Link className={"user-"+props.data.user.id} href={"mailto:" + props.data.user.email}><EmailIcon style={{paddingTop: '5px'}} /></Link> 
-                    <Link href={"https://acmsac.ecs.baylor.edu/#/api/check/" + props.data.user.email}><SearchIcon style={{paddingTop: '5px'}} /></Link>
+                    <Link href={"https://acmsac.ecs.baylor.edu/api/check/" + props.data.user.email}><SearchIcon style={{paddingTop: '5px'}} /></Link>
                     <br/>
                     {props.data.content}
                     <span className="time">{props.data.date.substr(5,5)} at {props.data.date.substr(11,5)}</span>
                 </Typography>
                     
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails className='chatRowDetails'>
+            </AccordionSummary>
+            <AccordionDetails className='chatRowDetails'>
                 <Grid container={true}>
                     {props.data.replies.length > 0 ?
                         props.data.replies.map((reply: Reply) => {
@@ -125,7 +125,7 @@ const ChatRow = (props) => {
                         
                                             <Avatar className="img" style={{height: "60px", maxWidth: "60px", width: "60px"}} src={reply.user.picUrl} />
                                             </span>
-                                            <b className={"reply-"+reply.id+" user-"+props.data.user.id}>{reply.user.name}</b> <Link href={"mailto:" + reply.user.email}><EmailIcon style={{paddingTop: '5px'}} /></Link> <Link href={"https://acmsac.ecs.baylor.edu/#/api/check/" + reply.user.email}><SearchIcon style={{paddingTop: '5px'}} /></Link><br/>
+                                            <b className={"reply-"+reply.id+" user-"+props.data.user.id}>{reply.user.name}</b> <Link href={"mailto:" + reply.user.email}><EmailIcon style={{paddingTop: '5px'}} /></Link> <Link href={"https://acmsac.ecs.baylor.edu/api/check/" + reply.user.email}><SearchIcon style={{paddingTop: '5px'}} /></Link><br/>
                                             {reply.content}
                                             <span className="time">{reply.date.substr(5,5)} at {reply.date.substr(11,5)}</span>
                                         </Typography>
@@ -140,9 +140,9 @@ const ChatRow = (props) => {
                        </Typography>
                     }
                 </Grid>
-            </ExpansionPanelDetails>
+            </AccordionDetails>
             <Divider />
-            <ExpansionPanelActions className='chatActions'>
+            <AccordionActions className='chatActions'>
                 <Grid container className='chatNew'>
                     <Grid item xs={11} >
                         <TextField className='chatInput'
@@ -159,8 +159,8 @@ const ChatRow = (props) => {
                         </Button>
                     </Grid>
                 </Grid>
-            </ExpansionPanelActions>
-        </ExpansionPanel>
+            </AccordionActions>
+        </Accordion>
     );
 };
 

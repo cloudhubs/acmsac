@@ -4,6 +4,7 @@ import { Track } from '../model/Track';
 import {ServerMessage} from "../model/ServerMessage";
 import {ServerError} from "../model/ServerError";
 import {CurrentUser} from "../model/CurrentUser";
+import { Session } from '../model/Session';
 
 export type Action =
 | { type: "setCurrentUser", currentUser: CurrentUser }
@@ -16,4 +17,8 @@ export type Action =
 | { type: "logout" }
 | { type: "setTrack"; track: string }
 | { type: "setServerError"; serverError: ServerError }
-| { type: "setServerToken"; serverToken: ServerToken };
+| { type: "setServerToken"; serverToken: ServerToken }
+| { type: "setAllSessions"; sessions: Session[] }
+| { type: "setSelectedSession"; session: Session }
+| { type: "setSelectedDay"; selectedDay: Date | null }
+| { type: "setSelectedSlot"; selectedTime: Date | null, selectedSession: Session };

@@ -1,7 +1,9 @@
 package com.example.polls.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import org.hibernate.annotations.NaturalId;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -32,7 +34,6 @@ public class User {
 
     @NaturalId
     @NotBlank
-    @Email
     private String email;
 
     @NotBlank
@@ -61,6 +62,8 @@ public class User {
     @Lob
     private String picUrl;
 
+    private boolean hasPassword;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -83,7 +86,7 @@ public class User {
 
     public User(String name, String username, String email, String password,
                 String affiliation, String country, String orcid,
-                String linkedInUrl, String googleScholarUrl, String bio, String picUrl) {
+                String linkedInUrl, String googleScholarUrl, String bio, String picUrl, boolean hasPassword) {
         this.name = name;
         this.username = username;
         this.email = email;
@@ -95,6 +98,7 @@ public class User {
         this.googleScholarUrl = googleScholarUrl;
         this.bio = bio;
         this.picUrl = picUrl;
+        this.hasPassword = hasPassword;
     }
 
     public Long getId() {
@@ -207,5 +211,13 @@ public class User {
 
     public void setBlocked(boolean blocked) {
         this.blocked = blocked;
+    }
+
+    public boolean isHasPassword() {
+        return hasPassword;
+    }
+
+    public void setHasPassword(boolean hasPassword) {
+        this.hasPassword = hasPassword;
     }
 }

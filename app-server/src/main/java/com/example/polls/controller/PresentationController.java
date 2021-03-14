@@ -7,8 +7,11 @@ import com.example.polls.model.Presentation;
 import com.example.polls.model.User;
 import com.example.polls.repository.PresentationRepository;
 import com.example.polls.repository.UserRepository;
+import com.example.polls.security.CurrentUser;
+import com.example.polls.security.UserPrincipal;
 import com.example.polls.service.DtoConverterService;
 import com.example.polls.service.PostprocessingHelpers;
+import com.example.polls.service.PresentationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +34,9 @@ public class PresentationController {
   @Autowired
   private DtoConverterService dtoConverterService;
 
+  @Autowired
+  private PresentationService presentationService;
+
   @GetMapping
   public List<PresentationDto> getAll() {
     return dtoConverterService.getPresentationDtoList(presentationRepository.findAll());
@@ -43,11 +49,17 @@ public class PresentationController {
     //return presentationRepository.findAllByTrackCodeIgnoreCase(trackCode).stream().map(p -> new PresentationDto(p)).collect(Collectors.toList());
   }
 
+  @GetMapping("/session/{sessionCode}")
+  public List<PresentationDto> getAllBySession(@PathVariable String sessionCode) {
+    return presentationRepository.findAllBySessionCodeIgnoreCase(sessionCode).parallelStream().map(dtoConverterService::getPresentationDto).collect(Collectors.toList());
+//    return dtoConverterService.getPresentationDtoList();
+  }
+
   @GetMapping("/user/{userid}")
   public List<PresentationDto> getAllByPresenter(@PathVariable("userid") Long userId) {
-    Optional<User> presenter = userRepository.findById(userId);
-    if (presenter.isPresent()) {
-      List<Presentation> presentations = presentationRepository.findAllByPresenter(presenter.get());
+    Optional<User> user = userRepository.findById(userId);
+    if (user.isPresent()) {
+      List<Presentation> presentations = presentationRepository.findAllByAuthorsContaining(user.get());
       return dtoConverterService.getPresentationDtoList(presentations);
     }
     return new ArrayList<>();
@@ -69,22 +81,10 @@ public class PresentationController {
     Optional<Presentation> pres = presentationRepository.findById(id);
     if (pres.isPresent()) {
       Presentation realPres = pres.get();
-      realPres.setTitle(newPres.getTitle());
-      realPres.setTrackCode(newPres.getTrackCode());
-      realPres.setSessionCode(newPres.getSessionCode()); // TODO: this probably just breaks everything
-      realPres.setDate(newPres.getDate());
-      realPres.setPaperAbstract(newPres.getPaperAbstract());
-      realPres.setPageNumbers(newPres.getPageNumbers());
-      realPres.setAcknowledgements(newPres.getAcknowledgements());
-      if (newPres.getSlidesUrl() != null && newPres.getSlidesUrl().trim() != "") {
-        realPres.setSlidesUrl(newPres.getSlidesUrl());
-      }
-      realPres.setDoiUrl(newPres.getDoiUrl());
-      String youtubeEmbed = PostprocessingHelpers.getYoutubeEmbed(newPres.getVideoUrl());
-      if (!youtubeEmbed.trim().equals("")) { // only change embed if valid youtube URL was given
-        realPres.setVideoEmbed(youtubeEmbed);
-      }
-      realPres = presentationRepository.save(realPres);
+      realPres = presentationService.editPres(newPres, realPres);
+//      if (!realPres.getAuthors().stream().anyMatch(u -> u.getEmail().equals(email))) {
+//        ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+//      }
       return ResponseEntity.ok(dtoConverterService.getPresentationDto(realPres));
     } else {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

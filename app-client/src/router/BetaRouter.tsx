@@ -1,6 +1,6 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React, {useEffect} from "react";
-import { HashRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import TrackList from '../pages/beta/private/TrackList';
 import PublicFooter from "../shared/footer/PublicFooter";
 import PrivateHeader from '../shared/header/PrivateHeader';
@@ -17,11 +17,14 @@ import Search from "../pages/public/Search";
 import EarlyRegister from "../pages/public/EarlyRegister";
 import PublicRouter from "./PublicRouter";
 import CurrentUser from '../components/currentUser/CurrentUser';
+import ScheduleView from '../pages/beta/private/ScheduleView';
+import GATracker from '../shared/GATracker';
+import ResetPasswordLoggedIn from '../pages/beta/private/ResetPasswordLoggedIn';
 
 const BetaRouter = () => {
 
     const [auth] = useGlobalState('authenticated');
-    console.log(auth);
+    console.log("Are we authed? " + auth);
     const [token] = useGlobalState('serverToken');
     const history = useHistory();
 
@@ -39,8 +42,7 @@ const BetaRouter = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 minHeight: '100vh',
-              },
-            
+              }
         }),
     );
 
@@ -79,6 +81,11 @@ const BetaRouter = () => {
                         <Route exact path="/app/register" component={Signup} />
                         <Route exact path="/search" component={PublicRouter} />
                         <Route exact path="/reminder" component={PublicRouter} />
+                        <Route exact path="/sessions" component={ScheduleView} />
+                        {/* <Route exact path="/changePassword" component={ResetPasswordLoggedIn} /> */}
+                        <PrivateRoute exact path="/changePassword">
+                            <ResetPasswordLoggedIn/>
+                        </PrivateRoute>
                         <PrivateRoute exact path="/app/currentuser">
                             <CurrentUser/>
                         </PrivateRoute>
@@ -96,7 +103,7 @@ const BetaRouter = () => {
                         </Route>
                     </Switch>
                 </div>
-                <PublicFooter />
+                <Route render={GATracker} />
             </Router>
         </div>
             

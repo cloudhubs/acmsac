@@ -42,19 +42,26 @@ const PrivateHeader = () => {
     }
 
     const classes = useStyles();
+    const routeTo = (url) => () => history.push(url)
 
     return (
         <>
             <AppBar position="static" color="default" elevation={0} className={classes.appBar}>
                 <Toolbar className={classes.toolbar}>
                     <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
-                        ACM SAC 2020
+                        ACM SAC 2021
                     </Typography>
-                    <Button color="primary" variant="outlined" className={classes.link}>
-                        <Link to="/app/track">Tracks</Link>
+                    <Button color="primary" variant="outlined" className={classes.link} onClick={routeTo("/")}>
+                        Home
                     </Button>
-                    <Button color="primary" variant="outlined" className={classes.link}>
-                        <Link to="/app/currentuser">Me</Link>
+                    <Button color="primary" variant="outlined" className={classes.link} onClick={routeTo("/sessions")}>
+                        Schedule
+                    </Button>
+                    <Button color="primary" variant="outlined" className={classes.link} onClick={routeTo("/app/track")}>
+                        Tracks
+                    </Button>
+                    <Button color="primary" variant="outlined" className={classes.link} onClick={routeTo("/app/currentuser")}>
+                        Me
                     </Button>
                     <Button color="primary" variant="outlined" className={classes.link} onClick={(event: React.MouseEvent<HTMLElement>) => {
                         onLogout(event)

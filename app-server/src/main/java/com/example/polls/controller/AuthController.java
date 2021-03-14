@@ -7,7 +7,9 @@ import com.example.polls.model.User;
 import com.example.polls.payload.*;
 import com.example.polls.repository.RoleRepository;
 import com.example.polls.repository.UserRepository;
+import com.example.polls.security.CurrentUser;
 import com.example.polls.security.JwtTokenProvider;
+import com.example.polls.security.UserPrincipal;
 import com.example.polls.service.PasswordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -109,6 +111,12 @@ public class AuthController {
     @GetMapping("/resetPassword/confirm/{id}/{token}")
     public ResponseEntity<?> resetPassword(@PathVariable Long id, @PathVariable String token) {
         return passwordService.resetPassword(id, token);
+    }
+
+    @PostMapping("/changePasswordLoggedIn")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> changePasswordLoggedIn(@CurrentUser UserPrincipal currentUser, @RequestBody ChangePasswordLoggedInRequest request) {
+        return passwordService.resetPasswordLoggedIn(currentUser, request);
     }
 
 }

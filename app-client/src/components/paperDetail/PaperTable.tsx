@@ -5,6 +5,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {useGlobalState} from "../../state";
 import {
     Box,
+    Button,
     ButtonBase,
     Container, IconButton,
     Link,
@@ -23,19 +24,42 @@ import EmailIcon from '@material-ui/icons/Email';
 import {Person} from "../../model/Person";
 import Avatar from "@material-ui/core/Avatar";
 import PaperList from "../currentUser/PaperList";
+import { TextField } from "@material-ui/core";
+import TrackMessagePut from "../../http/TrackMessagePut";
+import FetchTrackByCode from "../../http/FetchTrackByCode";
+import { useEffect } from "react";
 
 
 const PaperTable = () => {
     const [academicPapers] = useGlobalState('academicPapers');
-    // console.log(academicPapers);
+    const [currentUser] = useGlobalState('currentUser');
+    const [isEditMode, setEditMode] = React.useState<boolean>(false);
+    const [token] = useGlobalState('serverToken');
+    const [trackDetail, setTrackDetail] = useGlobalState('trackDetail');
+    const [newMessage, setNewMessage] = React.useState<string>("");
+
     let history = useHistory();
     let {code} = useParams();
-    const [trackDetail] = useGlobalState('trackDetail');
+    let isEditable: boolean = currentUser.roles.includes("ROLE_ADMIN") ||
+        (trackDetail.chairs && trackDetail.chairs.filter(chair => chair.email === currentUser.email).length > 0);
+
+    const saveMessage = async () => {
+        const newTrack = await TrackMessagePut.doSend(token, trackDetail.code, trackDetail.message);
+        if (newTrack === null) {
+            console.log("WE FAILED");
+        }
+        FetchTrackByCode.getTrackByCode(token, trackDetail.code);
+        setEditMode(false);
+    }
 
     const goDetail = (event: React.MouseEvent<HTMLElement>, row: AcademicArticle) => {
         event.preventDefault();
         history.push("/app/track/" + code + "/" + row.id);
     }
+
+    useEffect(() => {
+        setNewMessage(trackDetail.message);
+    }, []);
 
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({
@@ -61,26 +85,11 @@ const PaperTable = () => {
     );
     const classes = useStyles();
 
-    // console.log(trackDetail.chairs);
-/*
-    let affiliationSet = new Set<string>();
-    trackDetail.chairs.forEach((chair: Person) => {
-        affiliationSet.add(chair.affiliation);
-    });
-    let affiliations: Array<string> = Array.from(affiliationSet.keys());
-
-    let chairList: string[] = [];
-    let affiliationList: number[] = [];
-    trackDetail.chairs.forEach((chair) => {
-        chairList.push(chair.name);
-        affiliationList.push(affiliations.indexOf(chair.affiliation) + 1);
-    });
-
-*/    return (
+    return (
         <div>
 
-            <div className="breadcrumbs"><a href={"/#/app"}>ACM SAC 2020</a> &nbsp;
-                <a href={"/#/app/track"}>TRACKS</a> &nbsp;
+            <div className="breadcrumbs"><a href={"/app"}>ACM SAC 2021</a> &nbsp;
+                <a href={"/app/track"}>TRACKS</a> &nbsp;
                 {code}</div>
 
             <Container maxWidth="lg" component="main" className="trackDetail">
@@ -94,62 +103,35 @@ const PaperTable = () => {
 
 
 
-Chairs:
+                Chairs:
                     {trackDetail && trackDetail.chairs && trackDetail.chairs.map((chair: Person) => (
                         <div className="chairLine">
-                                <p>
-                                <Avatar style={{height: "45px", maxWidth: "45px", width: "100px"}} className="chairPic" src={chair.picUrl} />
-                                
-                                {chair.name}
-                                <Link className={"user-"} href={"mailto:" + chair.email}><EmailIcon style={{paddingTop: '5px'}} /></Link>
-                                <span className="space">{chair.affiliation}</span>
-                                <span className="space">{chair.country}</span>
-     {!!(chair.orcid) && (
+                            <p>
+                            <Avatar style={{height: "45px", maxWidth: "45px", width: "100px"}} className="chairPic" src={chair.picUrl} />
+                            
+                            {chair.name}
+                            <Link className={"user-"} href={"mailto:" + chair.email}><EmailIcon style={{paddingTop: '5px'}} /></Link>
+                            <span className="space">{chair.affiliation}</span>
+                            <span className="space">{chair.country}</span>
+                            {!!(chair.orcid) && (
                                 <Link className="link space" href={chair.orcid}>ORCID</Link>
-                    )}
-                                    {!!(chair.linkedInUrl) && (
-                                
+                            )}
+                            {!!(chair.linkedInUrl) && (
                                 <Link className="link space"  href={chair.linkedInUrl}>LinkedIn</Link>
-                                    )}
-                                {!!(chair.googleScholarUrl) && (
+                            )}
+                            {!!(chair.googleScholarUrl) && (
                                 <Link className="link space" href={chair.googleScholarUrl}>Google Scholar</Link>
-                                )}
-                                {!!(chair.bio) && (
-                                    <span className="space">
-
-                                <a className="hoverMe">Bio</a>
-                                <div className="hideAbstract">{chair.bio}</div>
-                                    </span>
-                                )}
+                            )}
+                            {!!(chair.bio) && (
+                                <span className="space">
+                                    <a className="hoverMe">Bio</a>
+                                    <div className="hideAbstract">{chair.bio}</div>
+                                </span>
+                            )}
                                 
-                                </p>
+                            </p>
                         </div>
                     ))}
-
-       
-
-                    {/*
-                        trackDetail.chairs.map((chair, ndx) => {
-                            return (
-                                <span>
-                                                {chair.name}<sup>{affiliationList[ndx]}</sup>{ndx === chairList.length - 1 ? "" : ", "}
-                                            </span>
-                            );
-                        })
-                    */}
-
-                    {/*
-                        affiliations.map((affiliation, ndx) => {
-                            return (
-                                <div><sup>
-                                    {
-                                        (ndx + 1) +"  "
-                                    }</sup>{affiliation}
-                                    <br />
-                                </div>
-                            );
-                        })
-                    */}
 
 
             </Container>
@@ -158,31 +140,45 @@ Chairs:
             <Container maxWidth="lg" component="main" className="trackContainer">
 
 
- {!!(trackDetail.message) &&  !!(trackDetail.message) && ( 
-                <Typography color="textSecondary" component="p" className="trackPanel">
-                    <Box boxShadow={3}>
-                        <Paper className={classes.boxContent}>
-                           {!!(trackDetail.message) && (
-                            <div><b>{'Track chair message'}</b><br/>
-                            {trackDetail.message}</div>
-                               )}
-                           {!!(trackDetail.acknowledgement) && (
-                            <div>
-                            <b>{'Acknowledgements'}</b><br/>
-                            {trackDetail.acknowledgement}
-                            </div>
-                           )}
-                        </Paper>
-                    </Box>
-                </Typography>
- )}
-                <h2>Full-papers</h2>
-                <PaperList papers={academicPapers.filter(row => row.type != 'Poster').slice().sort((a: AcademicArticle, b: AcademicArticle) => {
-                                return a.sessionCode.localeCompare(b.sessionCode);
+            {!!(trackDetail.message) && !isEditMode && ( 
+                <Box boxShadow={3}>
+                    <Paper className={classes.boxContent}>
+                        <Typography color="textPrimary" component="span" className="trackPanel">
+                            <b>{'Track chair message'}</b><br/>{trackDetail.message}
+                        </Typography>
+                        {!!(trackDetail.acknowledgement) && (
+                        <div>
+                        <b>{'Acknowledgements'}</b><br/>
+                        {trackDetail.acknowledgement}
+                        </div>
+                        )}
+                    </Paper>
+                </Box>
+            )}
+            {isEditMode && <TextField
+                fullWidth
+                label="Track Message"
+                value = {trackDetail.message}
+                onChange={(event) => {
+                    const message = event.target.value;
+                    trackDetail.message = message;
+                    setTrackDetail((t) => ({...t,message}));
+                }}
+            />}
+            <br/>
+            {isEditable &&
+                (isEditMode ? 
+                    <Button color="primary" variant="outlined" onClick={saveMessage}>Save Message</Button> :
+                    <Button color="primary" variant="outlined" onClick={()=>setEditMode(true)}>Edit Message</Button>
+                )
+            }
+                <h2>Full papers</h2>
+                <PaperList papers={academicPapers.filter(row => row.type.toLowerCase().indexOf('poster') < 0).slice().sort((a: AcademicArticle, b: AcademicArticle) => {
+                                return a.sessionCode == null ? -1 : a.sessionCode.localeCompare(b.sessionCode);
                             })}></PaperList>
                 <h2>Posters</h2>
-                <PaperList papers={academicPapers.filter(row => row.type == 'Poster').slice().sort((a: AcademicArticle, b: AcademicArticle) => {
-                                return a.sessionCode.localeCompare(b.sessionCode);
+                <PaperList papers={academicPapers.filter(row => row.type.toLowerCase().indexOf('poster') >= 0).slice().sort((a: AcademicArticle, b: AcademicArticle) => {
+                                return a.sessionCode == null ? -1 : a.sessionCode.localeCompare(b.sessionCode);
                             })}></PaperList>
             </Container>
 

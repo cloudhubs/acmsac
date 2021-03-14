@@ -2,10 +2,10 @@ package com.example.polls;
 
 import com.example.polls.exception.AppException;
 import com.example.polls.model.*;
-import com.example.polls.repository.AcmInfoRepository;
-import com.example.polls.repository.RoleRepository;
-import com.example.polls.repository.TrackRepository;
-import com.example.polls.repository.UserRepository;
+import com.example.polls.repository.*;
+import com.example.polls.service.ImportService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.TimeZone;
 
+@Slf4j
 @SpringBootApplication
 @EntityScan(basePackageClasses = {
         PollsApplication.class,
@@ -64,12 +65,18 @@ public class PollsApplication {
             private RoleRepository roleRepository;
 
             @Autowired
+            private PresentationRepository presentationRepository;
+
+            @Autowired
+            private ImportService importService;
+
+            @Autowired
             private AcmInfoRepository acmInfoRepository;
 
             @Autowired
             PasswordEncoder passwordEncoder;
 
-            @Value("classpath:track_codes.xlsx")
+            @Value("classpath:2021_tracks.xlsx")
             private Resource trackCodesResource;
 
             @Value("classpath:acm_info.xlsx")
@@ -80,6 +87,7 @@ public class PollsApplication {
 
                 // if the track codes have not been loaded, do it now
                 if (trackRepository.count() == 0) {
+                    log.info("Importing tracks");
                     XSSFWorkbook workbook = new XSSFWorkbook(trackCodesResource.getInputStream());
                     XSSFSheet worksheet = workbook.getSheetAt(0);
                     for (int i = 0; i < worksheet.getPhysicalNumberOfRows(); i++) {
@@ -89,21 +97,25 @@ public class PollsApplication {
                         track.setName(row.getCell(1).toString());
                         trackRepository.save(track);
                     }
+                    log.info("Done importing tracks");
+                } else {
+                    log.info("Skipped importing tracks");
                 }
 
-                // if the DOI info hasn't been loaded, do it
-                if (acmInfoRepository.count() == 0) {
-                    XSSFWorkbook workbook = new XSSFWorkbook(acmResource.getInputStream());
-                    XSSFSheet worksheet = workbook.getSheetAt(0);
-                    for (int i = 1; i < worksheet.getPhysicalNumberOfRows(); i++) {
-                        XSSFRow row = worksheet.getRow(i);
-                        AcmInfo info = new AcmInfo();
-                        info.setPaperId((int) row.getCell(0).getNumericCellValue());
-                        info.setDoiUrl(row.getCell(1).toString());
-                        info.setAcmUrl(row.getCell(2).toString());
-                        acmInfoRepository.save(info);
-                    }
-                }
+                // TODO: Needed for 2021?
+//                // if the DOI info hasn't been loaded, do it
+//                if (acmInfoRepository.count() == 0) {
+//                    XSSFWorkbook workbook = new XSSFWorkbook(acmResource.getInputStream());
+//                    XSSFSheet worksheet = workbook.getSheetAt(0);
+//                    for (int i = 1; i < worksheet.getPhysicalNumberOfRows(); i++) {
+//                        XSSFRow row = worksheet.getRow(i);
+//                        AcmInfo info = new AcmInfo();
+//                        info.setPaperId((int) row.getCell(0).getNumericCellValue());
+//                        info.setDoiUrl(row.getCell(1).toString());
+//                        info.setAcmUrl(row.getCell(2).toString());
+//                        acmInfoRepository.save(info);
+//                    }
+//                }
 
                 // create admin account if not exists
                 if (!userRepository.existsByEmail(adminEmail)) {
@@ -127,6 +139,25 @@ public class PollsApplication {
                     userRepository.save(admin);
                 }
 
+                // run import if no presentations
+                if (presentationRepository.count() == 0) {
+                    int triesLeft = 2;
+                    while (triesLeft > 0) {
+                        triesLeft--;
+                        try {
+                            log.info("Importing users/presentations");
+                            importService.importUsers();
+                            log.info("Done importing users/presentations");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            if (triesLeft > 0) {
+                                log.info("Failed to import users/presentations, retrying");
+                            }
+                        }
+                    }
+                } else {
+                    log.info("Skipped importing users/presentations");
+                }
             }
         };
     }

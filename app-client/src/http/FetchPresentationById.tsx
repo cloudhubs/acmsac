@@ -1,10 +1,10 @@
 import { useHistory, useParams } from "react-router-dom";
-import { AcademicArticle } from "../model/AcademicArticle";
-import { dispatch, useGlobalState } from "../state";
+import { AcademicArticle, mapArticleBackendToFrontend } from "../model/AcademicArticle";
+import { dispatch } from "../state";
 import { ServerToken } from "../model/ServerToken";
 
 const setSelectedPaper = (selectedPaper: AcademicArticle) => dispatch({
-    selectedPaper: selectedPaper,
+    selectedPaper: mapArticleBackendToFrontend(selectedPaper),
     type: 'setSelectedPaper',
 });
 

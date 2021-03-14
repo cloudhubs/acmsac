@@ -11,6 +11,7 @@ import PaperList from './PaperList';
 import Button from '@material-ui/core/Button';
 import UserDetailPut from '../../http/UserDetailPut';
 import FetchCurrentUser from '../../http/FetchCurrentUser';
+import { useHistory } from 'react-router-dom';
 
 const CurrentUser = () => {
     const useStyles = makeStyles((theme: Theme) =>
@@ -35,6 +36,11 @@ const CurrentUser = () => {
 
     const [token] = useGlobalState('serverToken');
     const [userPapers, setUserPapers] = React.useState<AcademicArticle[]>([]);
+
+    const history = useHistory();
+    const resetPassword = () => {
+        history.push("/changePassword");
+    }
 
     const onSave = async () => {
         const updatedUser = await UserDetailPut.doSend(token,author);
@@ -97,6 +103,8 @@ const CurrentUser = () => {
                                                            Edit
            </Button>
             }
+            <br/>
+            <Button onClick={resetPassword} color="primary">Click here to reset your password</Button>
 
 
             <h1>User presentations</h1>

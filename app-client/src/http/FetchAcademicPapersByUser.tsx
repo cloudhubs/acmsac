@@ -15,7 +15,7 @@ const FetchAcademicPapersByUser = {
                 'Authorization': `Bearer ${token.accessToken}`
             }
         });
-        if (response != null){
+        if (response != null) {
             const body = await response.json();
             if (!body.error) {
                 return body;

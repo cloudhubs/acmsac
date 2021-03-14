@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -12,6 +12,8 @@ import { useHistory } from 'react-router-dom';
 import { ServerToken } from "../../../model/ServerToken";
 import DoLogin from "../../../http/DoLogin";
 import FetchCurrentUser from "../../../http/FetchCurrentUser";
+import Alert from "@material-ui/lab/Alert";
+import { Link } from "@material-ui/core";
 
 // const setServerToken = (serverToken: ServerToken) => dispatch({
 //   serverToken: serverToken,
@@ -28,10 +30,15 @@ import FetchCurrentUser from "../../../http/FetchCurrentUser";
 
 
 const Login = () => {
+    const [badLogin, setBadLogin] = React.useState<boolean>(false);
     const onSubmit = async (event: React.MouseEvent<HTMLElement>, signInUser, history, token) => {
         event.preventDefault();
+        setBadLogin(false);
         console.log(signInUser);
-        await DoLogin.doSend(history, signInUser);
+        let res = await DoLogin.doSend(history, signInUser);
+        if (res && res.error) {
+          setBadLogin(true);
+        }
         setTimeout(function(){ }, 1000);
         // await FetchCurrentUser.doFetch(token);
     }
@@ -61,6 +68,12 @@ const Login = () => {
     const classes = useStyles();
     const [signInUser, uSignInUser] = useGlobalState('signInUser');
     const [token] = useGlobalState('serverToken');
+    const [auth] = useGlobalState('authenticated');
+    useEffect(() => {
+      if (auth) {
+        history.push("/");
+      }
+    }, []);
     return (
         <div>
           {/*<ApplicationBar />*/}
@@ -99,7 +112,6 @@ const Login = () => {
             label="Password"
             type="password"
             id="password"
-            autoComplete="current-password"
             value={signInUser.password}
             onChange={(event) => {
               const password = event.target.value;
@@ -117,6 +129,10 @@ const Login = () => {
              }}>
             Sign In
           </Button>
+          <Link href="reset">Reset password</Link>
+          {badLogin && 
+            <Alert severity="error">Incorrect username or password</Alert>
+          }
         </form>
       </div>
 

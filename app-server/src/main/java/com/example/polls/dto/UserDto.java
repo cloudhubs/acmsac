@@ -2,7 +2,11 @@ package com.example.polls.dto;
 
 import com.example.polls.model.User;
 import com.example.polls.service.PostprocessingHelpers;
+import lombok.Data;
 
+import java.util.List;
+
+@Data
 public class UserDto {
   private Long id;
   private String name;
@@ -15,10 +19,12 @@ public class UserDto {
   private String bio;
   private String picUrl;
   private boolean blocked;
+  private List<String> roles;
 
-  public UserDto() {}
-
-  public UserDto(User user) {
+  public UserDto(User user, List<String> roles) {
+    if (user == null) {
+      return;
+    }
     this.id = user.getId();
     this.name = user.getName();
     this.email = user.getEmail();
@@ -30,93 +36,6 @@ public class UserDto {
     this.bio = user.getBio();
     this.picUrl = user.getPicUrl() != null && !user.getPicUrl().isEmpty() ? PostprocessingHelpers.processPresentationLink(user.getPicUrl()).getEmbed() : "";
     this.blocked = user.isBlocked();
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getAffiliation() {
-    return affiliation;
-  }
-
-  public void setAffiliation(String affiliation) {
-    this.affiliation = affiliation;
-  }
-
-  public String getCountry() {
-    return country;
-  }
-
-  public void setCountry(String country) {
-    this.country = country;
-  }
-
-  public String getOrcid() {
-    return orcid;
-  }
-
-  public void setOrcid(String orcid) {
-    this.orcid = orcid;
-  }
-
-  public String getLinkedInUrl() {
-    return linkedInUrl;
-  }
-
-  public void setLinkedInUrl(String linkedInUrl) {
-    this.linkedInUrl = linkedInUrl;
-  }
-
-  public String getGoogleScholarUrl() {
-    return googleScholarUrl;
-  }
-
-  public void setGoogleScholarUrl(String googleScholarUrl) {
-    this.googleScholarUrl = googleScholarUrl;
-  }
-
-  public String getBio() {
-    return bio;
-  }
-
-  public void setBio(String bio) {
-    this.bio = bio;
-  }
-
-  public String getPicUrl() {
-    return picUrl;
-  }
-
-  public void setPicUrl(String picUrl) {
-    this.picUrl = picUrl;
-  }
-
-  public boolean isBlocked() {
-    return blocked;
-  }
-
-  public void setBlocked(boolean blocked) {
-    this.blocked = blocked;
+    this.roles = roles;
   }
 }
