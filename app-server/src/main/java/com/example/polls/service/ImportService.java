@@ -158,7 +158,7 @@ public class ImportService {
    * @return
    */
   private User createTrackChairFromImportRow(XSSFRow row, Set<Role> trackRoles) {
-    String email = row.getCell(1).toString().trim();
+    String email = row.getCell(1).toString().trim().toLowerCase();
     String fullName = row.getCell(2).toString().trim() + " " + row.getCell(3).toString().trim();
     String trackCode = row.getCell(4, Row.CREATE_NULL_AS_BLANK).toString().trim();
     User chair;
@@ -185,7 +185,7 @@ public class ImportService {
   }
 
   private User createOrganizerFromImportRow(XSSFRow row, Set<Role> userRoles) {
-    String email = row.getCell(2).toString().trim();
+    String email = row.getCell(2).toString().trim().toLowerCase();
     if (userRepository.existsByEmail(email)) {
       return userRepository.findByEmail(email).get();
     }
@@ -211,7 +211,7 @@ public class ImportService {
      * @return created/retrieved user
      */
   private User createUserFromImportRow(XSSFRow row, Set<Role> userRoles) {
-    String email = row.getCell(2).toString().trim();
+    String email = row.getCell(2).toString().trim().toLowerCase();
     if (userRepository.existsByEmail(email)) {
       return userRepository.findByEmail(email).get();
     }
@@ -246,7 +246,7 @@ public class ImportService {
       List<String> emails = new ArrayList<>();
       for (int i = 0; i < 11; i++) {
         int cellNum = 40 + i * 7; // first email is at col 40, then every 7 cols after that
-        emails.add(row.getCell(cellNum, Row.CREATE_NULL_AS_BLANK).toString().trim());
+        emails.add(row.getCell(cellNum, Row.CREATE_NULL_AS_BLANK).toString().trim().toLowerCase());
       }
       Map<String, Integer> emailOrder = new HashMap<String, Integer>();
       for (int i = 0; i < emails.size(); i++)
@@ -263,7 +263,7 @@ public class ImportService {
       }
       authors = userRepository.saveAll(authors);
       authors.sort(new AuthorEmailComparator(emailOrder));
-      String presenterEmail = row.getCell(124, Row.CREATE_NULL_AS_BLANK).toString().trim();
+      String presenterEmail = row.getCell(124, Row.CREATE_NULL_AS_BLANK).toString().trim().toLowerCase();
       User presenter = userRepository.findByEmail(presenterEmail).orElse(null);
       if (presenter == null && authors.size() > 0) {
         presenter = authors.get(0);
@@ -454,7 +454,7 @@ public class ImportService {
         presentation.setSessionCode(sessionCode);
         String name = row.getCell(10 + i*4, Row.CREATE_NULL_AS_BLANK).toString();
         String affiliation = row.getCell(11 + i*4, Row.CREATE_NULL_AS_BLANK).toString();
-        String email = row.getCell(12 + i*4, Row.CREATE_NULL_AS_BLANK).toString();
+        String email = row.getCell(12 + i*4, Row.CREATE_NULL_AS_BLANK).toString().toLowerCase();
         User presenter = userRepository.findByEmail(email).orElse(null);
         if (presenter != null) {
           presentation.setPresenter(presenter);

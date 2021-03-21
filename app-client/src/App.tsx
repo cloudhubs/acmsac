@@ -7,8 +7,45 @@ import PublicRouter from './router/PublicRouter';
 import { createBrowserHistory } from 'history';
 import { withRoot } from './withRoot';
 import PublicFooter from './shared/footer/PublicFooter';
+import fetchIntercept from 'fetch-intercept';
+import {dispatch} from "./state";
+
+const logout = () => dispatch({
+    type: 'logout',
+});
 
 const App = () => {
+
+    const unregister = fetchIntercept.register({
+        request: function (url, config) {
+            // Modify the url or config here
+            return [url, config];
+        },
+    
+        requestError: function (error) {
+            // Called when an error occured during another 'request' interceptor call
+            return Promise.reject(error);
+        },
+    
+        response: function (response) {
+            console.log(response);
+            if (response.status === 401  && !response.url.includes("signin")) {
+                localStorage.removeItem("MY_LOCAL_STORAGE_KEY");
+                history.push("/");
+                logout();
+            }
+            // Modify the reponse object
+            return response;
+        },
+    
+        responseError: function (error) {
+            console.log(error);
+            // Handle an fetch error
+            return Promise.reject(error);
+        }
+    });
+    
+
     // const trackingId: string = "UA-162125692-1"
     // ReactGA.initialize(trackingId);
     const history = createBrowserHistory();
