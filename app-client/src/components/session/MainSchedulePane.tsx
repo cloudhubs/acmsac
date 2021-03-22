@@ -49,6 +49,55 @@ const SchedulePane: () => JSX.Element = () => {
             the events are repeated in two separate rounds to accommodate the
             needs of attendees from different time zones around the world.
           </Typography>
+
+        <Typography variant="body1">
+        <hr></hr>
+        <p><b>NOTICE: Alternative links for Virtual Room D</b></p>
+        <ul>
+          <li>
+              <b>SAC '21: SVT-1 (Round 1)</b>
+              <ul>
+                <li><a href="https://baylor.zoom.us/j/84604134750?pwd=WWduWi9TOThGM0V2MjE4S3pQbWpCQT09" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable">https://baylor.zoom.us/j/84604134750?pwd=WWduWi9TOThGM0V2MjE4S3pQbWpCQT09</a></li>
+                <li>Meeting ID: 846 0413 4750</li>
+                <li>Passcode: 715403&nbsp;</li>
+              </ul>
+          </li>
+          <li>
+              <b>SAC '21: SVT-2 (Round 1)</b>
+              <ul>
+                <li><a href="https://baylor.zoom.us/j/87838765461?pwd=a1dQenN2dzlWeFZuZXJod0drbGFaQT09" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable">https://baylor.zoom.us/j/87838765461?pwd=a1dQenN2dzlWeFZuZXJod0drbGFaQT09</a></li>
+                <li>Meeting ID: 878 3876 5461</li>
+                <li>Passcode: 138893</li>
+              </ul>
+          </li>
+          <li>
+              <b>SAC '21: SVT-3/INTOP (Round 1)</b>
+              <ul>
+                <li><a href="https://baylor.zoom.us/j/82455455863?pwd=UkdTUDNSaithYk5WN1ZwRFZhenRpUT09" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable">https://baylor.zoom.us/j/82455455863?pwd=UkdTUDNSaithYk5WN1ZwRFZhenRpUT09</a></li>
+                <li>Meeting ID: 824 5545 5863</li>
+                <li>Passcode: 398669</li>
+              </ul>
+          </li>
+          <li>
+              <b>SAC '21: SVT-1 (Round 2)</b>
+              <ul>
+                <li><a href="https://baylor.zoom.us/j/86232039455?pwd=RktqNSthYkxaV092R1VBQjhVN080Zz09" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable">https://baylor.zoom.us/j/86232039455?pwd=RktqNSthYkxaV092R1VBQjhVN080Zz09</a></li>
+                <li>Meeting ID: 862 3203 9455</li>
+                <li>Passcode: 319744</li>
+              </ul>
+          </li>
+          <li>
+              <b>SAC '21: SVT-2 (Round 2)</b>
+              <ul>
+                <li><a href="https://baylor.zoom.us/j/82188458471?pwd=ZEREa2dQdGpKUGFmeGFQTDZtemZ6UT09" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable">https://baylor.zoom.us/j/82188458471?pwd=ZEREa2dQdGpKUGFmeGFQTDZtemZ6UT09</a></li>
+                <li>Meeting ID: 821 8845 8471</li>
+                <li>Passcode: 595787</li>
+              </ul>
+          </li>
+        </ul>
+        <hr></hr>
+        </Typography>
+
         </Paper>
 
         <Grid container direction="column">
