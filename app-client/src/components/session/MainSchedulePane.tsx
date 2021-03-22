@@ -52,46 +52,44 @@ const SchedulePane: () => JSX.Element = () => {
 
         <Typography variant="body1">
         <hr></hr>
-        <p><b>NOTICE: Alternative links for Virtual Room D</b></p>
+        <p><b>NOTICE: Alternative zoom links:</b></p>
         <ul>
           <li>
-              <b>SAC '21: SVT-1 (Round 1)</b>
+              <b>SAC '21: MLA-3 (Round 2)</b>
               <ul>
-                <li><a href="https://baylor.zoom.us/j/84604134750?pwd=WWduWi9TOThGM0V2MjE4S3pQbWpCQT09" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable">https://baylor.zoom.us/j/84604134750?pwd=WWduWi9TOThGM0V2MjE4S3pQbWpCQT09</a></li>
-                <li>Meeting ID: 846 0413 4750</li>
-                <li>Passcode: 715403&nbsp;</li>
+                <li><a href="https://acm-org.zoom.us/j/97689442040?pwd=TnBMSGpScDJSUzdDalp0WGhFQWtmUT09" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable">https://acm-org.zoom.us/j/97689442040?pwd=TnBMSGpScDJSUzdDalp0WGhFQWtmUT09</a></li>
+                <li>Meeting ID: 976 8944 2040</li>
+                <li>Passcode: 852455</li>
               </ul>
           </li>
           <li>
-              <b>SAC '21: SVT-2 (Round 1)</b>
+              <b>SAC '21: DAPP-2 (Round 2)</b>
               <ul>
-                <li><a href="https://baylor.zoom.us/j/87838765461?pwd=a1dQenN2dzlWeFZuZXJod0drbGFaQT09" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable">https://baylor.zoom.us/j/87838765461?pwd=a1dQenN2dzlWeFZuZXJod0drbGFaQT09</a></li>
-                <li>Meeting ID: 878 3876 5461</li>
-                <li>Passcode: 138893</li>
+                <li><a href="https://unige.zoom.us/my/jmseigneur" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable">https://unige.zoom.us/my/jmseigneur</a></li>
               </ul>
           </li>
           <li>
-              <b>SAC '21: SVT-3/INTOP (Round 1)</b>
+              <b>SAC '21: IOT-2 (Round 2)</b>
               <ul>
-                <li><a href="https://baylor.zoom.us/j/82455455863?pwd=UkdTUDNSaithYk5WN1ZwRFZhenRpUT09" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable">https://baylor.zoom.us/j/82455455863?pwd=UkdTUDNSaithYk5WN1ZwRFZhenRpUT09</a></li>
-                <li>Meeting ID: 824 5545 5863</li>
-                <li>Passcode: 398669</li>
+                <li><a href="https://acm-org.zoom.us/j/97570607121?pwd=L1hFY1VRem5qTW5sT2lpR01WSUthQT09" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable">https://acm-org.zoom.us/j/97570607121?pwd=L1hFY1VRem5qTW5sT2lpR01WSUthQT09</a></li>
+                <li>Meeting ID: 975 7060 7121</li>
+                <li>Passcode: 640396</li>
               </ul>
           </li>
           <li>
-              <b>SAC '21: SVT-1 (Round 2)</b>
+              <b>SAC ’21: SVT-3/INTOP (Round 2)</b>
               <ul>
-                <li><a href="https://baylor.zoom.us/j/86232039455?pwd=RktqNSthYkxaV092R1VBQjhVN080Zz09" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable">https://baylor.zoom.us/j/86232039455?pwd=RktqNSthYkxaV092R1VBQjhVN080Zz09</a></li>
-                <li>Meeting ID: 862 3203 9455</li>
-                <li>Passcode: 319744</li>
+                <li><a href="https://baylor.zoom.us/j/87243113959?pwd=blFKakNZeWVidzQ3bmFMZXVVVTNHQT09" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable">https://baylor.zoom.us/j/87243113959?pwd=blFKakNZeWVidzQ3bmFMZXVVVTNHQT09</a></li>
+                <li>Meeting ID: 872 4311 3959</li>
+                <li>Passcode: 767626</li>
               </ul>
           </li>
           <li>
-              <b>SAC '21: SVT-2 (Round 2)</b>
+              <b>SAC '21: DS (Round 2)</b>
               <ul>
-                <li><a href="https://baylor.zoom.us/j/82188458471?pwd=ZEREa2dQdGpKUGFmeGFQTDZtemZ6UT09" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable">https://baylor.zoom.us/j/82188458471?pwd=ZEREa2dQdGpKUGFmeGFQTDZtemZ6UT09</a></li>
-                <li>Meeting ID: 821 8845 8471</li>
-                <li>Passcode: 595787</li>
+                <li><a href="https://acm-org.zoom.us/j/92343599079?pwd=R0dJNzBkeEJsSWh6aFFxRFJJT3ZPUT09" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable">https://acm-org.zoom.us/j/92343599079?pwd=R0dJNzBkeEJsSWh6aFFxRFJJT3ZPUT09</a></li>
+                <li>Meeting ID: 923 4359 9079</li>
+                <li>Passcode: 981647</li>
               </ul>
           </li>
         </ul>
