@@ -52,47 +52,10 @@ const SchedulePane: () => JSX.Element = () => {
 
         <Typography variant="body1">
         <hr></hr>
-        <p><b>NOTICE: Alternative zoom links:</b></p>
-        <ul>
-          <li>
-              <b>SAC '21: MLA-3 (Round 2)</b>
-              <ul>
-                <li><a href="https://acm-org.zoom.us/j/97689442040?pwd=TnBMSGpScDJSUzdDalp0WGhFQWtmUT09" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable">https://acm-org.zoom.us/j/97689442040?pwd=TnBMSGpScDJSUzdDalp0WGhFQWtmUT09</a></li>
-                <li>Meeting ID: 976 8944 2040</li>
-                <li>Passcode: 852455</li>
-              </ul>
-          </li>
-          <li>
-              <b>SAC '21: DAPP-2 (Round 2)</b>
-              <ul>
-                <li><a href="https://unige.zoom.us/my/jmseigneur" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable">https://unige.zoom.us/my/jmseigneur</a></li>
-              </ul>
-          </li>
-          <li>
-              <b>SAC '21: IOT-2 (Round 2)</b>
-              <ul>
-                <li><a href="https://acm-org.zoom.us/j/97570607121?pwd=L1hFY1VRem5qTW5sT2lpR01WSUthQT09" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable">https://acm-org.zoom.us/j/97570607121?pwd=L1hFY1VRem5qTW5sT2lpR01WSUthQT09</a></li>
-                <li>Meeting ID: 975 7060 7121</li>
-                <li>Passcode: 640396</li>
-              </ul>
-          </li>
-          <li>
-              <b>SAC ’21: SVT-3/INTOP (Round 2)</b>
-              <ul>
-                <li><a href="https://baylor.zoom.us/j/87243113959?pwd=blFKakNZeWVidzQ3bmFMZXVVVTNHQT09" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable">https://baylor.zoom.us/j/87243113959?pwd=blFKakNZeWVidzQ3bmFMZXVVVTNHQT09</a></li>
-                <li>Meeting ID: 872 4311 3959</li>
-                <li>Passcode: 767626</li>
-              </ul>
-          </li>
-          <li>
-              <b>SAC '21: DS (Round 2)</b>
-              <ul>
-                <li><a href="https://acm-org.zoom.us/j/92343599079?pwd=R0dJNzBkeEJsSWh6aFFxRFJJT3ZPUT09" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable">https://acm-org.zoom.us/j/92343599079?pwd=R0dJNzBkeEJsSWh6aFFxRFJJT3ZPUT09</a></li>
-                <li>Meeting ID: 923 4359 9079</li>
-                <li>Passcode: 981647</li>
-              </ul>
-          </li>
-        </ul>
+        <p><b>NOTICE: All virtual rooms are working normally at this point!</b></p>
+        <p>To keep this healthy state, we limited our ACM Zoom account login use to the program/poster chairs only. 
+          So, if you are one of session chairs who received an ACM Zoom account login info earlier, you are no longer required to start a meeting as a HOST and now required not to use the given ACM Zoom login. 
+          Instead, you just need to join a meeting using your own (personal or institution) Zoom account. </p>  
         <hr></hr>
         </Typography>
 
