@@ -4,21 +4,25 @@ import FetchSession from "../../http/FetchSession";
 import { useGlobalState } from "../../state";
 import DaySchedulePane from "./DaySchedulePane";
 import { Session } from "../../model/Session";
-import { compareDates } from "./SessionViewUtils";
+import { compareDates, setSelectedDay } from "./SessionViewUtils";
+
+const LOADED_SS_KEY = "acmsac_loadedtoday";
 
 const SchedulePane: () => JSX.Element = () => {
   const [sessions] = useGlobalState("sessions");
   const [token] = useGlobalState("serverToken");
 
   // Method to retrieve all session names
-  const getSessions = async () => {
-    await FetchSession.getSessions(token);
+  const setUpSchedule = () => {
+    if (!sessionStorage.getItem(LOADED_SS_KEY)) {
+      sessionStorage.setItem(LOADED_SS_KEY, "yes im here");
+      setSelectedDay(new Date(Date.now()));
+    }
+    FetchSession.getSessions(token).catch(console.log);
   };
 
   // Start by fetching sessions and session names
-  useEffect(() => {
-    getSessions();
-  }, []);
+  useEffect(setUpSchedule, []);
 
   return (
     <Paper>
@@ -41,7 +45,8 @@ const SchedulePane: () => JSX.Element = () => {
 
 function registerDate(date: Date, map: Map<number, Date>) {
   // Simple hash of date only
-  let iso = 31 * (31 * (31 * date.getFullYear() + date.getMonth()) + date.getDay());
+  let iso =
+    31 * (31 * (31 * date.getFullYear() + date.getMonth()) + date.getDay());
   if (!map.has(iso)) {
     map.set(iso, date);
   }
