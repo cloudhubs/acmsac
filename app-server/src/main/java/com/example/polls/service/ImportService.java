@@ -48,15 +48,16 @@ public class ImportService {
   @Autowired
   private ResourceLoader resourceLoader;
 
-  private final String DEFAULT_ORGANIZER_PW = "acmsaccommittee2021";
-  private final String DEFAULT_REGISTRANT_PW = "acmsacregistrant2021";
-  private final String DEFAULT_SESSION_CHAIR_PW = "sacsessionchair2021";
-  private final String DEFAULT_CHAIR_PW = "acmsac2021-";
-  private final String PRESENTATION_RESOURCE_NAME = "classpath:2021_papers.xlsx";
-  private final String USER_RESOURCE_NAME = "classpath:2021_users.xlsx";
-  private final String TRACK_CHAIR_RESOURCE_NAME = "classpath:2021_track_chairs.xlsx";
-  private final String SESSION_RESOURCE_NAME = "classpath:2021_sessions.xlsx";
-  private final String ORGANIZERS_RESOURCE_NAME = "classpath:2021_organizers.xlsx";
+  private final String DEFAULT_ORGANIZER_PW = "acmsaccommittee2022";
+  private final String DEFAULT_REGISTRANT_PW = "acmsacregistrant2022";
+  private final String DEFAULT_SESSION_CHAIR_PW = "sacsessionchair2022";
+  private final String DEFAULT_CHAIR_PW = "acmsac2022-";
+  private final String PRESENTATION_RESOURCE_NAME = "classpath:2022_papers.xlsx";
+  private final String PRESENTATION_RESOURCE_NAME_SRC = "classpath:2022_papers_src.xlsx";
+  private final String USER_RESOURCE_NAME = "classpath:2022_users.xlsx";
+  private final String TRACK_CHAIR_RESOURCE_NAME = "classpath:2022_track_chairs.xlsx";
+  private final String SESSION_RESOURCE_NAME = "classpath:2022_sessions.xlsx";
+  private final String ORGANIZERS_RESOURCE_NAME = "classpath:2022_organizers.xlsx";
 
   public void importUsers() {
     try {
@@ -83,13 +84,7 @@ public class ImportService {
        * Create author users
        */
       log.info("Importing authors");
-      Resource userResource = resourceLoader.getResource(USER_RESOURCE_NAME);
-      XSSFWorkbook userWorkbook = new XSSFWorkbook(userResource.getInputStream());
-      XSSFSheet userSheet = userWorkbook.getSheetAt(0);
-      for (int i = 1; i < userSheet.getPhysicalNumberOfRows(); i++) {
-        XSSFRow row = userSheet.getRow(i);
-        User user = createUserFromImportRow(row, Collections.singleton(userRole)); // create user objects
-      }
+      importAuthors(USER_RESOURCE_NAME, userRole);
       log.info("Done importing authors");
 
       /**
@@ -109,17 +104,19 @@ public class ImportService {
        * Create presentations
        */
       log.info("Importing presentations");
-      Resource presentationResource = resourceLoader.getResource(PRESENTATION_RESOURCE_NAME);
-      XSSFWorkbook presentationWorkbook = new XSSFWorkbook(presentationResource.getInputStream());
-      XSSFSheet presentationSheet = presentationWorkbook.getSheetAt(0);
-      for (int i = 1; i < presentationSheet.getPhysicalNumberOfRows(); i++) {
-        XSSFRow row = presentationSheet.getRow(i);
-        String paperId = row.getCell(1, Row.CREATE_NULL_AS_BLANK).toString().trim(); // make sure ID exists
-        if (!paperId.equals("")) {
-          createPresentationFromImportRow(row);
-        }
-      }
+      
+      importPresentations(PRESENTATION_RESOURCE_NAME);
+      
       log.info("Done importing presentations");
+      
+      /**
+       * Create SRC presentations
+       */
+      log.info("Importing presentations SRC");
+      
+      importPresentations(PRESENTATION_RESOURCE_NAME_SRC);
+      
+      log.info("Done importing presentations SRC");
 
       /**
        * Create sessions
@@ -148,8 +145,29 @@ public class ImportService {
       throw new ImportException("Could not open one of the excel files!", e);
     }
   }
+  
+  public void importAuthors(String resource, Role userRole) throws IOException {
+	  Resource userResource = resourceLoader.getResource(resource);
+      XSSFWorkbook userWorkbook = new XSSFWorkbook(userResource.getInputStream());
+      XSSFSheet userSheet = userWorkbook.getSheetAt(0);
+      for (int i = 1; i < userSheet.getPhysicalNumberOfRows(); i++) {
+        XSSFRow row = userSheet.getRow(i);
+        User user = createUserFromImportRow(row, Collections.singleton(userRole)); // create user objects
+      }
+  }
 
-
+  public void importPresentations(String resourceName) throws IOException {
+	  Resource presentationResource = resourceLoader.getResource(resourceName);
+      XSSFWorkbook presentationWorkbook = new XSSFWorkbook(presentationResource.getInputStream());
+      XSSFSheet presentationSheet = presentationWorkbook.getSheetAt(0);
+      for (int i = 1; i < presentationSheet.getPhysicalNumberOfRows(); i++) {
+        XSSFRow row = presentationSheet.getRow(i);
+        String paperId = row.getCell(1, Row.CREATE_NULL_AS_BLANK).toString().trim(); // make sure ID exists
+        if (!paperId.equals("")) {
+          createPresentationFromImportRow(row);
+        }
+      }
+  }
 
   /**
    * Creates new user for track chair and adds them to the list of chairs for the track
@@ -186,22 +204,26 @@ public class ImportService {
 
   private User createOrganizerFromImportRow(XSSFRow row, Set<Role> userRoles) {
     String email = row.getCell(2).toString().trim();
-    if (userRepository.existsByEmail(email)) {
-      return userRepository.findByEmail(email).get();
-    }
-    String username = email;
-    String password = DEFAULT_ORGANIZER_PW;
     String fullName = row.getCell(0).toString().trim() + " " + row.getCell(1).toString().trim();
     String affiliation = row.getCell(3, Row.CREATE_NULL_AS_BLANK).toString().trim();
     String country = row.getCell(4, Row.CREATE_NULL_AS_BLANK).toString().trim();
-    String orcid = "";
-    String linkedIn = "";
-    String googleScholar = "";
-    String bio = "";
-    String picUrl = "";
+    return this.createOrganizer(email, fullName, affiliation, country, userRoles);
+  }
+  
+  public User createOrganizer(String email, String name, String affiliation, String country, Set<Role> userRoles) {
+	  if (userRepository.existsByEmail(email)) {
+	      return userRepository.findByEmail(email).get();
+	    }
+	    String username = email;
+	    String password = DEFAULT_ORGANIZER_PW;	    
+	    String orcid = "";
+	    String linkedIn = "";
+	    String googleScholar = "";
+	    String bio = "";
+	    String picUrl = "";
 
-    return createUser(fullName, username, email, password, affiliation, country,
-            orcid, linkedIn, googleScholar, bio, picUrl, false, userRoles);
+	    return createUser(name, username, email, password, affiliation, country,
+	            orcid, linkedIn, googleScholar, bio, picUrl, false, userRoles);
   }
 
     /**
@@ -239,7 +261,9 @@ public class ImportService {
     try {
       Presentation presentation = new Presentation();
       int paperId = (int) row.getCell(1).getNumericCellValue();
+      System.err.println("Paper " + paperId);
       if (presentationRepository.existsByPaperId(paperId)) {
+    	  System.err.println("Paper Exist");
         presentation = presentationRepository.findByPaperId(paperId).orElse(new Presentation());
       }
       // get author emails (11 possible authors)
@@ -254,6 +278,7 @@ public class ImportService {
         String email = emails.get(i);
         emailOrder.put(email.toLowerCase(), i);
       }
+      System.err.println("Paper Emails "+ emails);
       List<User> authors = userRepository.findAllByEmailIn(emails);
       for (User author : authors) {
         if (!author.isHasPassword()) {
@@ -265,9 +290,12 @@ public class ImportService {
       authors.sort(new AuthorEmailComparator(emailOrder));
       String presenterEmail = row.getCell(124, Row.CREATE_NULL_AS_BLANK).toString().trim();
       User presenter = userRepository.findByEmail(presenterEmail).orElse(null);
+      System.err.println("Paper Presenter "+ presenterEmail);
       if (presenter == null && authors.size() > 0) {
+    	  System.err.println("Presenter NOT Exist");
         presenter = authors.get(0);
       }
+      System.err.println("Paper Presenter "+ presenter.getEmail());
       presentation.setTitle(row.getCell(6, Row.CREATE_NULL_AS_BLANK).toString());
       presentation.setPaperId(paperId);
       String authorString = authors.size() == 0 ? "" : (authors.size() == 1 ? authors.get(0).getName() :
@@ -538,7 +566,8 @@ public class ImportService {
       if (email != null) {
         email = email.toLowerCase();
       }
-
+//      hasPassword = true;
+//      password = "admin";
       // Creating user's account
       User user = new User(name, username, email, password, affiliation, country, orcid, linkedIn,
               googleScholar, bio, picUrl, hasPassword);

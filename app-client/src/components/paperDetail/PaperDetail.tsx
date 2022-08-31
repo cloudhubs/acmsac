@@ -85,7 +85,7 @@ const PaperDetail = ({classes}) => {
     return (
         <>
             <Container maxWidth="xl" component="main" className='paperDetail {classes.heroContent}'>
-                <div className="breadcrumbs"><a href={"/app"}>ACM SAC 2021</a>&nbsp;
+                <div className="breadcrumbs"><a href={"/app"}>ACM SAC 2022</a>&nbsp;
                 <a href={"/app/track"}>TRACKS</a>&nbsp;
                 <a href={"/app/track/" + selectedPaper.trackCode}>{selectedPaper.trackCode}</a>&nbsp;
                 {selectedPaper.sessionCode}</div>
@@ -325,7 +325,7 @@ const PaperDetail = ({classes}) => {
                                         </TableCell>
                                     </TableRow>
 
-                                    <TableRow>
+                                    {!!(selectedPaper.acmUrl) && <TableRow>
                                         <TableCell component="th">
                                             ACM URL
                                         </TableCell>
@@ -340,9 +340,9 @@ const PaperDetail = ({classes}) => {
                                           />: <a href={selectedPaper.acmUrl} target="_blank">{selectedPaper.acmUrl}</a>} */}
                                           <a href={selectedPaper.acmUrl} target="_blank">{selectedPaper.acmUrl}</a>
                                         </TableCell>
-                                    </TableRow>
+                                    </TableRow>}
 
-                                    <TableRow>
+                                    {(!!(selectedPaper.doiUrl) || !!(paperUpdate.doiUrl)) && <TableRow>
                                         <TableCell component="th">
                                             DOI
                                         </TableCell>
@@ -356,7 +356,7 @@ const PaperDetail = ({classes}) => {
                                            }}
                                           />: <a href={selectedPaper.doiUrl} target="_blank">{!!(selectedPaper.doiUrl)?selectedPaper.doiUrl.substring(16):""}</a>}
                                         </TableCell>
-                                    </TableRow>
+                                    </TableRow>}
                                     {!!(selectedPaper.pageNumbers) && (
                                         <TableRow>
                                             <TableCell component="th">

@@ -32,7 +32,7 @@ const ApplicationBar = () => {
             <AppBar position="fixed" className={classes.appBar}>
                 <Toolbar>
                     <Typography variant="h6" noWrap  className={classes.title}>
-                        ACM SAC 2021
+                        ACM SAC 2022
                     </Typography>
                     <LogoutButton />
                     

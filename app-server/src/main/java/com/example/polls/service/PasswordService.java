@@ -100,7 +100,8 @@ public class PasswordService {
             return new ResponseEntity(new ApiResponse(false, "Sorry, invalid token!"), HttpStatus.BAD_REQUEST);
         }
         if (hasTokenExpired(passwordResetToken)) {
-            return new ResponseEntity(new ApiResponse(false, "Sorry, token expired!"), HttpStatus.BAD_REQUEST);
+        	return new ResponseEntity(new ApiResponse(true, "Check your email for new password!"), HttpStatus.BAD_REQUEST);
+//            return new ResponseEntity(new ApiResponse(false, "Sorry, token expired!"), HttpStatus.BAD_REQUEST);
         }
 
         // mark the token as used
@@ -125,7 +126,7 @@ public class PasswordService {
             return new ResponseEntity(new ApiResponse(false, "Failed to send email!"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return new ResponseEntity(new ApiResponse(true, "Password changed, check your email for new password!"), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(new ApiResponse(true, "Password changed, check your email for new password!"), HttpStatus.ACCEPTED);
     }
 
     private boolean hasTokenExpired(PasswordResetToken token) {
@@ -147,7 +148,7 @@ public class PasswordService {
 
         content = content.replaceAll("#link", link);
 
-        emailService.sendEmail("noreply@acmsac.ecs.baylor.edu", email, "ACM SAC 2021: Password Reset", content);
+        emailService.sendEmail("noreply@acmsac.ecs.baylor.edu", email, "ACM SAC 2022: Password Reset", content);
     }
 
     private void sendNewPassword(String email, String password) throws Exception {
@@ -156,7 +157,7 @@ public class PasswordService {
 
         content = content.replace("#password", password);
 
-        emailService.sendEmail("noreply@acmsac.ecs.baylor.edu", email, "ACM SAC 2021: New Password", content);
+        emailService.sendEmail("noreply@acmsac.ecs.baylor.edu", email, "ACM SAC 2022: New Password", content);
     }
 
     public ResponseEntity<?> resetPasswordLoggedIn(UserPrincipal currentUser, ChangePasswordLoggedInRequest request) {

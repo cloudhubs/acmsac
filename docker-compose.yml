@@ -30,6 +30,8 @@ services:
     build:
       context: app-server # build image from `app-server` directory
       dockerfile: Dockerfile
+    # ports:
+    # - "8082:8082"
     expose:
       - "8080" # expose 8080 to internal network not outside
     restart: always
@@ -38,6 +40,8 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/acmsacdb?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
       SPRING_DATASOURCE_USERNAME: root
+      # SPRING_DATASOURCE_PASSWORD: root
+      # APP_ADMIN_PASSWORD: root
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD:?}
       APP_ADMIN_PASSWORD: ${APP_ADMIN_PASSWORD:?}
     networks:
@@ -51,6 +55,7 @@ services:
     restart: always
     environment:
       MYSQL_DATABASE: acmsacdb
+      # MYSQL_ROOT_PASSWORD: root
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?}
     volumes:
       - db-data:/var/lib/mysql
@@ -58,15 +63,15 @@ services:
       - app-internal
   
   # phpMyAdmin
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    environment:
-      PMA_ARBITRARY: 1
-    restart: always
-    ports:
-      - "8080:80"
-    networks:
-      - app-internal
+  # phpmyadmin:
+  #   image: phpmyadmin/phpmyadmin
+  #   environment:
+  #     PMA_ARBITRARY: 1
+  #   restart: always
+  #   ports:
+  #     - "8080:80"
+  #   networks:
+  #     - app-internal
   
 volumes:
   db-data:

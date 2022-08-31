@@ -84,7 +84,7 @@ const PublicHeader = () => {
             <AppBar position="static" color="default" elevation={0} className={classes.appBar}>
                 <Toolbar className={classes.toolbar}>
                     <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
-                        ACM SAC 2021
+                        ACM SAC 2022
                     </Typography>
                     <Button color="primary" variant="outlined" className={classes.link} onClick={(event: React.MouseEvent<HTMLElement>) => {
                         onHome(event)
@@ -104,11 +104,11 @@ const PublicHeader = () => {
                         Password Reminder
                     </Button> */}
 
-                    {/* <Button color="primary" variant="outlined" className={classes.link} onClick={(event: React.MouseEvent<HTMLElement>) => {
-                        onVisitorLogin(event)
-                    }}>
-                        Tour
-                    </Button> */}
+                    {/*{ <Button color="primary" variant="outlined" className={classes.link} onClick={(event: React.MouseEvent<HTMLElement>) => {*/}
+                    {/*    onVisitorLogin(event)*/}
+                    {/*}}>*/}
+                    {/*    Tour*/}
+                    {/*</Button> }*/}
 
                     <Button color="primary" variant="outlined" className={classes.link} onClick={(event: React.MouseEvent<HTMLElement>) => {
                         onLogin(event)

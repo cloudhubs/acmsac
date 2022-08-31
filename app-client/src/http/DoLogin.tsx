@@ -35,7 +35,8 @@ const DoLogin = {
                 setTimeout(function(){ }, 1000);
                 console.log(body.accessToken);
                 await FetchCurrentUser.doFetch(body);
-                history.push("/sessions");
+                history.push("/");
+                // history.push("/sessions");
             } else {
                 console.log(body.message);
             }

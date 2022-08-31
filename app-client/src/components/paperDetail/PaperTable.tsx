@@ -29,7 +29,6 @@ import TrackMessagePut from "../../http/TrackMessagePut";
 import FetchTrackByCode from "../../http/FetchTrackByCode";
 import { useEffect } from "react";
 
-
 const PaperTable = () => {
     const [academicPapers] = useGlobalState('academicPapers');
     const [currentUser] = useGlobalState('currentUser');
@@ -88,7 +87,7 @@ const PaperTable = () => {
     return (
         <div>
 
-            <div className="breadcrumbs"><a href={"/app"}>ACM SAC 2021</a> &nbsp;
+            <div className="breadcrumbs"><a href={"/app"}>ACM SAC 2022</a> &nbsp;
                 <a href={"/app/track"}>TRACKS</a> &nbsp;
                 {code}</div>
 
@@ -173,13 +172,29 @@ const PaperTable = () => {
                 )
             }
                 <h2>Full papers</h2>
-                <PaperList papers={academicPapers.filter(row => row.type.toLowerCase().indexOf('poster') < 0).slice().sort((a: AcademicArticle, b: AcademicArticle) => {
+                <PaperList papers={academicPapers.filter(row => row.type.toLowerCase().indexOf('paper') >= 0).slice().sort((a: AcademicArticle, b: AcademicArticle) => {
                                 return a.sessionCode == null ? -1 : a.sessionCode.localeCompare(b.sessionCode);
                             })}></PaperList>
                 <h2>Posters</h2>
                 <PaperList papers={academicPapers.filter(row => row.type.toLowerCase().indexOf('poster') >= 0).slice().sort((a: AcademicArticle, b: AcademicArticle) => {
                                 return a.sessionCode == null ? -1 : a.sessionCode.localeCompare(b.sessionCode);
                             })}></PaperList>
+
+                {/*<PaperList papers={academicPapers.filter(row => row.type.toLowerCase().indexOf('src') >= 0).slice().sort((a: AcademicArticle, b: AcademicArticle) => {*/}
+                {/*    return a.sessionCode == null ? -1 : a.sessionCode.localeCompare(b.sessionCode);*/}
+                {/*})}></PaperList>*/}
+
+                {(academicPapers.filter(row => row.type.toLowerCase().indexOf('src') >= 0).length > 0 ?
+                    <div
+                        >
+                        <h2>SRC abstracts</h2>
+                        <PaperList papers={academicPapers.filter(row => row.type.toLowerCase().indexOf('src') >= 0).slice().sort((a: AcademicArticle, b: AcademicArticle) => {
+                            return a.sessionCode == null ? -1 : a.sessionCode.localeCompare(b.sessionCode);
+                        })}></PaperList>
+                    </div>
+                        :
+                        <div></div>
+                )}
             </Container>
 
 

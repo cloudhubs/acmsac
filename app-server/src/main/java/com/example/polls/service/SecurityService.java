@@ -52,7 +52,7 @@ public class SecurityService {
       Track presTrack = trackRepository.findByCodeIgnoreCase(pres.getTrackCode()).orElse(null);
       if (presTrack != null) {
         String userEmail = getUserEmailFromAuth(auth);
-        return presTrack.getChairs().stream().anyMatch(u -> u.getEmail().equals(userEmail));
+        return presTrack.getChairs().stream().anyMatch(u -> u.getEmail().equalsIgnoreCase(userEmail));
       }
     }
     return false;

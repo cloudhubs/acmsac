@@ -85,7 +85,8 @@ export const Author: FunctionComponent<AuthorProps> = ({ author, currentUser, is
                                        const affiliation = event.target.value;
                                        setAuthor((p) => ({...p,affiliation}));
                                }}
-                              />: <a href={"mailto:"+author.email}>{author.affiliation}</a>}
+                              />: author.affiliation}
+                                    {/*<a href={"mailto:"+author.email}>{author.affiliation}</a>*/}
                                 </TableCell>
                             </TableRow>
 
@@ -102,7 +103,8 @@ export const Author: FunctionComponent<AuthorProps> = ({ author, currentUser, is
                                        const country = event.target.value;
                                        setAuthor((p) => ({...p,country}));
                                }}
-                              />: <a href={"mailto:"+author.email}>{author.country}</a>}
+                              />: author.country}
+                                    {/*<a href={"mailto:"+author.email}>{author.country}</a>*/}
                                 </TableCell>
                             </TableRow>
 {(author.orcid || isEditable) && (

@@ -36,3 +36,18 @@
     transform: rotate(360deg);
   }
 }
+
+div#disqus_thread iframe[sandbox] {
+  max-height: 0px !important;
+}
+
+iframe[src*="ads-iframe"] { display: none; }
+
+/*div iframe:first-of-type {*/
+/*  display: none;*/
+/*}*/
+
+/*div iframe:last-of-type {*/
+/*  display: none;*/
+/*}*/
+

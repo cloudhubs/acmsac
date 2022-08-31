@@ -28,81 +28,80 @@ import java.util.TimeZone;
 
 @Slf4j
 @SpringBootApplication
-@EntityScan(basePackageClasses = {
-        PollsApplication.class,
-        Jsr310JpaConverters.class
-})
+@EntityScan(basePackageClasses = { PollsApplication.class, Jsr310JpaConverters.class })
 public class PollsApplication {
 
-    @Value("${app.admin.username}")
-    private String adminUsername;
-    @Value("${app.admin.password}")
-    private String adminPassword;
-    @Value("${app.admin.email}")
-    private String adminEmail;
-    @Value("${app.admin.name}")
-    private String adminName;
+	@Value("${app.admin.username}")
+	private String adminUsername;
+	@Value("${app.admin.password}")
+	private String adminPassword;
+	@Value("${app.admin.email}")
+	private String adminEmail;
+	@Value("${app.admin.name}")
+	private String adminName;
 
-    @PostConstruct
-    void init() {
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-    }
+	@PostConstruct
+	void init() {
+		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+	}
 
-    public static void main(String[] args) {
-        SpringApplication.run(PollsApplication.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(PollsApplication.class, args);
+	}
 
-    @Bean
-    public CommandLineRunner commandLineRunner() {
-        return new CommandLineRunner() {
-            @Autowired
-            private TrackRepository trackRepository;
+	@Bean
+	public CommandLineRunner commandLineRunner() {
+		return new CommandLineRunner() {
+			@Autowired
+			private TrackRepository trackRepository;
 
-            @Autowired
-            private UserRepository userRepository;
+			@Autowired
+			private UserRepository userRepository;
 
-            @Autowired
-            private RoleRepository roleRepository;
+			@Autowired
+			private RoleRepository roleRepository;
 
-            @Autowired
-            private PresentationRepository presentationRepository;
+			@Autowired
+			private PresentationRepository presentationRepository;
 
-            @Autowired
-            private ImportService importService;
+			@Autowired
+			private ImportService importService;
 
-            @Autowired
-            private AcmInfoRepository acmInfoRepository;
+			@Autowired
+			private AcmInfoRepository acmInfoRepository;
 
-            @Autowired
-            PasswordEncoder passwordEncoder;
+			@Autowired
+			PasswordEncoder passwordEncoder;
 
-            @Value("classpath:2021_tracks.xlsx")
-            private Resource trackCodesResource;
+			@Value("classpath:2022_tracks.xlsx")
+			private Resource trackCodesResource;
 
-            @Value("classpath:acm_info.xlsx")
-            private Resource acmResource;
+			@Value("classpath:acm_info.xlsx")
+			private Resource acmResource;
 
-            @Override
-            public void run(String... args) throws Exception {
+			@Override
+			public void run(String... args) throws Exception {
 
-                // if the track codes have not been loaded, do it now
-                if (trackRepository.count() == 0) {
-                    log.info("Importing tracks");
-                    XSSFWorkbook workbook = new XSSFWorkbook(trackCodesResource.getInputStream());
-                    XSSFSheet worksheet = workbook.getSheetAt(0);
-                    for (int i = 0; i < worksheet.getPhysicalNumberOfRows(); i++) {
-                        XSSFRow row = worksheet.getRow(i);
-                        Track track = new Track();
-                        track.setCode(row.getCell(0).toString());
-                        track.setName(row.getCell(1).toString());
-                        trackRepository.save(track);
-                    }
-                    log.info("Done importing tracks");
-                } else {
-                    log.info("Skipped importing tracks");
-                }
+				// if the track codes have not been loaded, do it now
+				if (trackRepository.count() == 0) {
+					log.info("Importing tracks");
+					XSSFWorkbook workbook = new XSSFWorkbook(trackCodesResource.getInputStream());
+					XSSFSheet worksheet = workbook.getSheetAt(0);
+					for (int i = 0; i < worksheet.getPhysicalNumberOfRows(); i++) {
+						XSSFRow row = worksheet.getRow(i);
+						Track track = new Track();
+						track.setCode(row.getCell(0).toString());
+						track.setName(row.getCell(1).toString());
+						if (track.getName() != null && !track.getName().trim().isEmpty()) {
+							trackRepository.save(track);
+						}
+					}
+					log.info("Done importing tracks");
+				} else {
+					log.info("Skipped importing tracks");
+				}
 
-                // TODO: Needed for 2021?
+				// TODO: Needed for 2021?
 //                // if the DOI info hasn't been loaded, do it
 //                if (acmInfoRepository.count() == 0) {
 //                    XSSFWorkbook workbook = new XSSFWorkbook(acmResource.getInputStream());
@@ -117,48 +116,48 @@ public class PollsApplication {
 //                    }
 //                }
 
-                // create admin account if not exists
-                if (!userRepository.existsByEmail(adminEmail)) {
-                    User admin = new User();
-                    admin.setUsername(adminUsername);
-                    admin.setPassword(passwordEncoder.encode(adminPassword));
-                    admin.setEmail(adminEmail);
-                    admin.setName(adminName);
+				// create admin account if not exists
+				if (!userRepository.existsByEmail(adminEmail)) {
+					User admin = new User();
+					admin.setUsername(adminUsername);
+					admin.setPassword(passwordEncoder.encode(adminPassword));
+					admin.setEmail(adminEmail);
+					admin.setName(adminName);
 
-                    Role adminRole = roleRepository.findByName(RoleName.ROLE_ADMIN)
-                            .orElseThrow(() -> new AppException("Admin Role not set."));
-                    Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
-                            .orElseThrow(() -> new AppException("User Role not set."));
+					Role adminRole = roleRepository.findByName(RoleName.ROLE_ADMIN)
+							.orElseThrow(() -> new AppException("Admin Role not set."));
+					Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
+							.orElseThrow(() -> new AppException("User Role not set."));
 
-                    Set<Role> roles = new HashSet<>();
-                    roles.add(adminRole);
-                    roles.add(userRole);
+					Set<Role> roles = new HashSet<>();
+					roles.add(adminRole);
+					roles.add(userRole);
 
-                    admin.setRoles(roles);
+					admin.setRoles(roles);
 
-                    userRepository.save(admin);
-                }
+					userRepository.save(admin);
+				}
 
-                // run import if no presentations
-                if (presentationRepository.count() == 0) {
-                    int triesLeft = 2;
-                    while (triesLeft > 0) {
-                        triesLeft--;
-                        try {
-                            log.info("Importing users/presentations");
-                            importService.importUsers();
-                            log.info("Done importing users/presentations");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            if (triesLeft > 0) {
-                                log.info("Failed to import users/presentations, retrying");
-                            }
-                        }
-                    }
-                } else {
-                    log.info("Skipped importing users/presentations");
-                }
-            }
-        };
-    }
+				// run import if no presentations
+				if (presentationRepository.count() == 0) {
+					int triesLeft = 2;
+					while (triesLeft > 0) {
+						triesLeft--;
+						try {
+							log.info("Importing users/presentations");
+							importService.importUsers();
+							log.info("Done importing users/presentations");
+						} catch (Exception e) {
+							e.printStackTrace();
+							if (triesLeft > 0) {
+								log.info("Failed to import users/presentations, retrying");
+							}
+						}
+					}
+				} else {
+					log.info("Skipped importing users/presentations");
+				}
+			}
+		};
+	}
 }

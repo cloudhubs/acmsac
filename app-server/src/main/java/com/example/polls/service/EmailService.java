@@ -25,7 +25,7 @@ public class EmailService {
         helper.setTo(to);
         helper.setSubject(subject);
 
-        log.info("Sending email to " + to);
+//        log.info("Sending email to " + to);
         javaMailSender.send(message);
     }
 }

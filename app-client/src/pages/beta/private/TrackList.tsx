@@ -9,6 +9,7 @@ import {Track} from "../../../model/Track";
 import TrackTable from "../../../components/track/TrackTable";
 import FetchTracks from "../../../http/FetchTracks";
 import TransitionsModal from "../../../shared/TransitionModal";
+import {Video} from "../../../components/paperDetail/Video";
 
 const TrackList = () => {
 
@@ -43,7 +44,6 @@ const TrackList = () => {
 
     return (
         <>
-
             <TrackTable/>
         </>
     );

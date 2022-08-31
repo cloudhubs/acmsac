@@ -5,8 +5,14 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom'
-import {dispatch} from "../../state";
+import {dispatch, useGlobalState} from "../../state";
 import { useHistory, useLocation } from 'react-router-dom';
+import {CurrentUser as CurrentUserType} from "../../model/CurrentUser";
+import {log} from "util";
+import CurrentUser from "../../components/currentUser/CurrentUser";
+
+// const [currentUser] = useGlobalState('currentUser');
+// const [author, setAuthor] = React.useState<CurrentUserType>(currentUser);
 
 const logout = () => dispatch({
     type: 'logout',
@@ -43,26 +49,31 @@ const PrivateHeader = () => {
 
     const classes = useStyles();
     const routeTo = (url) => () => history.push(url)
+    const [currentUser, setCurrentUser] = useGlobalState('currentUser');
 
     return (
         <>
             <AppBar position="static" color="default" elevation={0} className={classes.appBar}>
                 <Toolbar className={classes.toolbar}>
                     <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
-                        ACM SAC 2021
+                        ACM SAC 2022
                     </Typography>
                     <Button color="primary" variant="outlined" className={classes.link} onClick={routeTo("/")}>
                         Home
                     </Button>
-                    <Button color="primary" variant="outlined" className={classes.link} onClick={routeTo("/sessions")}>
-                        Schedule
-                    </Button>
+                    {/*<Button color="primary" variant="outlined" className={classes.link} onClick={routeTo("/sessions")}>*/}
+                    {/*    Schedule*/}
+                    {/*</Button>*/}
                     <Button color="primary" variant="outlined" className={classes.link} onClick={routeTo("/app/track")}>
                         Tracks
                     </Button>
-                    <Button color="primary" variant="outlined" className={classes.link} onClick={routeTo("/app/currentuser")}>
-                        Me
-                    </Button>
+
+                    { currentUser.email == 'visitor@acmsac.org' ? null:
+                        <Button color="primary" variant="outlined" className={classes.link} onClick={routeTo("/app/currentuser")}>
+                            Me
+                        </Button>
+                    }
+
                     <Button color="primary" variant="outlined" className={classes.link} onClick={(event: React.MouseEvent<HTMLElement>) => {
                         onLogout(event)
                     }}>

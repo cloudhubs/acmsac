@@ -60,8 +60,9 @@ const CurrentUser = () => {
     }, []);
 
     const renderUserFullPapers = () => {
-        if (userPapers.filter(row => row.type != 'Poster').slice().sort((a: AcademicArticle, b: AcademicArticle) => {
-            return a.sessionCode.localeCompare(b.sessionCode);
+        if (userPapers.filter(row => row.type.toLowerCase().indexOf('paper') >= 0).slice().sort((a: AcademicArticle, b: AcademicArticle) => {
+            return a.sessionCode == null ? -1 : a.sessionCode.localeCompare(b.sessionCode);
+            // return a.trackCode.localeCompare(b.trackCode);
         }).length > 0) {
             return (
                 <>
@@ -77,8 +78,8 @@ const CurrentUser = () => {
     }
 
     const renderUserPosters = () => {
-        if (userPapers.filter(row => row.type == 'Poster').slice().sort((a: AcademicArticle, b: AcademicArticle) => {
-            return a.sessionCode.localeCompare(b.sessionCode);
+        if (userPapers.filter(row => row.type.toLowerCase().indexOf('poster') >= 0).slice().sort((a: AcademicArticle, b: AcademicArticle) => {
+            return a.sessionCode == null ? -1 : a.sessionCode.localeCompare(b.sessionCode);
         }).length > 0) {
             return (
                 <>
@@ -89,6 +90,23 @@ const CurrentUser = () => {
         } else {
             return (
                 <h2>No poster presentations</h2>
+            );
+        }
+    }
+
+    const renderUserSRCPapers = () => {
+        if (userPapers.filter(row => row.type.toLowerCase().indexOf('src') >= 0).slice().sort((a: AcademicArticle, b: AcademicArticle) => {
+            return a.sessionCode == null ? -1 : a.sessionCode.localeCompare(b.sessionCode);
+        }).length > 0) {
+            return (
+                <>
+                    <h2>SRC abstracts</h2>
+                    <PaperList papers={userPapers}></PaperList>
+                </>
+            );
+        } else {
+            return (
+                <h2>No SRC abstracts</h2>
             );
         }
     }
@@ -110,6 +128,7 @@ const CurrentUser = () => {
             <h1>User presentations</h1>
             {renderUserFullPapers()}
             {renderUserPosters()}
+            {renderUserSRCPapers()}
         </Container>
     )
 }

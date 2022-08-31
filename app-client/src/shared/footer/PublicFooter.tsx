@@ -24,7 +24,8 @@ function Copyright() {
                   <a color="inherit" target="_blank" href="https://www.linkedin.com/in/micah-schiewe/" style={{padding: "3px"}}>Micah Schiewe,</a>
                   <a color="inherit" target="_blank" href="https://github.com/svacina" style={{padding: "3px"}}>Jan Svačina,</a>
                       <a color="inherit" target="_blank" href="https://github.com/walker76" style={{padding: "3px"}}>Andrew Walker,</a>
-                          <a color="inherit" target="_blank" href={"https://www.linkedin.com/in/tomascerny/"} style={{padding: "3px"}}>Tomáš Černý</a>
+                          <a color="inherit" target="_blank" href={"https://www.linkedin.com/in/tomascerny/"} style={{padding: "3px"}}>Tomáš Černý,</a>
+                              <a color="inherit" target="_blank" href={"https://www.linkedin.com/in/amrelsayedmohamed/"} style={{padding: "3px"}}>Amr El-Sayed</a>
           {/* </p> */}
       </Typography>
     );

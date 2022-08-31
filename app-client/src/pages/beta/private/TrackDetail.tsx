@@ -53,6 +53,7 @@ const TrackDetail = () => {
                     }
                 />
             </Container>
+
         </div>
     );
 }

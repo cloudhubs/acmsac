@@ -61,7 +61,7 @@ export default function Index() {
       {/* Hero unit */}
       <Container maxWidth="md" component="main" className={classes.heroContent}>
         <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-          ACM SAC 2021
+          ACM SAC 2022
         </Typography>
 
         <Typography variant="h4" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
@@ -69,7 +69,7 @@ export default function Index() {
         </Typography>
 
         <Typography variant="h5" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
-        It is our great pleasure to announce that the ACM SAC 2021 conference platform is now open.  
+        It is our great pleasure to announce that the ACM SAC 2022 conference platform is now open.
         </Typography>
 
         <Typography variant="h5" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
@@ -81,7 +81,7 @@ export default function Index() {
         </Typography>
 
         <Typography variant="h6" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>
-        Thank you for participating in ACM SAC 2021, and hoping to see you all in ACM SAC 2022, if possible, in person.
+        Thank you for participating in ACM SAC 2022, and hoping to see you all in ACM SAC 2023, if possible, in person.
         </Typography>
 
         <Typography variant="h6" align="center" color="textSecondary" component="p" className={classes.subHeroContent}>

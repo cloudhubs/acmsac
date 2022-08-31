@@ -6,6 +6,7 @@ import com.example.polls.model.User;
 import com.example.polls.service.DtoConverterService;
 import com.example.polls.service.PostprocessingHelpers;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Data
 public class PresentationDto {
   private Long id;
@@ -65,6 +67,7 @@ public class PresentationDto {
     this.paperAbstract = presentation.getPaperAbstract();
     this.pageNumbers = presentation.getPageNumbers();
     this.acknowledgements = presentation.getAcknowledgements();
+//    log.error(presentation.getPaperId() + "");
     this.presenter = DtoConverterService.getUserDto(presentation.getPresenter());
     this.authors = presentation.getAuthors().stream().map(DtoConverterService::getUserDto).collect(Collectors.toList());
     this.comments = presentation.getComments();
