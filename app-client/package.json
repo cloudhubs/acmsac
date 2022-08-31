@@ -18,7 +18,7 @@
     "@types/react": "^16.14.4",
     "@types/react-dom": "^16.9.11",
     "attina": "^1.0.1",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "disqus-react": "^1.0.11",
     "hist": "latest",
     "history": "^4.10.1",
